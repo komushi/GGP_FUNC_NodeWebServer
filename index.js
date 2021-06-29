@@ -9,6 +9,7 @@ const GROUP_ID = process.env.GROUP_ID
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 const AWS_IOT_THING_ARN = process.env.AWS_IOT_THING_ARN;
 const AWS_GREENGRASS_GROUP_NAME = process.env.AWS_GREENGRASS_GROUP_NAME;
+const LISTING_ID = process.env.LISTING_ID;
 const PORT = process.env.PORT || 8081;
 
 const base_topic = AWS_IOT_THING_NAME + '/web_server_node'
