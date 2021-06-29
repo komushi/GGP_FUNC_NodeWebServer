@@ -24,8 +24,6 @@ function publishCallback(err, data) {
 exports.handler = async function(event, context) {
     console.log('event: ' + JSON.stringify(event));
     console.log('context: ' + JSON.stringify(context));
-    // console.log('AWS_IOT_THING_NAME: ' + AWS_IOT_THING_NAME);
-    console.log('base_topic: ' + base_topic);
 
     try {
         if (context.clientContext.Custom.subject.indexOf('reservation_update') > -1) {
@@ -107,56 +105,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 mountRoutes(app);
 
-/*
-app.get('/', (req, res) => {
-        res.send('Hello World!')
-
-        const pubOpt = {
-           topic: log_topic,
-           payload: JSON.stringify({ message: 'Hello World request serviced' })
-        };
-
-        iotClient.publish(pubOpt, publishCallback);
-    });
-
-app.post('/aiFace/dev2service/api/deviceReg', (req, res) => {
-        console.log('req.body', req.body);
-        const response = {
-            "code":0,
-            "message":"Good!" 
-        };
-        res.send(response);
-
-        const pubOpt = {
-           topic: log_topic,
-           payload: JSON.stringify(req.body)
-        };
-
-        iotClient.publish(pubOpt, publishCallback);        
-    });
-
-app.post('/aiFace/dev2service/api/uploadMipsGateRecord', (req, res) => {
-        // console.log('req.body', req.body);
-        const response = {
-            "code":0,
-            "message":"Good!" 
-        };
-        res.send(response);
-
-        const payload = Object.assign({}, req.body);
-
-        delete payload.checkPic;
-
-        const pubOpt = {
-           topic: log_topic,
-           payload: JSON.stringify(payload)
-        };
-
-        iotClient.publish(pubOpt, publishCallback);
-
-        storage.saveScanRecord(payload);
-    });
-*/
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
 
@@ -167,4 +115,8 @@ app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
 //     console.log('getShadow startupShadowResult');
 // });
 
+
+console.log('AWS_IOT_THING_NAME: ' + AWS_IOT_THING_NAME);
+console.log('AWS_GREENGRASS_GROUP_NAME: ' + AWS_GREENGRASS_GROUP_NAME);
+console.log('LISTING_ID: ' + LISTING_ID);
 
