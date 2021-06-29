@@ -80,6 +80,12 @@ exports.handler = async function(event, context) {
 
             console.error('deleteShadowResult: ' + JSON.stringify(deleteShadowResult));
 
+        } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
+            console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
+
+            // event.state.reservations.keys.map(shadowName => {
+                
+            // });
         }
     } catch (err) {
         console.error('!!!!!!error happened at handler error start!!!!!!');
