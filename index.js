@@ -85,7 +85,7 @@ exports.handler = async function(event, context) {
 
             const results = await Promise.all(Object.keys(event.state.reservations).map(async (shadowName) => {
                 return await eventHandler.syncReservation({
-                    shadowName: event.shadowName
+                    shadowName
                 });
 
             }));
