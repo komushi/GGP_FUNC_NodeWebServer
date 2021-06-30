@@ -83,9 +83,14 @@ exports.handler = async function(event, context) {
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
 
-            // event.state.reservations.keys.map(shadowName => {
-                
-            // });
+            const results = await Promise.all(event.state.reservations.keys.map(async (shadowName) => {
+                result await eventHandler.syncReservation({
+                    shadowName: event.shadowName
+                });
+
+            }));
+
+            console.log('syncReservation results:' + JSON.stringify(results));
         }
     } catch (err) {
         console.error('!!!!!!error happened at handler error start!!!!!!');
