@@ -83,7 +83,7 @@ exports.handler = async function(event, context) {
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
 
-            const results = await Promise.all(event.state.reservations.keys().map(async (shadowName) => {
+            const results = await Promise.all(Object.keys(event.state.reservations).map(async (shadowName) => {
                 return await eventHandler.syncReservation({
                     shadowName: event.shadowName
                 });
