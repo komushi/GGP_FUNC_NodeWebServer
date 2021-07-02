@@ -1,10 +1,8 @@
-// event-handler
-
-const LISTING_ID = process.env.LISTING_ID;
+// iot-handler
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 
-const storage = require('./storage');
-const shadow = require('./shadow');
+const storage = require('../api/storage');
+const shadow = require('../api/shadow');
 
 module.exports.syncReservation = async (event) => {
 
@@ -16,7 +14,7 @@ module.exports.syncReservation = async (event) => {
 	});
 
     const getReservationResult = await storage.getReservation({
-        listingId: LISTING_ID,
+        listingId: event.listingId,
         reservationCode: event.shadowName
     });
 

@@ -1,15 +1,14 @@
 const express = require('express');
 const mountRoutes = require('./router');
 
-const storage = require('./handler/storage');
-const shadow = require('./handler/shadow');
-const eventHandler = require('./handler/event');
+const storage = require('./api/storage');
+const shadow = require('./api/shadow');
+const iotHandler = require('./handler/iot');
 
 const GROUP_ID = process.env.GROUP_ID
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 const AWS_IOT_THING_ARN = process.env.AWS_IOT_THING_ARN;
 const AWS_GREENGRASS_GROUP_NAME = process.env.AWS_GREENGRASS_GROUP_NAME;
-const LISTING_ID = process.env.LISTING_ID;
 const PORT = process.env.PORT || 8081;
 
 const base_topic = AWS_IOT_THING_NAME + '/web_server_node'
@@ -27,14 +26,7 @@ exports.handler = async function(event, context) {
     console.log('context: ' + JSON.stringify(context));
 
     try {
-        if (context.clientContext.Custom.subject.indexOf('reservation_update') > -1) {
-
-            await storage.saveReservationRecord(event);
-
-        } else if (context.clientContext.Custom.subject.indexOf('member_update') > -1) {
-
-            await storage.saveMemberData(event);
-        } else if (context.clientContext.Custom.subject.indexOf('list_tables') > -1) {
+        if (context.clientContext.Custom.subject.indexOf('list_tables') > -1) {
             const tableList = await storage.listTables();
 
             console.log('tableList: ' + JSON.stringify(tableList));
@@ -66,7 +58,7 @@ exports.handler = async function(event, context) {
         } else if (context.clientContext.Custom.subject.indexOf('sync_reservation') > -1) {
             console.log('event.shadowName:: ' + event.shadowName);
 
-            await eventHandler.syncReservation({
+            await iotHandler.syncReservation({
                 shadowName: event.shadowName
             });
 
@@ -84,7 +76,7 @@ exports.handler = async function(event, context) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
 
             const results = await Promise.all(Object.keys(event.state.reservations).map(async (shadowName) => {
-                return await eventHandler.syncReservation({
+                return await iotHandler.syncReservation({
                     shadowName
                 });
 
@@ -130,5 +122,4 @@ app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
 
 console.log('AWS_IOT_THING_NAME: ' + AWS_IOT_THING_NAME);
 console.log('AWS_GREENGRASS_GROUP_NAME: ' + AWS_GREENGRASS_GROUP_NAME);
-console.log('LISTING_ID: ' + LISTING_ID);
 
