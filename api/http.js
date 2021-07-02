@@ -7,7 +7,7 @@ module.exports = router
 
 router.post('/deviceReg', async (req, res) => {
 
-  console.log('req.body', req.body);
+  console.log('req.body' + JSON.stringify(req.body));
   
   const response = {
     "code":0,
