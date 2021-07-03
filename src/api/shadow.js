@@ -82,7 +82,7 @@ module.exports.deleteShadow = async (params) => {
 		result = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(returnArray)));
 	}
 
-	console.log('updateShadow out: result:' + JSON.stringify(result));
+	console.log('deleteShadow out: result:' + JSON.stringify(result));
 
 	return result;
 

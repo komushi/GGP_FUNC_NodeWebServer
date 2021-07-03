@@ -31,7 +31,6 @@ module.exports.syncReservation = async (event) => {
 
 	    		memberParams = getShadowResult.state.desired.members;
 
-	    		//todo: clear GoCheckInMember for this reservation
 	    		await storage.deleteMembers(getReservationResult.members);
 
 	    		//todo: clear face info for this group    		
@@ -49,6 +48,12 @@ module.exports.syncReservation = async (event) => {
 
 	    }
     }
+
+    const resultUpdatedShadow = await shadow.updateReportedShadow({
+    	thingName: AWS_IOT_THING_NAME,
+    	shadowName: event.reservationCode,
+    	reportedState: getShadowResult.state.desired
+    });
 
     const result = await storage.saveReservation({
         reservation: getShadowResult.state.desired.reservation,
