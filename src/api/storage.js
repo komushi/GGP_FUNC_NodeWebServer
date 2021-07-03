@@ -1,5 +1,6 @@
 const TBL_RESERVATION = process.env.TBL_RESERVATION;
 const TBL_MEMBER = process.env.TBL_MEMBER;
+const TBL_SCANNER = process.env.TBL_SCANNER;
 
 const config = {
   endpoint: process.env.DDB_ENDPOINT || 'http://localhost:8080',
@@ -239,5 +240,31 @@ module.exports.getReservation = async (params) => {
 
     return result;
   }
+
+};
+
+module.exports.updateScanner = async (record) => {
+
+  console.log('updateScanner in: record:', record);
+
+  const params = [{
+    Put: {
+      TableName: TBL_SCANNER,
+      Item: record,
+      ExpressionAttributeNames : {
+          '#pk' : 'listingId'
+      }
+    }
+  }];
+
+  const command = new TransactWriteCommand({
+    TransactItems: params
+  });
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('updateScanner out: result:', result);
+
+  return result;
 
 };

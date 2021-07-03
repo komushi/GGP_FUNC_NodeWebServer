@@ -1,3 +1,5 @@
+const storage = require('../api/storage');
+
 const Router = require('express-promise-router');
 
 const router = new Router();
@@ -8,7 +10,14 @@ module.exports = router
 router.post('/deviceReg', async (req, res) => {
 
   console.log('req.body' + JSON.stringify(req.body));
-  
+
+  await storage.updateScanner({
+    terminalKey: req.body.terminalKey,
+    listingId: req.body.listingId,
+    roomCode: req.body.roomCode,
+    localIp: req.body.localIp
+  });
+
   const response = {
     "code":0,
     "message":"Good!" 

@@ -31,9 +31,9 @@ module.exports.syncReservation = async (event) => {
 
 	    		memberParams = getShadowResult.state.desired.members;
 
-	    		await storage.deleteMembers(getReservationResult.members);
+	    		await scanner.deleteUsers({listingId: event.listingId, members: getReservationResult.members});
 
-	    		//todo: clear face info for this group    		
+	    		await storage.deleteMembers(getReservationResult.members);
 	    	} else {
 				memberParams = getShadowResult.state.desired.members.filter((member, index) => {
 					if (getReservationResult.members[index]) {
