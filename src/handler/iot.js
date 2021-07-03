@@ -10,12 +10,12 @@ module.exports.syncReservation = async (event) => {
 
 	const getShadowResult = await shadow.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
-	    shadowName: event.shadowName
+	    shadowName: event.reservationCode
 	});
 
     const getReservationResult = await storage.getReservation({
         listingId: event.listingId,
-        reservationCode: event.shadowName
+        reservationCode: event.reservationCode
     });
 
     let memberParams = [];
