@@ -250,10 +250,7 @@ module.exports.updateScanner = async (record) => {
   const params = [{
     Put: {
       TableName: TBL_SCANNER,
-      Item: record,
-      ExpressionAttributeNames : {
-          '#pk' : 'listingId'
-      }
+      Item: record
     }
   }];
 
