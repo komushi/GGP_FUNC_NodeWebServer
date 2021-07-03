@@ -8,22 +8,24 @@ module.exports.syncReservation = async (event) => {
 
 	console.log('syncReservation in: event:' + JSON.stringify(event));
 
-	const getShadowResult = await shadow.getShadow({
-	    thingName: AWS_IOT_THING_NAME,
-	    shadowName: event.reservationCode
-	});
-
     const getReservationResult = await storage.getReservation({
         listingId: event.listingId,
         reservationCode: event.reservationCode
     });
 
+    let getShadowResult;
+
     let memberParams = [];
     if (getReservationResult) {
-	    if (getReservationResult.version == getShadowResult.version) {
+	    if (getReservationResult.version == event.version) {
 	    	console.log('ShadowReservation considered same as LocalReservation, nothing will be done');
 	    	return;
 	    } else {
+
+			getShadowResult = await shadow.getShadow({
+			    thingName: AWS_IOT_THING_NAME,
+			    shadowName: event.reservationCode
+			});	    	
 
 	    	if (getShadowResult.state.desired.members.length < getReservationResult.members.length) {
 

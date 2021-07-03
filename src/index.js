@@ -75,10 +75,11 @@ exports.handler = async function(event, context) {
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
 
-            const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, listingId]) => {
+            const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, version}]) => {
                 return await iotHandler.syncReservation({
                     reservationCode,
-                    listingId
+                    listingId,
+                    version
                 });
 
             }));
