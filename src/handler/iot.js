@@ -58,7 +58,7 @@ module.exports.syncReservation = async (event) => {
     const result = await storage.saveReservation({
         reservation: getShadowResult.state.desired.reservation,
         members: memberParams,
-        version: getShadowResult.version
+        version: resultUpdatedShadow.version
     });
 
 	console.log('syncReservation out: result: ' + JSON.stringify(result));
