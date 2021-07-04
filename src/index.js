@@ -3,6 +3,7 @@ const mountRoutes = require('./router');
 
 const storage = require('./api/storage');
 const shadow = require('./api/shadow');
+const scanner = require('./api/scanner');
 const iotHandler = require('./handler/iot');
 
 const GROUP_ID = process.env.GROUP_ID
