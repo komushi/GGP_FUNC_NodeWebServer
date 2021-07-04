@@ -28,14 +28,14 @@ exports.handler = async function(event, context) {
 
     try {
         if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
-            // let result = await storage.updateScanner({
-            //     terminalKey: 'd6fe7c7a63a72ed4',
-            //     listingId: '3i6cSu',
-            //     roomCode: '101',
-            //     localIp: '192.168.11.106'
-            // });
+            let result = await storage.updateScanner({
+                terminalKey: 'd6fe7c7a63a72ed4',
+                listingId: '3i6cSu',
+                // roomCode: '101',
+                localIp: '192.168.11.106'
+            });
 
-            // console.log('updateScanner result: ' + JSON.stringify(result));
+            console.log('updateScanner result: ' + JSON.stringify(result));
 
             result = await storage.getScanner({
                 listingId: event.listingId,
