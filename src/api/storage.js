@@ -309,14 +309,14 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   //   ExpressionAttributeValues : {':pk' : listingId}
   // };
 
-  const param = new QueryCommand({
-    TableName: 'GoCheckInScanner',
-    IndexName : 'ListingRoomIndex',
+  const param = {
+    TableName: TBL_SCANNER,
+    IndexName : IDX_SCANNER_LISTING,
     KeyConditionExpression: 'listingId = :pk',
     ExpressionAttributeValues: {':pk': listingId}
-  });
+  };
 
-  const command = new ScanCommand(param);
+  const command = new QueryCommand(param);
 
   const result = await ddbDocClient.send(command);  
 
