@@ -269,21 +269,52 @@ module.exports.updateScanner = async (record) => {
 
 };
 
+/*
 module.exports.getScanner = async ({listingId, roomCode}) => {
 
   console.log('getScanner in: listingId:' + listingId);
   console.log('getScanner in: roomCode:' + roomCode);
 
+  // const param = {
+  //   TableName : TBL_SCANNER,
+  //   IndexName : IDX_SCANNER_LISTING,
+  //   FilterExpression : 'listingId = :pk',
+  //   ExpressionAttributeValues : {':pk' : listingId}
+  // };
+
   const param = {
-    TableName : TBL_SCANNER,
-    IndexName : IDX_SCANNER_LISTING,
-    FilterExpression : 'listingId = :pk',
-    ExpressionAttributeValues : {':pk' : listingId}
+    TableName : TBL_SCANNER
   };
 
+  const command = new ScanCommand(param);
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('getScanner out: result:' + JSON.stringify(result));
+
+  return result;
+
+};
+*/
+
+module.exports.getScanner = async ({listingId, roomCode}) => {
+
+  console.log('getScanner in: listingId:' + listingId);
+  console.log('getScanner in: roomCode:' + roomCode);
+
   // const param = {
-  //   TableName : TBL_SCANNER
+  //   TableName : TBL_SCANNER,
+  //   IndexName : IDX_SCANNER_LISTING,
+  //   FilterExpression : 'listingId = :pk',
+  //   ExpressionAttributeValues : {':pk' : listingId}
   // };
+
+  const param = new QueryCommand({
+    TableName: TBL_SCANNER,
+    IndexName : IDX_SCANNER_LISTING,
+    KeyConditionExpression: 'listingId = :pk',
+    ExpressionAttributeValues: {':pk': listingId}
+  });
 
   const command = new ScanCommand(param);
 
