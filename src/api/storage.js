@@ -269,7 +269,8 @@ module.exports.updateScanner = async (record) => {
 
 module.exports.getScanner = async ({listingId, roomCode}) => {
 
-  console.log('getScanner in: record:', record);
+  console.log('getScanner in: listingId:', listingId);
+  console.log('getScanner in: roomCode:', roomCode);
 
   const param = {
     TableName : TBL_SCANNER,
