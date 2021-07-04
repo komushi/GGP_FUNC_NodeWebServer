@@ -26,51 +26,12 @@ exports.handler = async function(event, context) {
     console.log('context: ' + JSON.stringify(context));
 
     try {
-        if (context.clientContext.Custom.subject.indexOf('list_tables') > -1) {
-            const tableList = await storage.listTables();
-
-            console.log('tableList: ' + JSON.stringify(tableList));
-        } else if (context.clientContext.Custom.subject.indexOf('get_reservation') > -1) {
-            const result = await storage.getReservation({
-                listingId: event.listingId,
-                reservationCode: event.reservationCode
+        if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
+            const result = await scanner.getScanner({
+                listingId: event.listingId
             });
 
-            console.log('result: ' + JSON.stringify(result));
-
-        } else if (context.clientContext.Custom.subject.indexOf('check_shadow') > -1) {
-            console.log('event.shadowName:: ' + event.shadowName);
-
-            const getShadowResult = await shadow.getShadow({
-                thingName: AWS_IOT_THING_NAME,
-                shadowName: event.shadowName
-            });
-
-            console.log('getShadowResult caller: ' + JSON.stringify(getShadowResult));
-
-            await storage.saveReservation({
-                reservation: getShadowResult.state.desired.reservation,
-                members: getShadowResult.state.desired.members,
-                version: getShadowResult.version
-            });
-
-
-        } else if (context.clientContext.Custom.subject.indexOf('sync_reservation') > -1) {
-            console.log('event.shadowName:: ' + event.shadowName);
-
-            await iotHandler.syncReservation({
-                shadowName: event.shadowName
-            });
-
-        } else if (context.clientContext.Custom.subject.indexOf('delete_shadow') > -1) {
-            console.log('event.shadowName:: ' + event.shadowName);
-
-            const deleteShadowResult = await shadow.deleteShadow({
-                thingName: AWS_IOT_THING_NAME,
-                shadowName: event.shadowName
-            });
-
-            console.error('deleteShadowResult: ' + JSON.stringify(deleteShadowResult));
+            console.log('get_scanners result: ' + JSON.stringify(result));
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
