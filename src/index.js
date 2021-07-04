@@ -28,7 +28,7 @@ exports.handler = async function(event, context) {
 
     try {
         if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
-            const result = await scanner.getScanner({
+            const result = await storage.getScanner({
                 listingId: event.listingId
             });
 
