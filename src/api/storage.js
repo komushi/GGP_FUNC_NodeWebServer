@@ -312,8 +312,11 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   const param = {
     TableName: TBL_SCANNER,
     IndexName : IDX_SCANNER_LISTING,
-    KeyConditionExpression: 'listingId = :pk',
-    ExpressionAttributeValues: {':pk': listingId}
+    KeyConditionExpression: 'listingId = :pk and roomCode = :rk',
+    ExpressionAttributeValues: {
+      ':pk': '3i6cSu',
+      ':rk': '101',
+    }
   };
 
   const command = new QueryCommand(param);
