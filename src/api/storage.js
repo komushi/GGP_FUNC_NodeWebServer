@@ -246,7 +246,7 @@ module.exports.getReservation = async (params) => {
 
 module.exports.updateScanner = async (record) => {
 
-  console.log('updateScanner in: record:', record);
+  console.log('updateScanner in: record:' + JSON.stringify(record));
 
   const params = [{
     Put: {
@@ -263,7 +263,7 @@ module.exports.updateScanner = async (record) => {
 
   const result = await ddbDocClient.send(command);  
 
-  console.log('updateScanner out: result:', result);
+  console.log('updateScanner out: result:' + JSON.stringify(result));
 
   return result;
 
