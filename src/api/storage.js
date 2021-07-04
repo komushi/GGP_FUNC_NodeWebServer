@@ -274,16 +274,16 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   console.log('getScanner in: listingId:', listingId);
   console.log('getScanner in: roomCode:', roomCode);
 
-  // const param = {
-  //   TableName : TBL_SCANNER,
-  //   IndexName : IDX_SCANNER_LISTING,
-  //   FilterExpression : 'listingId = :pk',
-  //   ExpressionAttributeValues : {':pk' : listingId}
-  // };
-
   const param = {
-    TableName : TBL_SCANNER
+    TableName : TBL_SCANNER,
+    IndexName : IDX_SCANNER_LISTING,
+    FilterExpression : 'listingId = :pk',
+    ExpressionAttributeValues : {':pk' : listingId}
   };
+
+  // const param = {
+  //   TableName : TBL_SCANNER
+  // };
 
   const command = new ScanCommand(param);
 
