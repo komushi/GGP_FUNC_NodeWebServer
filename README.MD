@@ -96,3 +96,7 @@ $ aws dynamodb create-table --cli-input-json file://create-table-member.json --e
 
 $ aws dynamodb create-table --cli-input-json file://create-table-scanner.json --global-secondary-indexes file://gsi.json --endpoint-url http://192.168.11.36:8080
 ```
+
+```
+$ aws dynamodb scan --table-name GoCheckInScanner --endpoint-url http://192.168.11.36:8080
+```

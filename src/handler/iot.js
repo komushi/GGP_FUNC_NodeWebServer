@@ -3,6 +3,7 @@ const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 
 const storage = require('../api/storage');
 const shadow = require('../api/shadow');
+const scanner = require('../api/scanner');
 
 module.exports.syncReservation = async (event) => {
 
@@ -15,7 +16,8 @@ module.exports.syncReservation = async (event) => {
 
     let getShadowResult;
 
-    let memberParams = [];
+    let addMembersParam = [];
+    let deleteMembersParam = [];
     if (getReservationResult) {
 	    if (getReservationResult.version == event.version) {
 	    	console.log('ShadowReservation considered same as LocalReservation, nothing will be done');
@@ -29,13 +31,15 @@ module.exports.syncReservation = async (event) => {
 
 	    	if (getShadowResult.state.desired.members.length < getReservationResult.members.length) {
 
-	    		memberParams = getShadowResult.state.desired.members;
+	    		addMembersParam = getShadowResult.state.desired.members;
 
-	    		await scanner.deleteUsers({listingId: event.listingId, members: getReservationResult.members});
+	    		deleteMembersParam = getReservationResult.members;
+
+	    		// await scanner.deleteUsers({listingId: event.listingId, members: getReservationResult.members});
 
 	    		await storage.deleteMembers(getReservationResult.members);
 	    	} else {
-				memberParams = getShadowResult.state.desired.members.filter((member, index) => {
+				addMembersParam = getShadowResult.state.desired.members.filter((member, index) => {
 					if (getReservationResult.members[index]) {
 						return member.lastUpdateOn != getReservationResult.members[index].lastUpdateOn;	
 					} else {
@@ -49,6 +53,10 @@ module.exports.syncReservation = async (event) => {
 	    }
     }
 
+    await scanner.getScanner({
+    	listingId: event.listingId
+    });
+
     const resultUpdatedShadow = await shadow.updateReportedShadow({
     	thingName: AWS_IOT_THING_NAME,
     	shadowName: event.reservationCode,
@@ -57,7 +65,7 @@ module.exports.syncReservation = async (event) => {
 
     const result = await storage.saveReservation({
         reservation: getShadowResult.state.desired.reservation,
-        members: memberParams,
+        members: addMembersParam,
         version: resultUpdatedShadow.version
     });
 

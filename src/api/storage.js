@@ -1,6 +1,7 @@
 const TBL_RESERVATION = process.env.TBL_RESERVATION;
 const TBL_MEMBER = process.env.TBL_MEMBER;
 const TBL_SCANNER = process.env.TBL_SCANNER;
+const IDX_SCANNER_LISTING = process.env.IDX_SCANNER_LISTING;
 
 const config = {
   endpoint: process.env.DDB_ENDPOINT || 'http://localhost:8080',
@@ -25,7 +26,7 @@ const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 
 const client = new DynamoDBClient(config);
 
-const { DynamoDBDocumentClient, QueryCommand, TransactWriteCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, QueryCommand, TransactWriteCommand, DeleteCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
 
 const ddbDocClient = DynamoDBDocumentClient.from(client, translateConfig);
 
@@ -261,6 +262,27 @@ module.exports.updateScanner = async (record) => {
   const result = await ddbDocClient.send(command);  
 
   console.log('updateScanner out: result:', result);
+
+  return result;
+
+};
+
+module.exports.getScanner = async ({listingId, roomCode}) => {
+
+  console.log('getScanner in: record:', record);
+
+  const param = {
+    TableName : TBL_SCANNER,
+    IndexName : IDX_SCANNER_LISTING,
+    FilterExpression : 'listingId = :pk',
+    ExpressionAttributeValues : {':pk' : listingId}
+  };
+
+  const command = new ScanCommand(param);
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('getScanner out: result:', result);
 
   return result;
 
