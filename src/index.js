@@ -28,11 +28,20 @@ exports.handler = async function(event, context) {
 
     try {
         if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
-            const result = await storage.getScanner({
-                listingId: event.listingId
+            await storage.updateScanner({
+                terminalKey: 'd6fe7c7a63a72ed4',
+                listingId: '3i6cSu',
+                // roomCode: '101',
+                localIp: '192.168.11.106'
             });
 
-            console.log('get_scanners result: ' + JSON.stringify(result));
+            console.log('updateScanner result: ');
+
+            // const result = await storage.getScanner({
+            //     listingId: event.listingId
+            // });
+
+            // console.log('get_scanners result: ' + JSON.stringify(result));
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
