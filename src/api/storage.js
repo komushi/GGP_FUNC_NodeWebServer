@@ -310,8 +310,8 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   // };
 
   const param = new QueryCommand({
-    TableName: TBL_SCANNER,
-    IndexName : IDX_SCANNER_LISTING,
+    TableName: 'GoCheckInScanner',
+    IndexName : 'ListingRoomIndex',
     KeyConditionExpression: 'listingId = :pk',
     ExpressionAttributeValues: {':pk': listingId}
   });
