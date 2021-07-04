@@ -269,7 +269,7 @@ module.exports.updateScanner = async (record) => {
 
 };
 
-/*
+
 module.exports.getScanner = async ({listingId, roomCode}) => {
 
   console.log('getScanner in: listingId:' + listingId);
@@ -278,9 +278,10 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   const param = {
     TableName : TBL_SCANNER,
     IndexName : IDX_SCANNER_LISTING,
-    FilterExpression: 'listingId = :pk',
+    FilterExpression: 'listingId = :pk and roomCode = :rk',
     ExpressionAttributeValues: {
-      ':pk': listingId
+      ':pk': listingId,
+      ':rk': roomCode
     }    
   };
 
@@ -293,9 +294,9 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   return result;
 
 };
-*/
 
 
+/*
 module.exports.getScanner = async ({listingId, roomCode}) => {
 
   console.log('getScanner in: listingId:' + listingId);
@@ -320,3 +321,4 @@ module.exports.getScanner = async ({listingId, roomCode}) => {
   return result;
 
 };
+*/
