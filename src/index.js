@@ -31,17 +31,17 @@ exports.handler = async function(event, context) {
             let result = await storage.updateScanner({
                 terminalKey: 'd6fe7c7a63a72ed4',
                 listingId: '3i6cSu',
-                roomCode: '101',
+                // roomCode: '101',
                 localIp: '192.168.11.106'
             });
 
             result = await storage.updateScanner({
                 terminalKey: 'd6fe7c7a63a72ed41',
-                listingId: '3i6cSu',
+                listingId: '3i6cSu-2',
                 roomCode: '102',
                 localIp: '192.168.11.107'
             });
-            
+
             console.log('updateScanner result: ' + JSON.stringify(result));
 
             result = await storage.getScanner({
