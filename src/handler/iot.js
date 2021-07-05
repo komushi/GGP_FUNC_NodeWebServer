@@ -23,7 +23,6 @@ module.exports.syncReservation = async (event) => {
 	    	console.log('ShadowReservation considered same as LocalReservation, nothing will be done');
 	    	return;
 	    } else {
-
 			getShadowResult = await shadow.getShadow({
 			    thingName: AWS_IOT_THING_NAME,
 			    shadowName: event.reservationCode
@@ -36,6 +35,7 @@ module.exports.syncReservation = async (event) => {
 	    		deleteMembersParam = getReservationResult.members;
 
 	    		// await scanner.deleteUsers({listingId: event.listingId, members: getReservationResult.members});
+	    		// todo: update face info for this group
 
 	    		await storage.deleteMembers(getReservationResult.members);
 	    	} else {
@@ -46,16 +46,33 @@ module.exports.syncReservation = async (event) => {
 						return true;
 					}
 				});
-
-	    		//todo: update face info for this group				
+	    		// todo: update face info for this group
 	    	}
-
 	    }
     }
 
-    await scanner.getScanner({
-    	listingId: event.listingId
-    });
+	const scannerAddresses = await storage.getScanners();
+	if (scannerAddresses.length == 0){
+		throw new Error('No scanner registered!! Needs at least one scanner!!')
+	}
+
+	const scannerDeleteResults = await Promise.all(deleteMembersParam.map(async (member) => {
+		return 	await scanner.deleteUser({
+			reservation: getShadowResult.state.desired.reservation,
+			userParam: member
+		});
+	}));
+
+	console.log('scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
+
+	const scannerAddResults = await Promise.all(addMembersParam.map(async (member) => {
+		return 	await scanner.addUser({
+			reservation: getShadowResult.state.desired.reservation,
+			userParam: member
+		});
+	}));
+
+	console.log('scannerAddResults: ' + JSON.stringify(scannerAddResults));
 
     const resultUpdatedShadow = await shadow.updateReportedShadow({
     	thingName: AWS_IOT_THING_NAME,
@@ -74,3 +91,41 @@ module.exports.syncReservation = async (event) => {
 	return result;
 
 };
+
+// const getScannerParams = async ({reservation, addMembersParam, deleteMembersParam}) => {
+
+// 	console.log('getDelMemberParams in: reservation:' + JSON.stringify(reservation));
+// 	console.log('getDelMemberParams in: addMembersParam:' + JSON.stringify(addMembersParam));
+// 	console.log('getDelMemberParams in: deleteMembersParam:' + JSON.stringify(deleteMembersParam));
+
+//     const scannerResult = await storage.getScanner({
+//     	listingId: reservation.listingId
+//     });
+
+//     let scannerAddresses = new Map();
+//     if (scannerResult.Count == 0) {
+// 	    const allScannerResult = await storage.getScanner();
+// 	    allScannerResult.Items.forEach(item => {
+// 	    	scannerAddresses.add(item.localIp);
+// 	    });
+//     } else if (scannerResult.Count == 1) {
+//     	scannerAddresses.add(scannerResult.Items[0].localIp);
+//     } else if (scannerResult.Count > 1) {
+// 	    allScannerResult.Items.forEach(item => {
+// 	    	scannerAddresses.add(item.localIp);
+// 	    });
+//     }
+
+//     let params;
+//     if (scannerAddress) {
+//     	params = {scannerAddress, deleteMembersParam};
+//     } else {
+
+//     }
+
+// 	return params;
+// };
+
+
+
+

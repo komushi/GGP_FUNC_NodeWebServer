@@ -269,27 +269,47 @@ module.exports.updateScanner = async (record) => {
 
 };
 
-module.exports.getScanner = async ({listingId, roomCode}) => {
+module.exports.getScanners = async ({listingId, roomCode}) => {
 
-  console.log('getScanner in: listingId:' + listingId);
-  console.log('getScanner in: roomCode:' + roomCode);
+  console.log('getScanners in: listingId:' + listingId);
+  console.log('getScanners in: roomCode:' + roomCode);
 
-  const param = {
-    TableName : TBL_SCANNER,
-    IndexName : IDX_SCANNER_LISTING,
-    FilterExpression: 'listingId = :pk',
-    ExpressionAttributeValues: {
-      ':pk': listingId
-    }    
-  };
+  let param;
+
+  if (listingId) {
+    if (roomCode) {
+      param = {
+        TableName : TBL_SCANNER,
+        FilterExpression: 'listingId = :listingId and roomCode = :roomCode',
+        ExpressionAttributeValues: {
+          ':listingId': listingId,
+          ':roomCode': roomCode
+        }    
+      };
+    } else {
+      param = {
+        TableName : TBL_SCANNER,
+        FilterExpression: 'listingId = :listingId',
+        ExpressionAttributeValues: {
+          ':listingId': listingId
+        }    
+      };
+    }
+  } else {
+    param = {
+      TableName : TBL_SCANNER
+    };
+  }
 
   const command = new ScanCommand(param);
 
   const result = await ddbDocClient.send(command);  
 
-  console.log('getScanner out: result:' + JSON.stringify(result));
+  console.log('getScanners result:' + JSON.stringify(result));
 
-  return result;
+  return result.Items.map(item => {
+    item.localIp
+  });
 
 };
 
