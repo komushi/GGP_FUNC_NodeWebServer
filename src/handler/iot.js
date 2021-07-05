@@ -51,7 +51,7 @@ module.exports.syncReservation = async (event) => {
 	    }
     }
 
-	const scannerAddresses = await storage.getScanners();
+	const scannerAddresses = await storage.getScanners({});
 	if (scannerAddresses.length == 0){
 		throw new Error('No scanner registered!! Needs at least one scanner!!')
 	}
