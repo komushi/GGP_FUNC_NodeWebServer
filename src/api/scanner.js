@@ -24,6 +24,9 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
   bodyFormData.append('userCode', `userCode`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+    
+    console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
+
     return await axios({
       method: 'post',
       url: `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`,
@@ -58,6 +61,9 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+
+    console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
+
     return await axios({
       method: 'post',
       url: `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`,
