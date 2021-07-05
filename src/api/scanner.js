@@ -3,6 +3,7 @@ const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
 
 const axios = require('axios');
+FormData = require('form-data');
 
 const storage = require('../api/storage');
 
