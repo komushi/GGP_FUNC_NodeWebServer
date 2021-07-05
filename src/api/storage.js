@@ -307,9 +307,7 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
 
   console.log('getScanners result:' + JSON.stringify(result));
 
-  return result.Items.map(item => {
-    item.localIp
-  });
+  return result.Items.map(item => item.localIp);
 
 };
 
