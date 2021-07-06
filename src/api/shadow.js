@@ -90,7 +90,8 @@ module.exports.deleteShadow = async (params) => {
 
 const updateShadow = async (params) => {
 
-	console.log('updateShadow in: params:' + JSON.stringify(params));
+	console.log('updateShadow in: params.thingName:' + JSON.stringify(params.thingName));
+	console.log('updateShadow in: params.shadowName:' + JSON.stringify(params.shadowName));
 
 	const client = new IoTDataPlaneClient({});
 

@@ -28,7 +28,7 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
     console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
-    // console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
+    console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
       method: 'POST',
@@ -62,8 +62,8 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberId}`);
   bodyFormData.append('group', `${userParam.reservationCode}`);
   bodyFormData.append('memberId', `${userParam.memberId}`);
-  bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
-  bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
+  // bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
+  // bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
