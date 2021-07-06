@@ -28,12 +28,14 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
     console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
-    console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
+    // console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
-    return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
+    const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
       method: 'POST',
       data: bodyFormData
-    }).json();
+    });
+
+    return await response.json();
   }));
 
   console.log('deleteUser out: results:' + JSON.stringify(results));
@@ -66,12 +68,14 @@ module.exports.addUser = async ({reservation, userParam}) => {
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
     console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
-    console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
+    // console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
-    return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
+    const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
       method: 'POST',
       data: bodyFormData
-    }).json();
+    });
+
+    return await response.json();
   }));    
 
   console.log('addUser out: results:' + JSON.stringify(results));
@@ -92,10 +96,12 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
   const bodyFormData = new FormData();
   bodyFormData.append('userCode', userCodes);
 
-  return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
+  const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
     method: 'POST',
     data: bodyFormData
-  }).json();
+  });
+
+  return await response.json();
 
 };
 
@@ -118,10 +124,12 @@ module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
 
 
   const results = await Promise.all(params.map(async (param) => {
-    return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
+    const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
       method: 'POST',
       data: param
-    }).json();
+    });
+
+    return await response.json();
   }));
 
   return results;
