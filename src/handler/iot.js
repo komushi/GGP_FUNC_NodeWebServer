@@ -34,22 +34,22 @@ module.exports.syncReservation = async (event) => {
 
 	    		deleteMembersParam = getReservationResult.members;
 
-	    		// await scanner.deleteUsers({listingId: event.listingId, members: getReservationResult.members});
-	    		// todo: update face info for this group
-
 	    		await storage.deleteMembers(getReservationResult.members);
 	    	} else {
 				addMembersParam = getShadowResult.state.desired.members.filter((member, index) => {
 					if (getReservationResult.members[index]) {
-						return member.lastUpdateOn != getReservationResult.members[index].lastUpdateOn;	
+						// return member.lastUpdateOn != getReservationResult.members[index].lastUpdateOn;
+						return true;
 					} else {
 						return true;
 					}
 				});
-	    		// todo: update face info for this group
 	    	}
 	    }
     }
+
+    console.log('deleteMembersParam: ' + JSON.stringify(deleteMembersParam));
+    console.log('addMembersParam: ' + JSON.stringify(addMembersParam));
 
 	const scannerAddresses = await storage.getScanners({});
 	if (scannerAddresses.length == 0){
@@ -66,7 +66,7 @@ module.exports.syncReservation = async (event) => {
 	console.log('scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
 
 	const scannerAddResults = await Promise.all(addMembersParam.map(async (member) => {
-		return 	await scanner.addUser({
+		return await scanner.addUser({
 			reservation: getShadowResult.state.desired.reservation,
 			userParam: member
 		});
