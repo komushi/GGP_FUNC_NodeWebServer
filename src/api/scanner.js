@@ -2,8 +2,8 @@ const SCANNER_PORT = process.env.SCANNER_PORT;
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
 
-const axios = require('axios');
-FormData = require('form-data');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
 
 const storage = require('../api/storage');
 
@@ -21,17 +21,15 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
   console.log('deleteUser userCode:' + userCode);
 
   const bodyFormData = new FormData();
-  bodyFormData.append('userCode', `userCode`);
+  bodyFormData.append('userCode', userCode);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
     console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
 
-    return await axios({
-      method: 'post',
-      url: `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`,
-      data: bodyFormData,
-      headers: { 'Content-Type': 'multipart/form-data' },
+    return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
+      method: 'POST',
+      data: bodyFormData
     });
   }));
 
@@ -62,13 +60,9 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
-    console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
-
-    return await axios({
-      method: 'post',
-      url: `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`,
-      data: bodyFormData,
-      headers: { 'Content-Type': 'multipart/form-data' },
+    return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
+      method: 'POST',
+      data: bodyFormData
     });
   }));    
 
@@ -90,12 +84,11 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
   const bodyFormData = new FormData();
   bodyFormData.append('userCode', userCodes);
 
-  return await axios({
-    method: 'post',
-    url: `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`,
-    data: bodyFormData,
-    headers: { 'Content-Type': 'multipart/form-data' },
+  return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
+    method: 'POST',
+    data: bodyFormData
   });
+
 };
 
 module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
@@ -112,17 +105,15 @@ module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
     bodyFormData.append('group', `${user.reservationCode}`);
     bodyFormData.append('memberId', `${user.memberId}`);
 
-    return {
-      method: 'post',
-      url: `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`,
-      data: bodyFormData,
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }
+    return bodyFormData;
   });
 
 
   const results = await Promise.all(params.map(async (param) => {
-      return await axios(param);
+    return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
+      method: 'POST',
+      data: param
+    });
   }));
 
   return results;
