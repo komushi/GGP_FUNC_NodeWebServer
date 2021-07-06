@@ -16,6 +16,8 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
     roomCode: userParam.roomCode
   });
 
+  console.log('deleteUser scannerAddresses:' + JSON.stringify(scannerAddresses));
+
   const userCode = `${member.reservationCode}-${member.memberNo}#_`;
 
   console.log('deleteUser userCode:' + userCode);
@@ -47,6 +49,8 @@ module.exports.addUser = async ({reservation, userParam}) => {
     roomCode: userParam.roomCode
   });
 
+  console.log('addUser scannerAddresses:' + JSON.stringify(scannerAddresses));
+
   const bodyFormData = new FormData();
   bodyFormData.append('userId', Date.now());
   bodyFormData.append('imgUrl', userParam.faceImgUrl);
@@ -59,6 +63,8 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+
+    console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
 
     return await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
       method: 'POST',
