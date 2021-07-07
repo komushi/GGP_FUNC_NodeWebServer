@@ -115,9 +115,9 @@ module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
     bodyFormData.append('imgUrl', user.faceImgUrl);
     bodyFormData.append('userName', user.fullName);
     bodyFormData.append('type', 2);
-    bodyFormData.append('userCode', `${user.reservationCode}-${user.memberId}`);
+    bodyFormData.append('userCode', `${user.reservationCode}-${user.memberNo}`);
     bodyFormData.append('group', `${user.reservationCode}`);
-    bodyFormData.append('memberId', `${user.memberId}`);
+    bodyFormData.append('memberId', `${user.memberNo}`);
 
     return bodyFormData;
   });
