@@ -118,6 +118,8 @@ module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
     bodyFormData.append('userCode', `${user.reservationCode}-${user.memberNo}`);
     bodyFormData.append('group', `${user.reservationCode}`);
     bodyFormData.append('memberId', `${user.memberNo}`);
+    bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
+    bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
 
     return bodyFormData;
   });
