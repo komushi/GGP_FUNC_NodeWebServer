@@ -104,40 +104,39 @@ module.exports.syncReservation = async (event) => {
 
 };
 
-// const getScannerParams = async ({reservation, addMembersParam, deleteMembersParam}) => {
+/*
+const getScannerParams = async ({reservation, addMembersParam, deleteMembersParam}) => {
 
-// 	console.log('getDelMemberParams in: reservation:' + JSON.stringify(reservation));
-// 	console.log('getDelMemberParams in: addMembersParam:' + JSON.stringify(addMembersParam));
-// 	console.log('getDelMemberParams in: deleteMembersParam:' + JSON.stringify(deleteMembersParam));
+	console.log('getDelMemberParams in: reservation:' + JSON.stringify(reservation));
+	console.log('getDelMemberParams in: addMembersParam:' + JSON.stringify(addMembersParam));
+	console.log('getDelMemberParams in: deleteMembersParam:' + JSON.stringify(deleteMembersParam));
 
-//     const scannerResult = await storage.getScanner({
-//     	listingId: reservation.listingId
-//     });
+    const scannerResult = await storage.getScanner({
+    	listingId: reservation.listingId
+    });
 
-//     let scannerAddresses = new Map();
-//     if (scannerResult.Count == 0) {
-// 	    const allScannerResult = await storage.getScanner();
-// 	    allScannerResult.Items.forEach(item => {
-// 	    	scannerAddresses.add(item.localIp);
-// 	    });
-//     } else if (scannerResult.Count == 1) {
-//     	scannerAddresses.add(scannerResult.Items[0].localIp);
-//     } else if (scannerResult.Count > 1) {
-// 	    allScannerResult.Items.forEach(item => {
-// 	    	scannerAddresses.add(item.localIp);
-// 	    });
-//     }
+    let scannerAddresses = new Map();
+    if (scannerResult.Count == 0) {
+	    const allScannerResult = await storage.getScanner();
+	    allScannerResult.Items.forEach(item => {
+	    	scannerAddresses.add(item.localIp);
+	    });
+    } else if (scannerResult.Count == 1) {
+    	scannerAddresses.add(scannerResult.Items[0].localIp);
+    } else if (scannerResult.Count > 1) {
+	    allScannerResult.Items.forEach(item => {
+	    	scannerAddresses.add(item.localIp);
+	    });
+    }
 
-//     let params;
-//     if (scannerAddress) {
-//     	params = {scannerAddress, deleteMembersParam};
-//     } else {
+    let params;
+    if (scannerAddress) {
+    	params = {scannerAddress, deleteMembersParam};
+    } else {
 
-//     }
+    }
 
-// 	return params;
-// };
-
-
-
+	return params;
+};
+*/
 

@@ -2,7 +2,6 @@ const SCANNER_PORT = process.env.SCANNER_PORT;
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
 
-// const fetch = require('node-fetch');
 const got = require('got');
 const FormData = require('form-data');
 
@@ -35,15 +34,7 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
       body: bodyFormData
     });
 
-    return response.body;
-/*
-    const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
-      method: 'POST',
-      data: bodyFormData
-    });
-
-    return await response.json();
-*/
+    return JSON.parse(response.body);
 
   }));
 
@@ -71,8 +62,8 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);
   bodyFormData.append('group', `${userParam.reservationCode}`);
   bodyFormData.append('memberId', `${userParam.memberNo}`);
-  // bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
-  // bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
+  bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
+  bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
@@ -83,16 +74,8 @@ module.exports.addUser = async ({reservation, userParam}) => {
       body: bodyFormData
     });
 
-    return response.body;
+    return JSON.parse(response.body);
 
-/*
-    const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
-      method: 'POST',
-      data: bodyFormData
-    });
-
-    return await response.json();
-*/
   }));    
 
   console.log('addUser out: results:' + JSON.stringify(results));
