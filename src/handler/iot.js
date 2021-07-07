@@ -56,23 +56,35 @@ module.exports.syncReservation = async (event) => {
 		throw new Error('No scanner registered!! Needs at least one scanner!!')
 	}
 
-	const scannerDeleteResults = await Promise.all(deleteMembersParam.map(async (member) => {
+	const deleteResponse = await Promise.all(deleteMembersParam.map(async (member) => {
 		return 	await scanner.deleteUser({
 			reservation: getShadowResult.state.desired.reservation,
 			userParam: member
 		});
 	}));
 
+	const scannerDeleteResults = deleteResponse.flatMap(x => x);
+
 	console.log('scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
 
-	const scannerAddResults = await Promise.all(addMembersParam.map(async (member) => {
+	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
+		throw new Error('There are scanner.deleteUser errors and process terminated!');
+	}
+
+	const addResponse = await Promise.all(addMembersParam.map(async (member) => {
 		return await scanner.addUser({
 			reservation: getShadowResult.state.desired.reservation,
 			userParam: member
 		});
 	}));
 
+	const scannerAddResults = addResponse.flatMap(x => x);
+
 	console.log('scannerAddResults: ' + JSON.stringify(scannerAddResults));
+
+	if (scannerAddResults.filter(x => x.code != 0).length > 0) {
+		throw new Error('There are scanner.addUser errors and process terminated!');
+	}
 
     const resultUpdatedShadow = await shadow.updateReportedShadow({
     	thingName: AWS_IOT_THING_NAME,

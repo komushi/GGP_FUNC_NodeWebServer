@@ -62,8 +62,8 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);
   bodyFormData.append('group', `${userParam.reservationCode}`);
   bodyFormData.append('memberId', `${userParam.memberNo}`);
-  bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
-  bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
+  // bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
+  // bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
