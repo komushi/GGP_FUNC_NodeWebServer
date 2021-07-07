@@ -62,13 +62,13 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);
   bodyFormData.append('group', `${userParam.reservationCode}`);
   bodyFormData.append('memberId', `${userParam.memberNo}`);
-  bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
-  bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
+  bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
+  bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
     console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
-    // console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
+    console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
       method: 'POST',
