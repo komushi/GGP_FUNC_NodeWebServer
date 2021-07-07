@@ -59,11 +59,11 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('imgUrl', userParam.faceImgUrl);
   bodyFormData.append('userName', userParam.fullName);
   bodyFormData.append('type', 2);
-  bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberId}`);
+  bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);
   bodyFormData.append('group', `${userParam.reservationCode}`);
-  bodyFormData.append('memberId', `${userParam.memberId}`);
-  // bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
-  // bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
+  bodyFormData.append('memberId', `${userParam.memberNo}`);
+  bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
+  bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
 
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
@@ -118,8 +118,6 @@ module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
     bodyFormData.append('userCode', `${user.reservationCode}-${user.memberNo}`);
     bodyFormData.append('group', `${user.reservationCode}`);
     bodyFormData.append('memberId', `${user.memberNo}`);
-    bodyFormData.append('beginDate', `${userParam.checkInDate} 14:00`);
-    bodyFormData.append('endDate', `${userParam.checkOutDate} 11:00`);
 
     return bodyFormData;
   });
