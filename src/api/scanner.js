@@ -2,7 +2,8 @@ const SCANNER_PORT = process.env.SCANNER_PORT;
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
 
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
+const got = require('got');
 const FormData = require('form-data');
 
 const storage = require('../api/storage');
@@ -30,12 +31,20 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
     console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
     console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
+    const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
+      body: bodyFormData
+    });
+
+    return response.body;
+/*
     const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
       method: 'POST',
       data: bodyFormData
     });
 
     return await response.json();
+*/
+
   }));
 
   console.log('deleteUser out: results:' + JSON.stringify(results));
@@ -70,12 +79,20 @@ module.exports.addUser = async ({reservation, userParam}) => {
     console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
     console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
+    const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
+      body: bodyFormData
+    });
+
+    return response.body;
+
+/*
     const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
       method: 'POST',
       data: bodyFormData
     });
 
     return await response.json();
+*/
   }));    
 
   console.log('addUser out: results:' + JSON.stringify(results));
@@ -83,6 +100,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
   return results;
 };
 
+/*
 module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
   console.log('deleteUsers in: scannerAddress:' + scannerAddress);
   console.log('deleteUsers in: deleteUsersParam:' + JSON.stringify(deleteUsersParam));
@@ -148,3 +166,4 @@ module.exports.updateScanner = async ({scannerAddress, deleteUsersParam, addUser
 
   return;
 };
+*/
