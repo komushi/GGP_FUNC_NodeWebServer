@@ -20,7 +20,7 @@ module.exports.findUser = async ({reservation, userName, userCode}) => {
       listingId: reservation.listingId
     });    
   } else {
-    scannerAddresses = await storage.getScanners();
+    scannerAddresses = await storage.getScanners({});
   }
 
   console.log('findUser scannerAddresses:' + JSON.stringify(scannerAddresses));
