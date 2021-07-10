@@ -1,7 +1,7 @@
 const SCANNER_PORT = process.env.SCANNER_PORT;
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
-const USER_FIND_API = '/service2dev/api/findUser';
+const USER_FIND_API = 'service2dev/api/findUser';
 
 const got = require('got');
 const FormData = require('form-data');
