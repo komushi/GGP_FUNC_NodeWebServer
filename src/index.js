@@ -28,6 +28,7 @@ exports.handler = async function(event, context) {
 
     try {
         if (context.clientContext.Custom.subject.indexOf('find_user') > -1) {
+            console.log('event.userName: ' + event.userName);
             const result = await scanner.findUser({
                 userName: event.userName
             });
