@@ -18,7 +18,7 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
 
   // console.log('deleteUser scannerAddresses:' + JSON.stringify(scannerAddresses));
 
-  const userCode = `${member.reservationCode}-${member.memberNo}#_`;
+  const userCode = `${userParam.reservationCode}-${userParam.memberNo}#_`;
 
   console.log('deleteUser userCode:' + userCode);
 
