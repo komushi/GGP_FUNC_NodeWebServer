@@ -10,7 +10,7 @@ const storage = require('../api/storage');
 
 module.exports.findUser = async ({reservation, userName, userCode}) => {
   console.log('findUser in: reservation:' + JSON.stringify(reservation));
-  console.log('findUser in: userName:' + reservation);
+  console.log('findUser in: userName:' + userName);
   console.log('findUser in: userCode:' + userCode);
 
   let scannerAddresses = [];

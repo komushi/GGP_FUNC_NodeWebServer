@@ -271,8 +271,8 @@ module.exports.updateScanner = async (record) => {
 
 module.exports.getScanners = async ({listingId, roomCode}) => {
 
-  console.log('getScanners in: listingId:' + listingId);
-  console.log('getScanners in: roomCode:' + roomCode);
+  // console.log('getScanners in: listingId:' + listingId);
+  // console.log('getScanners in: roomCode:' + roomCode);
 
   let param;
 
