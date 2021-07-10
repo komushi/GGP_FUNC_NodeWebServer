@@ -1,11 +1,60 @@
 const SCANNER_PORT = process.env.SCANNER_PORT;
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
+const USER_FIND_API = '/service2dev/api/findUser';
 
 const got = require('got');
 const FormData = require('form-data');
 
 const storage = require('../api/storage');
+
+module.exports.findUser = async ({reservation, userName, userCode}) => {
+  console.log('findUser in: reservation:' + JSON.stringify(reservation));
+  console.log('findUser in: userName:' + reservation);
+  console.log('findUser in: userCode:' + userCode);
+
+  let scannerAddresses = [];
+
+  if (reservation) {
+    scannerAddresses = await storage.getScanners({
+      listingId: reservation.listingId
+    });    
+  } else {
+    scannerAddresses = await storage.getScanners();
+  }
+
+  console.log('findUser scannerAddresses:' + JSON.stringify(scannerAddresses));
+
+  if (scannerAddresses.length == 0) {
+    throw new Error('No Scanner Addresses found!!');
+  }
+
+  const bodyFormData = new FormData();
+  if (userName) {
+    bodyFormData.append('name', userName);
+  } else if (userCode) {
+    bodyFormData.append('name', userCode);  
+  } else {
+    throw new Error('Need either userName or userCode to find a user'); 
+  }
+  
+  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+    
+    console.log('findUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`);
+    console.log('findUser bodyFormData:' + JSON.stringify(bodyFormData));
+
+    const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`, {
+      body: bodyFormData
+    });
+
+    return JSON.parse(response.body);
+
+  }));
+
+  console.log('findUser out: results:' + JSON.stringify(results));
+
+  return results;
+};
 
 module.exports.deleteUser = async ({reservation, userParam}) => {
   console.log('deleteUser in: reservation:' + JSON.stringify(reservation));
@@ -28,7 +77,7 @@ module.exports.deleteUser = async ({reservation, userParam}) => {
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
     console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
-    console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
+    console.log('deleteUser bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
       body: bodyFormData
