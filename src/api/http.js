@@ -40,7 +40,7 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   const response = {
       "code":0,
-      "message":"Good!" 
+      "message": `userName: ${payload.userName}`
   };
 
   res.send(response);
