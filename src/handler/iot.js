@@ -16,9 +16,9 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 	});
 
     let reportedMembers = new Map(Object.entries(getShadowResult.state.reported.members));
-    console.log('reportedMembers:' + JSON.stringify(reportedMembers));
+    console.log('reportedMembers:' + reportedMembers);
     let desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));
-    console.log('desiredMembers:' + JSON.stringify(desiredMembers));
+    console.log('desiredMembers:' + desiredMembers);
 	let deltaMembers = new Map();
 	if (getShadowResult.state.delta) {
 		if (getShadowResult.state.delta.members) {
