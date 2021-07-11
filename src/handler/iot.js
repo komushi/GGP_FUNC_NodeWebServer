@@ -30,7 +30,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
   			toDeleteMembers.set(key, value);
   		}
 	});
-/*
+
 	const scannerAddresses = await storage.getScanners({});
 	if (scannerAddresses.length == 0){
 		throw new Error('No scanner registered!! Needs at least one scanner!!');
@@ -54,7 +54,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
 		throw new Error('There are scanner.deleteUser errors and process terminated!');
 	}
-*/
+
 	const reportedState = Object.assign({}, getShadowResult.state.delta);
 
 	toDeleteMembers.forEach((value, key) => {
@@ -69,14 +69,6 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
     	shadowName: reservationCode,
     	reportedState: reportedState
     });	
-
-    // let deltaReservation = new Map();
-
-
-	// if (getShadowResult.state.delta.reservation) {
-	// 	deltaReservation = getShadowResult.state.delta.reservation;
-	// }
-
 
 	return;
 
