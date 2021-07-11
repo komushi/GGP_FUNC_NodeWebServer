@@ -10,7 +10,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 
 	// console.log('syncReservationV2 in: event:' + JSON.stringify(event));
 
-	const getShadowResult = await getShadow({
+	const getShadowResult = await shadow.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
 	    shadowName: reservationCode
 	});
