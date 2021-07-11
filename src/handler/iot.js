@@ -59,10 +59,10 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 	// add/update users to scanner
 	const scannerUpdatePromises = [];
 
-	deltaMembers.forEach(async (member) => {
+	deltaMembers.forEach(async (value, key) => {
 		scannerUpdatePromises.push(scanner.addUser({
 			reservation: getShadowResult.state.desired.reservation,
-			userParam: member
+			userParam: desiredMembers[key]
 		}));
 	});
 
