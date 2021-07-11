@@ -15,8 +15,6 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 	    shadowName: reservationCode
 	});
 
-	// console.log('getShadowResult.state: ' + JSON.stringify(getShadowResult.state));
-
     let reportedMembers = new Map(Object.entries(getShadowResult.state.reported.members));
     let desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));
 	let deltaMembers = new Map();
@@ -38,6 +36,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 		throw new Error('No scanner registered!! Needs at least one scanner!!');
 	}
 
+	// delete users on scanner
 	const scannerDeletePromises = [];
 
 	toDeleteMembers.forEach(async (member) => {
@@ -47,9 +46,9 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 		}));
 	})
 
-	const deleteResponse = Promise.all(scannerDeletePromises);
+	const scannerDeleteResponse = await Promise.all(scannerDeletePromises);
 
-	const scannerDeleteResults = deleteResponse.flatMap(x => x);
+	const scannerDeleteResults = scannerDeleteResponse.flatMap(x => x);
 
 	console.log('scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
 
@@ -57,6 +56,27 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 		throw new Error('There are scanner.deleteUser errors and process terminated!');
 	}
 
+	// add/update users to scanner
+	const scannerUpdatePromises = [];
+
+	deltaMembers.forEach(async (member) => {
+		scannerUpdatePromises.push(scanner.addUser({
+			reservation: getShadowResult.state.desired.reservation,
+			userParam: member
+		}));
+	});
+
+	const scannerUpdateResponse = await Promise.all(scannerUpdatePromises);
+
+	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
+
+	console.log('scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
+
+	if (scannerUpdateResults.filter(x => x.code != 0).length > 0) {
+		throw new Error('There are scanner.addUser errors and process terminated!');
+	}
+
+	// update shadow
 	const reportedState = Object.assign({}, getShadowResult.state.delta);
 
 	toDeleteMembers.forEach((value, key) => {
