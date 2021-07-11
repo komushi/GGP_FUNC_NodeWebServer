@@ -90,7 +90,16 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
     	thingName: AWS_IOT_THING_NAME,
     	shadowName: reservationCode,
     	reportedState: reportedState
-    });	
+    });
+
+    // update local ddb
+    await storage.deleteMembers(Array.from(toDeleteMembers.values()));
+
+    await storage.saveReservation({
+        reservation: getShadowResult.state.desired.reservation,
+        members: Array.from(desiredMembers.values()),
+        version: resultUpdatedShadow.version
+    });
 
 	return;
 
