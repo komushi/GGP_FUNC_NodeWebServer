@@ -64,7 +64,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 		reportedState['members'][key] = null;
 	});
 
-    const resultUpdatedShadow = await updateReportedShadow({
+    const resultUpdatedShadow = await shadow.updateReportedShadow({
     	thingName: AWS_IOT_THING_NAME,
     	shadowName: reservationCode,
     	reportedState: reportedState
