@@ -303,7 +303,19 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
 
   const command = new ScanCommand(param);
 
-  const result = await ddbDocClient.send(command);  
+  let result;
+  
+  try {
+    result = await ddbDocClient.send(command);  
+  } catch (err) {
+    console.error(`getScanners with listingId: ${listingId} and roomCode: ${roomCode} has err.name: ${err.name}`);
+    console.error(`getScanners with listingId: ${listingId} and roomCode: ${roomCode} has err.message: ${err.message}`);
+    console.error(err.stack);
+    console.trace();
+
+    return [];
+  }
+  
 
   console.log('getScanners result:' + JSON.stringify(result));
 
