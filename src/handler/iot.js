@@ -65,13 +65,13 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 		console.log('deltaMembers key:' + key);
 
 		const userParam = desiredMembers.get(key);
-		if (!value.hasOwnProperty(COL_FACE_IMG_URL)) {
-			delete userParam[COL_FACE_IMG_URL];
-		}
+		// if (!value.hasOwnProperty(COL_FACE_IMG_URL)) {
+		// 	delete userParam[COL_FACE_IMG_URL];
+		// }
 
 		scannerUpdatePromises.push(scanner.addUser({
 			reservation: getShadowResult.state.desired.reservation,
-			userParam: desiredMembers.get(key)
+			userParam: userParam
 		}));
 	});
 
