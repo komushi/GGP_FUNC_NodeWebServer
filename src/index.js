@@ -29,10 +29,25 @@ exports.handler = async function(event, context) {
     try {
         if (context.clientContext.Custom.subject.indexOf('find_user') > -1) {
             console.log('event.userName: ' + event.userName);
+            console.log('event.userCode: ' + event.userCode);
             const result = await scanner.findUser({
                 userName: event.userName,
                 userCode: event.userCode
             });
+
+            // console.log('findUser result: ' + JSON.stringify(result));
+
+        } else if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
+            console.log('event.listingId: ' + event.listingId);
+            console.log('event.roomCode: ' + event.roomCode);
+            
+            const scannerAddresses = await storage.getScanners({
+                listingId: event.listingId,
+                roomCode: event.roomCode
+            });
+            if (scannerAddresses.length == 0){
+                throw new Error('No scanner registered!! Needs at least one scanner!!');
+            }
 
             // console.log('findUser result: ' + JSON.stringify(result));
 
