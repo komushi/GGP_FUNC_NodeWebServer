@@ -21,7 +21,9 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
     let desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));
 	let deltaMembers = new Map();
 	if (getShadowResult.state.delta) {
-		deltaMembers = new Map(Object.entries(getShadowResult.state.delta.members));
+		if (getShadowResult.state.delta.members) {
+			deltaMembers = new Map(Object.entries(getShadowResult.state.delta.members));	
+		}
 	}
 
 	const toDeleteMembers = new Map();
