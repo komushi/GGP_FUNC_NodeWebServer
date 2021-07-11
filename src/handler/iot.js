@@ -16,9 +16,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 	});
 
     let reportedMembers = new Map(Object.entries(getShadowResult.state.reported.members));
-    console.log('reportedMembers:' + reportedMembers);
     let desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));
-    console.log('desiredMembers:' + desiredMembers);
 	let deltaMembers = new Map();
 	if (getShadowResult.state.delta) {
 		if (getShadowResult.state.delta.members) {
@@ -66,7 +64,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 		console.log('deltaMembers key:' + key);
 		scannerUpdatePromises.push(scanner.addUser({
 			reservation: getShadowResult.state.desired.reservation,
-			userParam: desiredMembers[key]
+			userParam: desiredMembers.get(key)
 		}));
 	});
 
