@@ -104,7 +104,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
   // console.log('addUser scannerAddresses:' + JSON.stringify(scannerAddresses));
 
   const bodyFormData = new FormData();
-  bodyFormData.append('userId', Date.now());
+  // bodyFormData.append('userId', Date.now());
   bodyFormData.append('imgUrl', userParam.faceImgUrl);
   bodyFormData.append('userName', userParam.fullName);
   bodyFormData.append('type', 2);
