@@ -1,4 +1,6 @@
 const SCANNER_PORT = process.env.SCANNER_PORT;
+const COL_FACE_IMG_URL = process.env.COL_FACE_IMG_URL;
+
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
 const USER_FIND_API = 'service2dev/api/findUser';
@@ -105,7 +107,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
   const bodyFormData = new FormData();
   // bodyFormData.append('userId', Date.now());
-  bodyFormData.append('imgUrl', userParam.faceImgUrl);
+  bodyFormData.append('imgUrl', userParam[COL_FACE_IMG_URL]);
   bodyFormData.append('userName', userParam.fullName);
   bodyFormData.append('type', 2);
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);

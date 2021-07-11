@@ -1,5 +1,6 @@
 // iot-handler
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
+const COL_FACE_IMG_URL = process.env.COL_FACE_IMG_URL;
 
 const storage = require('../api/storage');
 const shadow = require('../api/shadow');
@@ -62,6 +63,12 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 	deltaMembers.forEach(async (value, key) => {
 		console.log('deltaMembers value:' + JSON.stringify(value));
 		console.log('deltaMembers key:' + key);
+
+		const userParam = desiredMembers.get(key);
+		if (!value.hasOwnProperty(COL_FACE_IMG_URL)) {
+			delete userParam[COL_FACE_IMG_URL];
+		}
+
 		scannerUpdatePromises.push(scanner.addUser({
 			reservation: getShadowResult.state.desired.reservation,
 			userParam: desiredMembers.get(key)
