@@ -107,7 +107,9 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
   const bodyFormData = new FormData();
   // bodyFormData.append('userId', Date.now());
-  bodyFormData.append('imgUrl', userParam[COL_FACE_IMG_URL]);
+  if (userParam[COL_FACE_IMG_URL]) {
+    bodyFormData.append('imgUrl', userParam[COL_FACE_IMG_URL]);
+  }
   bodyFormData.append('userName', userParam.fullName);
   bodyFormData.append('type', 2);
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);
