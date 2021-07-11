@@ -42,22 +42,49 @@ module.exports.getShadow = async (params) => {
 
 };
 
-module.exports.updateReportedShadow = async (params) => {
+module.exports.updateReportedShadow = async ({thingName, shadowName, reportedState}) => {
 
-	console.log('updateReportedShadow in: params:' + JSON.stringify(params));
+	console.log('updateReportedShadow in: thingName:' + thingName);
+	console.log('updateReportedShadow in: shadowName:' + shadowName);
+	console.log('updateReportedShadow in: reportedState:' + JSON.stringify(reportedState));
+
+	let newParams = {
+		thingName: thingName
+	}
+
+	if (shadowName) {
+		newParams.shadowName = shadowName;
+	}
+
+	if (reportedState) {
+		newParams.payload = Buffer.from(JSON.stringify({
+            "state": {
+                "reported": reportedState
+            }
+		}));
+	}
+
+	return await updateShadow(newParams);
+};
+
+module.exports.updateDeltaShadow = async ({thingName, shadowName, deltaState}) => {
+
+	console.log('updateDeltaShadow in: thingName:' + thingName);
+	console.log('updateDeltaShadow in: shadowName:' + shadowName);
+	console.log('updateDeltaShadow in: deltaState:' + JSON.stringify(deltaState));
 
 	let newParams = {
 		thingName: params.thingName
 	}
 
-	if (params.shadowName) {
-		newParams.shadowName = params.shadowName;
+	if (shadowName) {
+		newParams.shadowName = shadowName;
 	}
 
-	if (params.reportedState) {
+	if (deltaState) {
 		newParams.payload = Buffer.from(JSON.stringify({
             "state": {
-                "reported": params.reportedState
+                "delta": deltaState
             }
 		}));
 	}

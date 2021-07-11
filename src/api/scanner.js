@@ -8,16 +8,16 @@ const FormData = require('form-data');
 
 const storage = require('../api/storage');
 
-module.exports.findUser = async ({reservation, userName, userCode}) => {
-  console.log('findUser in: reservation:' + JSON.stringify(reservation));
+module.exports.findUser = async ({listingId, userName, userCode}) => {
+  console.log('findUser in: listingId:' + listingId);
   console.log('findUser in: userName:' + userName);
   console.log('findUser in: userCode:' + userCode);
 
   let scannerAddresses = [];
 
-  if (reservation) {
+  if (listingId) {
     scannerAddresses = await storage.getScanners({
-      listingId: reservation.listingId
+      listingId: listingId
     });    
   } else {
     scannerAddresses = await storage.getScanners({});
@@ -56,12 +56,12 @@ module.exports.findUser = async ({reservation, userName, userCode}) => {
   return results;
 };
 
-module.exports.deleteUser = async ({reservation, userParam}) => {
-  console.log('deleteUser in: reservation:' + JSON.stringify(reservation));
+module.exports.deleteUser = async ({listingId, userParam}) => {
+  console.log('deleteUser in: listingId:' + listingId);
   console.log('deleteUser in: userParam:' + JSON.stringify(userParam));
 
   const scannerAddresses = await storage.getScanners({
-    listingId: reservation.listingId, 
+    listingId: listingId, 
     roomCode: userParam.roomCode
   });
 

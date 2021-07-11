@@ -5,6 +5,84 @@ const storage = require('../api/storage');
 const shadow = require('../api/shadow');
 const scanner = require('../api/scanner');
 
+
+module.exports.syncReservation = async ({listingId, reservationCode}) => {
+
+	// console.log('syncReservationV2 in: event:' + JSON.stringify(event));
+
+	const getShadowResult = await getShadow({
+	    thingName: AWS_IOT_THING_NAME,
+	    shadowName: reservationCode
+	});
+
+	// console.log('getShadowResult.state: ' + JSON.stringify(getShadowResult.state));
+
+    let reportedMembers = new Map(Object.entries(getShadowResult.state.reported.members));
+    let desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));
+	let deltaMembers = new Map();
+	if (getShadowResult.state.delta) {
+		deltaMembers = new Map(Object.entries(getShadowResult.state.delta.members));
+	}
+
+	const toDeleteMembers = new Map();
+	reportedMembers.forEach((value, key) => {
+  		if (!desiredMembers.has(key)) {
+  			toDeleteMembers.set(key, value);
+  		}
+	});
+/*
+	const scannerAddresses = await storage.getScanners({});
+	if (scannerAddresses.length == 0){
+		throw new Error('No scanner registered!! Needs at least one scanner!!');
+	}
+
+	const scannerDeletePromises = [];
+
+	toDeleteMembers.forEach(async (member) => {
+		scannerDeletePromises.push(scanner.deleteUser({
+			listingId: listingId,
+			userParam: member
+		}));
+	})
+
+	const deleteResponse = Promise.all(scannerDeletePromises);
+
+	const scannerDeleteResults = deleteResponse.flatMap(x => x);
+
+	console.log('scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
+
+	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
+		throw new Error('There are scanner.deleteUser errors and process terminated!');
+	}
+*/
+	const reportedState = Object.assign({}, getShadowResult.state.delta);
+
+	toDeleteMembers.forEach((value, key) => {
+		if (!reportedState['members']){
+			reportedState['members'] ={};
+		}
+		reportedState['members'][key] = null;
+	});
+
+    const resultUpdatedShadow = await updateReportedShadow({
+    	thingName: AWS_IOT_THING_NAME,
+    	shadowName: reservationCode,
+    	reportedState: reportedState
+    });	
+
+    // let deltaReservation = new Map();
+
+
+	// if (getShadowResult.state.delta.reservation) {
+	// 	deltaReservation = getShadowResult.state.delta.reservation;
+	// }
+
+
+	return;
+
+};
+
+/*
 module.exports.syncReservation = async (event) => {
 
 	console.log('syncReservation in: event:' + JSON.stringify(event));
@@ -104,39 +182,4 @@ module.exports.syncReservation = async (event) => {
 
 };
 
-/*
-const getScannerParams = async ({reservation, addMembersParam, deleteMembersParam}) => {
-
-	console.log('getDelMemberParams in: reservation:' + JSON.stringify(reservation));
-	console.log('getDelMemberParams in: addMembersParam:' + JSON.stringify(addMembersParam));
-	console.log('getDelMemberParams in: deleteMembersParam:' + JSON.stringify(deleteMembersParam));
-
-    const scannerResult = await storage.getScanner({
-    	listingId: reservation.listingId
-    });
-
-    let scannerAddresses = new Map();
-    if (scannerResult.Count == 0) {
-	    const allScannerResult = await storage.getScanner();
-	    allScannerResult.Items.forEach(item => {
-	    	scannerAddresses.add(item.localIp);
-	    });
-    } else if (scannerResult.Count == 1) {
-    	scannerAddresses.add(scannerResult.Items[0].localIp);
-    } else if (scannerResult.Count > 1) {
-	    allScannerResult.Items.forEach(item => {
-	    	scannerAddresses.add(item.localIp);
-	    });
-    }
-
-    let params;
-    if (scannerAddress) {
-    	params = {scannerAddress, deleteMembersParam};
-    } else {
-
-    }
-
-	return params;
-};
 */
-
