@@ -43,6 +43,8 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   await storage.saveScanRecord(payload);
 
+  // await storage.
+
   const response = {
       "code":0,
       "message": `userName: ${payload.userName}`

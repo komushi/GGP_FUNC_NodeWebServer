@@ -103,10 +103,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
     roomCode: userParam.roomCode
   });
 
-  // console.log('addUser scannerAddresses:' + JSON.stringify(scannerAddresses));
-
   const bodyFormData = new FormData();
-  // bodyFormData.append('userId', Date.now());
   if (userParam[COL_FACE_IMG_URL]) {
     bodyFormData.append('imgUrl', userParam[COL_FACE_IMG_URL]);
   }
