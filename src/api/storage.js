@@ -1,7 +1,7 @@
 const TBL_RESERVATION = process.env.TBL_RESERVATION;
 const TBL_MEMBER = process.env.TBL_MEMBER;
 const TBL_SCANNER = process.env.TBL_SCANNER;
-const IDX_SCANNER_LISTING = process.env.IDX_SCANNER_LISTING;
+const TBL_RECORD = process.env.TBL_RECORD;
 
 const config = {
   endpoint: process.env.DDB_ENDPOINT || 'http://localhost:8080',
@@ -321,6 +321,26 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
 
   return result.Items.map(item => item.localIp);
 
+};
+
+module.exports.saveScanRecord = async (record) => {
+
+  console.log('saveScanRecord in: record:', record);
+
+  const params = [{
+    Put: {
+      TableName: TBL_RECORD,
+      Item: record,
+      ExpressionAttributeNames : {
+          '#pk' : 'terminalKey'
+      },
+      ConditionExpression: 'attribute_not_exists(#pk)'
+    }
+  }];
+
+  return await docClient.transactWrite({TransactItems: params}).promise().catch(error => {
+      throw error;
+    });
 };
 
 /*

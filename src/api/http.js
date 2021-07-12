@@ -29,14 +29,19 @@ router.post('/deviceReg', async (req, res) => {
 
 router.post('/uploadMipsGateRecord', async (req, res) => {
 
-  const payload = Object.assign({}, req.body);
+  // const payload = Object.assign({}, req.body);
 
-  delete payload.checkPic;
+  const record = req.body；
 
-  console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
+  record.eventTimestamp = Date.now();
 
-  // const storage = require('../handler/storage');
-  // await storage.saveScanRecord(payload);
+  if（record.type == 1 || record.type == 2）{
+    delete record.checkPic;
+  }
+
+  console.log('uploadMipsGateRecord req.body:' + JSON.stringify(record));
+
+  await storage.saveScanRecord(record);
 
   const response = {
       "code":0,
