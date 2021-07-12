@@ -35,6 +35,8 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   if(payload.type == 1 || payload.type == 2){
     delete payload.checkPic;
+  } else {
+    payload = payload.replace(/\r?\n|\r/g, "");
   }
 
   console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
