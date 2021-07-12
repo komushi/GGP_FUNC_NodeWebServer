@@ -29,7 +29,23 @@ router.post('/deviceReg', async (req, res) => {
 
 router.post('/uploadMipsGateRecord', async (req, res) => {
 
-  // const payload = Object.assign({}, req.body);
+  const payload = Object.assign({}, req.body);
+
+  delete payload.checkPic;
+
+  console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
+
+  const response = {
+      "code":0,
+      "message": `userName: ${payload.userName}`
+  };
+
+  res.send(response);
+  
+});
+
+/*
+router.post('/uploadMipsGateRecord', async (req, res) => {
 
   const record = Object.assign({}, req.body);
 
@@ -51,3 +67,4 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
   res.send(response);
   
 });
+*/
