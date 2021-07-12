@@ -33,7 +33,11 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   delete payload.checkPic;
 
+  // payload.eventTimestamp = Date.now();
+
   console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
+
+  await storage.saveScanRecord(payload);
 
   const response = {
       "code":0,
