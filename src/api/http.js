@@ -33,7 +33,7 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   payload.eventTimestamp = Date.now();
 
-  payload.type == 1 || payload.type == 2）{
+  if（ payload.type == 1 || payload.type == 2 ）{
     delete payload.checkPic;
   }
 
