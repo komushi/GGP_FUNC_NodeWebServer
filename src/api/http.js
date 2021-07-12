@@ -31,9 +31,11 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   const payload = Object.assign({}, req.body);
 
-  delete payload.checkPic;
+  payload.eventTimestamp = Date.now();
 
-  // payload.eventTimestamp = Date.now();
+  payload.type == 1 || payload.type == 2）{
+    delete payload.checkPic;
+  }
 
   console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
 

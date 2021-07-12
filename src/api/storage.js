@@ -261,7 +261,7 @@ module.exports.updateScanner = async (record) => {
     TransactItems: params
   });
 
-  const result = await ddbDocClient.send(command);  
+  const result = await ddbDocClient.send(command);
 
   console.log('updateScanner out: result:' + JSON.stringify(result));
 
@@ -338,9 +338,15 @@ module.exports.saveScanRecord = async (record) => {
     }
   }];
 
-  return await docClient.transactWrite({TransactItems: params}).promise().catch(error => {
-      throw error;
-    });
+  const command = new TransactWriteCommand({
+    TransactItems: params
+  });
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('saveScanRecord out: result:' + JSON.stringify(result));
+
+  return result;
 };
 
 /*
