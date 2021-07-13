@@ -32,7 +32,8 @@ exports.handler = async function(event, context) {
             console.log('event.userCode: ' + event.userCode);
             const result = await scanner.findUser({
                 userName: event.userName,
-                userCode: event.userCode
+                userCode: event.userCode,
+                group: event.reservationCode
             });
 
             // console.log('findUser result: ' + JSON.stringify(result));
