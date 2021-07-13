@@ -10,10 +10,11 @@ const FormData = require('form-data');
 
 const storage = require('../api/storage');
 
-module.exports.findUser = async ({listingId, userName, userCode}) => {
+module.exports.findUser = async ({listingId, userName, userCode, group}) => {
   console.log('findUser in: listingId:' + listingId);
   console.log('findUser in: userName:' + userName);
   console.log('findUser in: userCode:' + userCode);
+  console.log('findUser in: group:' + group);
 
   let scannerAddresses = [];
 
@@ -36,6 +37,8 @@ module.exports.findUser = async ({listingId, userName, userCode}) => {
     bodyFormData.append('name', userName);
   } else if (userCode) {
     bodyFormData.append('name', userCode);  
+  } else if (group) {
+    bodyFormData.append('name', group);  
   } else {
     throw new Error('Need either userName or userCode to find a user'); 
   }
