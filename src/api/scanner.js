@@ -40,7 +40,7 @@ module.exports.findUser = async ({listingId, userName, userCode, group}) => {
   } else if (group) {
     bodyFormData.append('name', group);  
   } else {
-    throw new Error('Need either userName or userCode to find a user'); 
+    throw new Error('Need userName, userCode or group to find a user');
   }
   
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
@@ -111,7 +111,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
     bodyFormData.append('imgUrl', userParam[COL_FACE_IMG_URL]);
   }
   bodyFormData.append('userName', userParam.fullName);
-  bodyFormData.append('type', 2);
+  bodyFormData.append('type', 1);
   bodyFormData.append('userCode', `${userParam.reservationCode}-${userParam.memberNo}`);
   bodyFormData.append('group', `${userParam.reservationCode}`);
   bodyFormData.append('memberId', `${userParam.memberNo}`);
