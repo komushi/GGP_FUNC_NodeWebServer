@@ -35,9 +35,6 @@ exports.handler = async function(event, context) {
                 userCode: event.userCode,
                 group: event.reservationCode
             });
-
-            // console.log('findUser result: ' + JSON.stringify(result));
-
         } else if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
             console.log('event.listingId: ' + event.listingId);
             console.log('event.roomCode: ' + event.roomCode);
@@ -49,9 +46,6 @@ exports.handler = async function(event, context) {
             if (scannerAddresses.length == 0){
                 throw new Error('No scanner registered!! Needs at least one scanner!!');
             }
-
-            // console.log('findUser result: ' + JSON.stringify(result));
-
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
@@ -66,6 +60,12 @@ exports.handler = async function(event, context) {
             }));
 
             console.log('syncReservation results:' + JSON.stringify(results));
+
+        } else if (context.clientContext.Custom.subject.indexOf('/shadow/delete/accepted') > -1) {
+            console.log('/shadow/delete/accepted event.state:: ' + JSON.stringify(event.state));
+
+
+
         }
     } catch (err) {
         console.error('!!!!!!error happened at handler error start!!!!!!');
