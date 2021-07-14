@@ -27,27 +27,15 @@ exports.handler = async function(event, context) {
     console.log('context: ' + JSON.stringify(context));
 
     try {
-        if (context.clientContext.Custom.subject.indexOf('find_user') > -1) {
+        if (context.clientContext.Custom.subject.indexOf('find_users') > -1) {
             console.log('event.userName: ' + event.userName);
             console.log('event.userCode: ' + event.userCode);
             
-            const result = await scanner.findUser({
+            const result = await scanner.findUsers({
                 userName: event.userName,
                 userCode: event.userCode,
                 group: event.reservationCode
             });
-
-        } else if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
-            console.log('event.listingId: ' + event.listingId);
-            console.log('event.roomCode: ' + event.roomCode);
-            
-            const scannerAddresses = await storage.getScanners({
-                listingId: event.listingId,
-                roomCode: event.roomCode
-            });
-            if (scannerAddresses.length == 0){
-                throw new Error('No scanner registered!! Needs at least one scanner!!');
-            }
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));

@@ -3,18 +3,18 @@ const COL_FACE_IMG_URL = process.env.COL_FACE_IMG_URL;
 
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
-const USER_FIND_API = 'service2dev/api/findUser';
+const USER_FIND_API = 'service2dev/api/findUsers';
 
 const got = require('got');
 const FormData = require('form-data');
 
 const storage = require('../api/storage');
 
-module.exports.findUser = async ({listingId, userName, userCode, group}) => {
-  console.log('findUser in: listingId:' + listingId);
-  console.log('findUser in: userName:' + userName);
-  console.log('findUser in: userCode:' + userCode);
-  console.log('findUser in: group:' + group);
+module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
+  console.log('findUsers in: listingId:' + listingId);
+  console.log('findUsers in: userName:' + userName);
+  console.log('findUsers in: userCode:' + userCode);
+  console.log('findUsers in: group:' + group);
 
   let scannerAddresses = [];
 
@@ -26,7 +26,7 @@ module.exports.findUser = async ({listingId, userName, userCode, group}) => {
     scannerAddresses = await storage.getScanners({});
   }
 
-  console.log('findUser scannerAddresses:' + JSON.stringify(scannerAddresses));
+  console.log('findUsers scannerAddresses:' + JSON.stringify(scannerAddresses));
 
   if (scannerAddresses.length == 0) {
     throw new Error('No Scanner Addresses found!!');
@@ -45,8 +45,8 @@ module.exports.findUser = async ({listingId, userName, userCode, group}) => {
   
   const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
-    console.log('findUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`);
-    console.log('findUser bodyFormData:' + JSON.stringify(bodyFormData));
+    console.log('findUsers url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`);
+    console.log('findUsers bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`, {
       body: bodyFormData
@@ -56,7 +56,7 @@ module.exports.findUser = async ({listingId, userName, userCode, group}) => {
 
   }));
 
-  console.log('findUser out: results:' + JSON.stringify(results));
+  console.log('findUsers out: results:' + JSON.stringify(results));
 
   return results;
 };
