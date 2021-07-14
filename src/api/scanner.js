@@ -52,12 +52,9 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
       body: bodyFormData
     });
 
-    console.log(response.body);
-    console.log(JSON.stringify(response.body));
-
     return {
       scannerAddress: scannerAddress,
-      users: (JSON.stringify(response.body)).data
+      users: (JSON.parse(response.body)).data
     };
 
   }));
