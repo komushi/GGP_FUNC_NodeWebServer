@@ -53,9 +53,6 @@ exports.handler = async function(event, context) {
                 scannerAddress: '192.168.11.106', 
                 deleteUsersParam: [{
                     userCode: 'temp-1'
-                },
-                {
-                    userCode: 'temp-2'
                 }]
             });
 
