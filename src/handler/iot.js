@@ -26,7 +26,7 @@ module.exports.syncReservation = async ({reservationCode, version}) => {
     let desiredMembers = new Map();
     if (getShadowResult.state.desired) {
 		if (getShadowResult.state.desired.members) {
-			reportedMembers = new Map(Object.entries(getShadowResult.state.desired.members));	
+			desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));	
 		}
     }
 
