@@ -38,23 +38,24 @@ exports.handler = async function(event, context) {
                 group: event.reservationCode
             });
         } else if (context.clientContext.Custom.subject.indexOf('delete_users') > -1) {
-            // const userResults = await scanner.findUsers({
-            //     group: 'temp'
-            // });
 
-            // const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
-            //     return await scanner.deleteUsers({
-            //         scannerAddress: scannerAddress, 
-            //         deleteUsersParam: users
-            //     });
-            // }));
-
-            await scanner.deleteUsers({
-                scannerAddress: '192.168.11.106', 
-                deleteUsersParam: [{
-                    userCode: 'test-3'
-                }]
+            const userResults = await scanner.findUsers({
+                group: event.reservationCode
             });
+
+            const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
+                return await scanner.deleteUsers({
+                    scannerAddress: scannerAddress, 
+                    deleteUsersParam: users
+                });
+            }));
+
+            // await scanner.deleteUsers({
+            //     scannerAddress: '192.168.11.106', 
+            //     deleteUsersParam: [{
+            //         userCode: 'test-3'
+            //     }]
+            // });
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations: ' + JSON.stringify(event.state.reservations));
