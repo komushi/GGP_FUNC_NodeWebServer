@@ -53,7 +53,6 @@ exports.handler = async function(event, context) {
             const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, version}]) => {
                 return await iotHandler.syncReservation({
                     reservationCode,
-                    listingId,
                     version
                 });
 

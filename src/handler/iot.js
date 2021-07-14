@@ -7,7 +7,7 @@ const shadow = require('../api/shadow');
 const scanner = require('../api/scanner');
 
 
-module.exports.syncReservation = async ({listingId, reservationCode}) => {
+module.exports.syncReservation = async ({reservationCode, version}) => {
 
 	// console.log('syncReservationV2 in: event:' + JSON.stringify(event));
 
@@ -24,6 +24,7 @@ module.exports.syncReservation = async ({listingId, reservationCode}) => {
 			deltaMembers = new Map(Object.entries(getShadowResult.state.delta.members));	
 		}
 	}
+	let listingId = getShadowResult.state.desired.reservation.listingId;
 
 	const toDeleteMembers = new Map();
 	reportedMembers.forEach((value, key) => {
