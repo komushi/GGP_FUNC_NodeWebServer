@@ -27,6 +27,7 @@ exports.handler = async function(event, context) {
     console.log('context: ' + JSON.stringify(context));
 
     try {
+
         if (context.clientContext.Custom.subject.indexOf('find_users') > -1) {
             console.log('event.userName: ' + event.userName);
             console.log('event.userCode: ' + event.userCode);
@@ -36,6 +37,17 @@ exports.handler = async function(event, context) {
                 userCode: event.userCode,
                 group: event.reservationCode
             });
+        } else if (context.clientContext.Custom.subject.indexOf('delete_users') > -1) {
+            const userResults = await scanner.findUsers({
+                group: 'temp'
+            });
+
+            const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
+                return await scanner.deleteUsers({
+                    scannerAddress: scannerAddress, 
+                    deleteUsersParam: users
+                });
+            }));
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations: ' + JSON.stringify(event.state.reservations));

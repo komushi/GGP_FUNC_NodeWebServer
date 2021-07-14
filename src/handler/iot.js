@@ -75,7 +75,7 @@ module.exports.syncReservation = async ({reservationCode, version}) => {
 			listingId: listingId,
 			userParam: member
 		}));
-	})
+	});
 
 	const scannerDeleteResponse = await Promise.all(scannerDeletePromises);
 
