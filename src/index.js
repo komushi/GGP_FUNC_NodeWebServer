@@ -39,16 +39,16 @@ exports.handler = async function(event, context) {
             });
         } else if (context.clientContext.Custom.subject.indexOf('delete_users') > -1) {
 
-            const userResults = await scanner.findUsers({
-                group: event.reservationCode
-            });
+            // const userResults = await scanner.findUsers({
+            //     group: event.reservationCode
+            // });
 
-            const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
-                return await scanner.deleteUsers({
-                    scannerAddress: scannerAddress, 
-                    deleteUsersParam: users
-                });
-            }));
+            // const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
+            //     return await scanner.deleteUsers({
+            //         scannerAddress: scannerAddress, 
+            //         deleteUsersParam: users
+            //     });
+            // }));
 
             // await scanner.deleteUsers({
             //     scannerAddress: '192.168.11.106', 
@@ -56,6 +56,19 @@ exports.handler = async function(event, context) {
             //         userCode: 'test-3'
             //     }]
             // });
+
+            const FormData = require('form-data');
+            const bodyFormData = new FormData();
+            bodyFormData.append('userCode', event.userCode);
+
+            const got = require('got');
+
+            const result = await got.post('http://192.168.11.106:8082/service2dev/api/userDelete', {
+              body: bodyFormData
+            });
+
+            console.log(result.body);
+
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations: ' + JSON.stringify(event.state.reservations));
