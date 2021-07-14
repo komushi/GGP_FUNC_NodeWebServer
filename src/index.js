@@ -52,7 +52,7 @@ exports.handler = async function(event, context) {
             await scanner.deleteUsers({
                 scannerAddress: '192.168.11.106', 
                 deleteUsersParam: [{
-                    userCode: 'temp-1'
+                    userCode: 'test-3'
                 }]
             });
 
