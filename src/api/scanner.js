@@ -53,6 +53,7 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
     });
 
     console.log(response.body);
+    console.log(JSON.stringify(response.body));
 
     return {
       scannerAddress: scannerAddress,
