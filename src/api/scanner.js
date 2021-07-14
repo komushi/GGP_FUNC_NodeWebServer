@@ -80,7 +80,7 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
   console.log('deleteUsers bodyFormData:' + JSON.stringify(bodyFormData));
 
   const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
-    data: bodyFormData
+    body: bodyFormData
   });
 
   return JSON.parse(response.body);
