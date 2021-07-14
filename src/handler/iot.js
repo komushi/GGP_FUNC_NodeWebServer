@@ -9,11 +9,8 @@ const scanner = require('../api/scanner');
 
 module.exports.removeReservation = async ({reservationCode}) => {
 	const userResults = await scanner.findUsers({
-	    userName: event.userName,
-	    userCode: event.userCode,
-	    group: event.reservationCode
+	    group: reservationCode
 	});
-
 
 	const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
 		return await(deleteUsers, users);
