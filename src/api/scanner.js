@@ -96,6 +96,9 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
   });
 
   // console.log('deleteUser scannerAddresses:' + JSON.stringify(scannerAddresses));
+  if (scannerAddresses.length == 0) {
+    throw new Error('No Scanner Addresses found!!');
+  }
 
   const userCode = `${userParam.reservationCode}-${userParam.memberNo}#_`;
 
@@ -130,6 +133,10 @@ module.exports.addUser = async ({reservation, userParam}) => {
     listingId: reservation.listingId, 
     roomCode: userParam.roomCode
   });
+
+  if (scannerAddresses.length == 0) {
+    throw new Error('No Scanner Addresses found!!');
+  }  
 
   const bodyFormData = new FormData();
   if (userParam[COL_FACE_IMG_URL]) {
