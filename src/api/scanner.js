@@ -3,7 +3,7 @@ const COL_FACE_IMG_URL = process.env.COL_FACE_IMG_URL;
 
 const USER_DELETE_API = 'service2dev/api/userDelete';
 const USER_ADD_API = 'service2dev/api/userFaceAdd';
-const USER_FIND_API = 'service2dev/api/findUsers';
+const USER_FIND_API = 'service2dev/api/findUser';
 
 const got = require('got');
 const FormData = require('form-data');
@@ -52,9 +52,12 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
       body: bodyFormData
     });
 
-    console.log(response.body);
+    const users = JSON.stringify(response.body).data;
 
-    return response.body;
+    return {
+      scannerAddress: scannerAddress,
+      users: JSON.stringify(response.body).data
+    };
 
   }));
 
