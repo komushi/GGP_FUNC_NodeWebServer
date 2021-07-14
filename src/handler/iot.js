@@ -13,7 +13,10 @@ module.exports.removeReservation = async ({reservationCode}) => {
 	});
 
 	const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
-		return await scanner.deleteUsers(scannerAddress, users);
+		return await scanner.deleteUsers({
+			scannerAddress: scannerAddress, 
+			deleteUsersParam: users
+		});
 	}));
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
