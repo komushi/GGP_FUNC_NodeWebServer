@@ -60,6 +60,11 @@ exports.handler = async function(event, context) {
             }));
 
             console.log('syncReservation results:' + JSON.stringify(results));
+        } else if (context.clientContext.Custom.subject.indexOf('/update/delta') > -1 
+            && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
+            console.log('/shadow/name/update/delta event.state:: ' + JSON.stringify(event.state));
+
+
 
         } else if (context.clientContext.Custom.subject.indexOf('/shadow/delete/accepted') > -1) {
             console.log('/shadow/delete/accepted event.state:: ' + JSON.stringify(event.state));
