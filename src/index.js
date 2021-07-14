@@ -30,11 +30,13 @@ exports.handler = async function(event, context) {
         if (context.clientContext.Custom.subject.indexOf('find_user') > -1) {
             console.log('event.userName: ' + event.userName);
             console.log('event.userCode: ' + event.userCode);
+            
             const result = await scanner.findUser({
                 userName: event.userName,
                 userCode: event.userCode,
                 group: event.reservationCode
             });
+
         } else if (context.clientContext.Custom.subject.indexOf('get_scanners') > -1) {
             console.log('event.listingId: ' + event.listingId);
             console.log('event.roomCode: ' + event.roomCode);
@@ -59,11 +61,15 @@ exports.handler = async function(event, context) {
             }));
 
             console.log('syncReservation results:' + JSON.stringify(results));
+
         } else if (context.clientContext.Custom.subject.indexOf('/update/delta') > -1 
             && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
             console.log('/shadow/name/update/delta event.state:: ' + JSON.stringify(event.state));
 
-
+            await iotHandler.syncReservation({
+                reservationCode: context.clientContext.Custom.subject.split('/update/delta').join('').split('/').pop(),
+                version: event.version
+            });
 
         } else if (context.clientContext.Custom.subject.indexOf('/shadow/delete/accepted') > -1) {
             console.log('/shadow/delete/accepted event.state:: ' + JSON.stringify(event.state));
