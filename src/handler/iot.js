@@ -16,14 +16,27 @@ module.exports.syncReservation = async ({reservationCode, version}) => {
 	    shadowName: reservationCode
 	});
 
-    let reportedMembers = new Map(Object.entries(getShadowResult.state.reported.members));
-    let desiredMembers = new Map(Object.entries(getShadowResult.state.desired.members));
+    let reportedMembers = new Map();
+    if (getShadowResult.state.reported) {
+		if (getShadowResult.state.reported.members) {
+			reportedMembers = new Map(Object.entries(getShadowResult.state.reported.members));	
+		}
+    }
+
+    let desiredMembers = new Map();
+    if (getShadowResult.state.desired) {
+		if (getShadowResult.state.desired.members) {
+			reportedMembers = new Map(Object.entries(getShadowResult.state.desired.members));	
+		}
+    }
+
 	let deltaMembers = new Map();
 	if (getShadowResult.state.delta) {
 		if (getShadowResult.state.delta.members) {
 			deltaMembers = new Map(Object.entries(getShadowResult.state.delta.members));	
 		}
 	}
+	
 	let listingId = getShadowResult.state.desired.reservation.listingId;
 
 	const toDeleteMembers = new Map();
