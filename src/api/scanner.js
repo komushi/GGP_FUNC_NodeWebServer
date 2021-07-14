@@ -69,8 +69,8 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
   console.log('deleteUsers in: deleteUsersParam:' + JSON.stringify(deleteUsersParam));
 
   const userCodes = deleteUsersParam.map(member => {
-    return member.userCode;
-  }).join('#_');
+    return member.userCode + '#_';
+  }).join('');
 
   console.log('deleteUsers userCodes:' + userCodes);
 
