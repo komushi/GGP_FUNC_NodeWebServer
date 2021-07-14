@@ -82,7 +82,7 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
     data: bodyFormData
   });
 
-  return (JSON.parse(response.body)).data;
+  return JSON.parse(response.body);
 
 };
 
