@@ -64,6 +64,28 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
   return results;
 };
 
+module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
+  console.log('deleteUsers in: scannerAddress:' + scannerAddress);
+  console.log('deleteUsers in: deleteUsersParam:' + JSON.stringify(deleteUsersParam));
+
+  const userCodes = deleteUsersParam.map(member => {
+    return member.userCode;
+  }).join('#_');
+
+  console.log('deleteUsers userCodes:' + userCodes);
+
+  const bodyFormData = new FormData();
+  bodyFormData.append('userCode', userCodes);
+
+  const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
+    method: 'POST',
+    data: bodyFormData
+  });
+
+  return (JSON.parse(response.body)).data;
+
+};
+
 module.exports.deleteUser = async ({listingId, userParam}) => {
   console.log('deleteUser in: listingId:' + listingId);
   console.log('deleteUser in: userParam:' + JSON.stringify(userParam));
@@ -140,28 +162,6 @@ module.exports.addUser = async ({reservation, userParam}) => {
 };
 
 /*
-module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
-  console.log('deleteUsers in: scannerAddress:' + scannerAddress);
-  console.log('deleteUsers in: deleteUsersParam:' + JSON.stringify(deleteUsersParam));
-
-  const userCodes = deleteUsersParam.map(member => {
-    return member.reservationCode + '-' + member.memberNo;
-  }).join('#_');
-
-  console.log('deleteUsers userCodes:' + userCodes);
-
-  const bodyFormData = new FormData();
-  bodyFormData.append('userCode', userCodes);
-
-  const response = await fetch(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
-    method: 'POST',
-    data: bodyFormData
-  });
-
-  return await response.json();
-
-};
-
 module.exports.addUsers = async ({scannerAddress, addUsersParam}) => {
   console.log('addUsers in: scannerAddress:' + scannerAddress);
   console.log('addUsers in: addUsersParam:' + JSON.stringify(addUsersParam));

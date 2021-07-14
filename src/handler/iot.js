@@ -7,6 +7,22 @@ const shadow = require('../api/shadow');
 const scanner = require('../api/scanner');
 
 
+module.exports.removeReservation = async ({reservationCode}) => {
+	const userResults = await scanner.findUsers({
+	    userName: event.userName,
+	    userCode: event.userCode,
+	    group: event.reservationCode
+	});
+
+
+	const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
+		return await(deleteUsers, users);
+	}));
+
+	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
+	
+}
+
 module.exports.syncReservation = async ({reservationCode, version}) => {
 
 	// console.log('syncReservationV2 in: event:' + JSON.stringify(event));

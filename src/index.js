@@ -38,7 +38,7 @@ exports.handler = async function(event, context) {
             });
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
-            console.log('event.state.reservations:: ' + JSON.stringify(event.state.reservations));
+            console.log('event.state.reservations: ' + JSON.stringify(event.state.reservations));
 
             const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, version}]) => {
                 return await iotHandler.syncReservation({
@@ -52,17 +52,19 @@ exports.handler = async function(event, context) {
 
         } else if (context.clientContext.Custom.subject.indexOf('/update/delta') > -1 
             && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
-            console.log('/shadow/name/update/delta event.state:: ' + JSON.stringify(event.state));
+            console.log('/shadow/name/update/delta event.state: ' + JSON.stringify(event.state));
 
             await iotHandler.syncReservation({
                 reservationCode: context.clientContext.Custom.subject.split('/update/delta').join('').split('/').pop(),
                 version: event.version
             });
 
-        } else if (context.clientContext.Custom.subject.indexOf('/shadow/delete/accepted') > -1) {
-            console.log('/shadow/delete/accepted event.state:: ' + JSON.stringify(event.state));
+        } else if (context.clientContext.Custom.subject.indexOf('/delete/accepted') > -1) {
+            console.log('/shadow/delete/accepted event.state: ' + JSON.stringify(event.state));
 
-
+            await iotHandler.removeReservation({
+                reservationCode: context.clientContext.Custom.subject.split('/delete/accepted').join('').split('/').pop()
+            });
 
         }
     } catch (err) {
