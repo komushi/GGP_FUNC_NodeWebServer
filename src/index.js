@@ -11,6 +11,8 @@ const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 const AWS_IOT_THING_ARN = process.env.AWS_IOT_THING_ARN;
 const AWS_GREENGRASS_GROUP_NAME = process.env.AWS_GREENGRASS_GROUP_NAME;
 const CORE_PORT = process.env.CORE_PORT || 8081;
+const ACTION_UPDATE = 'UPDATE';
+const ACTION_REMOVE = 'REMOVE';
 
 const base_topic = AWS_IOT_THING_NAME + '/web_server_node'
 const log_topic = base_topic + '/log'
@@ -54,12 +56,21 @@ exports.handler = async function(event, context) {
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('event.state.reservations: ' + JSON.stringify(event.state.reservations));
 
-            const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, version}]) => {
-                return await iotHandler.syncReservation({
-                    reservationCode,
-                    version
-                });
+            const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, version, action}]) => {
 
+                if (action == ACTION_REMOVE) {
+                    return await iotHandler.removeReservation({
+                        reservationCode,
+                        listingId
+                    });
+                } else if (action == ACTION_UPDATE) {
+                    return await iotHandler.syncReservation({
+                        reservationCode,
+                        version
+                    });                
+                } else {
+                    return;
+                }
             }));
 
             console.log('syncReservation results:' + JSON.stringify(results));

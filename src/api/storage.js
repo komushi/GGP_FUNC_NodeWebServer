@@ -202,14 +202,15 @@ const getDelMemberParams = (records) => {
   return params;
 };
 
-module.exports.getReservation = async (params) => {
+module.exports.getReservation = async ({reservationCode, listingId}) => {
 
-  console.log('getReservation in: params:' + JSON.stringify(params));
+  console.log('getReservation in: reservationCode:' + reservationCode);
+  console.log('getReservation in: listingId:' + listingId);
 
   const memberCmd = new QueryCommand({
     TableName: TBL_MEMBER,
     KeyConditionExpression: 'reservationCode = :pk',
-    ExpressionAttributeValues: {':pk': params.reservationCode}
+    ExpressionAttributeValues: {':pk': reservationCode}
   });
 
   const memberResult = await ddbDocClient.send(memberCmd);
@@ -219,7 +220,7 @@ module.exports.getReservation = async (params) => {
   const reservationCmd = new QueryCommand({
     TableName: TBL_RESERVATION,
     KeyConditionExpression: 'listingId = :pk and reservationCode = :rk',
-    ExpressionAttributeValues: {':pk': params.listingId, ':rk': params.reservationCode}
+    ExpressionAttributeValues: {':pk': listingId, ':rk': reservationCode}
   });
 
   const reservationResult = await ddbDocClient.send(reservationCmd);

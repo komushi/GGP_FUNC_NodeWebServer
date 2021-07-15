@@ -7,7 +7,7 @@ const shadow = require('../api/shadow');
 const scanner = require('../api/scanner');
 
 
-module.exports.removeReservation = async ({reservationCode}) => {
+module.exports.removeReservation = async ({reservationCode, listingId}) => {
 	const userResults = await scanner.findUsers({
 	    group: reservationCode
 	});
@@ -20,11 +20,7 @@ module.exports.removeReservation = async ({reservationCode}) => {
 	}));
 
     // update local ddb
-    await storage.saveReservation({
-        reservation: getShadowResult.state.desired.reservation,
-        members: Array.from(desiredMembers.values()),
-        version: resultUpdatedShadow.version
-    });	
+    const await storage.getReservation({reservationCode, listingId});
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
 	
