@@ -381,7 +381,7 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
     KeyConditionExpression: 'reservationCode = :pk and memberNo = :rk',
     ExpressionAttributeValues: {
       ':pk': reservationCode,
-      ':rk': memberNo,
+      ':rk': parseInt(memberNo),
     }
   });
 
