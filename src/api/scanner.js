@@ -52,6 +52,8 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
       body: bodyFormData
     });
 
+    console.log(response);
+
     let users = [];
 
     if (response) {
