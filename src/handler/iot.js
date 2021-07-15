@@ -35,7 +35,7 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
 
 module.exports.syncReservation = async ({reservationCode, version}) => {
 
-	// console.log('syncReservationV2 in: event:' + JSON.stringify(event));
+	console.log('syncReservationV2 in: ' + JSON.stringify({reservationCode, version}));
 
 	const getShadowResult = await shadow.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
