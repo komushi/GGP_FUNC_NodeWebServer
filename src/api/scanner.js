@@ -58,7 +58,9 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
 
     if (response) {
       if (response.body) {
-        users = (JSON.parse(response.body)).data;
+        if ((JSON.parse(response.body)).data) {
+          users = (JSON.parse(response.body)).data;
+        }
       }
     }
 
