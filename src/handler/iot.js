@@ -20,7 +20,14 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
 	}));
 
     // update local ddb
-    await storage.getReservation({reservationCode, listingId});
+    const getReservationResult = await storage.getReservation({reservationCode, listingId});
+
+    await storage.deleteReservation({
+    	listingId: getReservationResult.reservation.listingId,
+    	reservationCode: getReservationResult.reservation.reservationCode
+    });
+
+    await storage.deleteMembers(getReservationResult.members);
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
 	

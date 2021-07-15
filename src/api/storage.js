@@ -111,59 +111,25 @@ const getPutMemberParams = (records) => {
   return params;
 };
 
-module.exports.saveReservationRecord = async (record) => {
+module.exports.deleteReservation = async ({listingId, reservationCode}) => {
 
-  console.log('saveReservationRecord in: record:', record);
+  console.log('deleteReservation in:' + JSON.stringify({listingId, reservationCode}));
 
-  const params = [{
-    Put: {
-      TableName: TBL_RESERVATION,
-      Item: record,
-      ExpressionAttributeNames : {
-          '#pk' : 'listingId'
-      },
-      ConditionExpression: 'attribute_not_exists(#pk)'
+  const param = {
+    TableName: TBL_RESERVATION,
+    Key: {
+      reservationCode: reservationCode,
+      listingId: listingId
     }
-  }];
+  };
 
-  const command = new TransactWriteCommand({
-    TransactItems: params
-  });
+  const command = new DeleteCommand(param);
 
-  const result = await ddbDocClient.send(command);  
+  const results = await ddbDocClient.send(command);
 
-  console.log('saveReservationRecord out: result:', result);
+  console.log('deleteReservation out: results:' + JSON.stringify(results));
 
-  return result;
-
-};
-
-module.exports.saveMembers = async (records) => {
-
-  console.log('saveMembers in: records:', records);
-
-  const params = records.map(reord => {
-    return {
-      Put: {
-          TableName: TBL_MEMBER,
-          Item: record,
-          ExpressionAttributeNames : {
-              '#pk' : 'reservationCode'
-          },
-          ConditionExpression: 'attribute_not_exists(#pk)'
-        }
-      }
-  });
-
-  const command = new TransactWriteCommand({
-    TransactItems: params
-  });
-
-  const result = await ddbDocClient.send(command); 
-
-  console.log('saveMembers out: result:', result);
-
-  return result;
+  return results;
 };
 
 module.exports.deleteMembers = async (records) => {
@@ -258,8 +224,6 @@ module.exports.updateScanner = async (record) => {
     }
   }];
 
-
-
   const command = new TransactWriteCommand({
     TransactItems: params
   });
@@ -350,4 +314,60 @@ module.exports.saveScanRecord = async (record) => {
   console.log('saveScanRecord out: result:' + JSON.stringify(result));
 
   return result;
+};
+
+
+module.exports.saveMembers = async (records) => {
+
+  console.log('saveMembers in: records:', records);
+
+  const params = records.map(reord => {
+    return {
+      Put: {
+          TableName: TBL_MEMBER,
+          Item: record,
+          ExpressionAttributeNames : {
+              '#pk' : 'reservationCode'
+          },
+          ConditionExpression: 'attribute_not_exists(#pk)'
+        }
+      }
+  });
+
+  const command = new TransactWriteCommand({
+    TransactItems: params
+  });
+
+  const result = await ddbDocClient.send(command); 
+
+  console.log('saveMembers out: result:', result);
+
+  return result;
+};
+
+module.exports.saveReservationRecord = async (record) => {
+
+  console.log('saveReservationRecord in: record:', record);
+
+  const params = [{
+    Put: {
+      TableName: TBL_RESERVATION,
+      Item: record,
+      ExpressionAttributeNames : {
+          '#pk' : 'listingId'
+      },
+      ConditionExpression: 'attribute_not_exists(#pk)'
+    }
+  }];
+
+  const command = new TransactWriteCommand({
+    TransactItems: params
+  });
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('saveReservationRecord out: result:', result);
+
+  return result;
+
 };
