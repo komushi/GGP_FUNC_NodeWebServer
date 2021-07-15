@@ -371,3 +371,24 @@ module.exports.saveReservationRecord = async (record) => {
   return result;
 
 };
+
+module.exports.getMember = async ({reservationCode, memberNo}) => {
+
+  console.log('getMember in:', {reservationCode, memberNo});
+
+  const memberCmd = new QueryCommand({
+    TableName: TBL_MEMBER,
+    KeyConditionExpression: 'reservationCode = :pk and memberNo = :rk',
+    ExpressionAttributeValues: {
+      ':pk': reservationCode,
+      ':rk': memberNo,
+    }
+  });
+
+  const memberResult = await ddbDocClient.send(memberCmd);
+
+  console.log('getMember out: result:', result);
+
+  return result;
+
+};

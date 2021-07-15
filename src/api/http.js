@@ -43,11 +43,14 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   await storage.saveScanRecord(payload);
 
-  // await storage.
+  const getMemberResult = await storage.getMember({
+    reservationCode: payload.group,
+    memberNo: payload.memberId
+  });
 
   const response = {
       "code":0,
-      "message": `userName: ${payload.userName}`
+      "message": `${payload.userName} roomKey: ${getMemberResult.roomKey}`
   };
 
   res.send(response);
