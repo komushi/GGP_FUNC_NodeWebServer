@@ -389,6 +389,6 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
 
   console.log('getMember out: memberResult:' + JSON.stringify(memberResult));
 
-  return memberResult;
+  return memberResult.Items[0];
 
 };
