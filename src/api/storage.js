@@ -387,8 +387,8 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
 
   const memberResult = await ddbDocClient.send(memberCmd);
 
-  console.log('getMember out: result:', result);
+  console.log('getMember out: memberResult:' + JSON.stringify(memberResult));
 
-  return result;
+  return memberResult;
 
 };
