@@ -30,17 +30,19 @@ const { DynamoDBDocumentClient, QueryCommand, TransactWriteCommand, DeleteComman
 
 const ddbDocClient = DynamoDBDocumentClient.from(client, translateConfig);
 
-module.exports.saveReservation = async (record) => {
+module.exports.saveReservation = async ({reservation, members, version}) => {
 
   try {
-    console.log('saveReservation in: record:' + JSON.stringify(record));
+    console.log('saveReservation in: reservation:' + JSON.stringify(reservation));
+    console.log('saveReservation in: members:' + JSON.stringify(members));
+    console.log('saveReservation in: version:' + version);
 
-    const reservarionRecord = record.reservation;
-    reservarionRecord.version = record.version;
+    const reservarionRecord = reservation;
+    reservarionRecord.version = version;
 
     const reservationParams = getReservationParams(reservarionRecord);
 
-    const memberParams = getPutMemberParams(record.members);
+    const memberParams = getPutMemberParams(members);
 
     const params = reservationParams.concat(memberParams);
 
@@ -348,57 +350,3 @@ module.exports.saveScanRecord = async (record) => {
 
   return result;
 };
-
-/*
-module.exports.getScanner = async ({listingId, roomCode}) => {
-
-  console.log('getScanner in: listingId:' + listingId);
-  console.log('getScanner in: roomCode:' + roomCode);
-
-  const param = {
-    TableName : TBL_SCANNER,
-    IndexName : IDX_SCANNER_LISTING,
-    FilterExpression: 'listingId = :pk and roomCode = :rk',
-    ExpressionAttributeValues: {
-      ':pk': listingId,
-      ':rk': roomCode
-    }    
-  };
-
-  const command = new ScanCommand(param);
-
-  const result = await ddbDocClient.send(command);  
-
-  console.log('getScanner out: result:' + JSON.stringify(result));
-
-  return result;
-
-};
-*/
-
-/*
-module.exports.getScanner = async ({listingId, roomCode}) => {
-
-  console.log('getScanner in: listingId:' + listingId);
-  console.log('getScanner in: roomCode:' + roomCode);
-
-  const param = {
-    TableName: TBL_SCANNER,
-    IndexName : IDX_SCANNER_LISTING,
-    KeyConditionExpression: 'listingId = :pk and roomCode = :rk',
-    ExpressionAttributeValues: {
-      ':pk': listingId,
-      ':rk': roomCode,
-    }
-  };
-
-  const command = new QueryCommand(param);
-
-  const result = await ddbDocClient.send(command);  
-
-  console.log('getScanner out: result:' + JSON.stringify(result));
-
-  return result;
-
-};
-*/

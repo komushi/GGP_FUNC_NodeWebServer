@@ -53,28 +53,3 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
   res.send(response);
   
 });
-
-/*
-router.post('/uploadMipsGateRecord', async (req, res) => {
-
-  const record = Object.assign({}, req.body);
-
-  record.eventTimestamp = Date.now();
-
-  if(record.type == 1 || record.type == 2){
-    delete record.checkPic;
-  }
-
-  console.log('uploadMipsGateRecord req.body:' + JSON.stringify(record));
-
-  await storage.saveScanRecord(record);
-
-  const response = {
-      "code":0,
-      "message": `userName: ${payload.userName}`
-  };
-
-  res.send(response);
-  
-});
-*/

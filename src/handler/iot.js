@@ -19,6 +19,13 @@ module.exports.removeReservation = async ({reservationCode}) => {
 		});
 	}));
 
+    // update local ddb
+    await storage.saveReservation({
+        reservation: getShadowResult.state.desired.reservation,
+        members: Array.from(desiredMembers.values()),
+        version: resultUpdatedShadow.version
+    });	
+
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
 	
 }

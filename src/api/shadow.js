@@ -2,23 +2,6 @@
 // const iotData = new greengrass.IotData();
 const { IoTDataPlaneClient, GetThingShadowCommand, UpdateThingShadowCommand, DeleteThingShadowCommand } = require("@aws-sdk/client-iot-data-plane");
 
-// module.exports.checkShadow = async (params) => {
-
-// 	console.log('checkShadow for: record.thingName:' + JSON.stringify(params));
-
-// 	return new Promise((resolve, reject) => {
-// 		iotData.getThingShadow(params, (err, data) => {
-// 			if (err) {
-// 				console.log("checkShadow: " + JSON.stringify(error));
-// 				reject(err);
-// 			} else {
-// 				console.log('checkShadow out: result:' + data);
-// 				resolve(JSON.parse(data));
-// 			}
-//  		});
-// 	});	
-// };
-
 module.exports.getShadow = async (params) => {
 
 	console.log('getShadow in: params:' + JSON.stringify(params));
