@@ -33,7 +33,7 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   payload.eventTimestamp = Date.now();
 
-  if(payload.type == 1 || payload.type == 2){
+  if (payload.type == 1 || payload.type == 2) {
     delete payload.checkPic;
   } else {
     payload.checkPic = payload.checkPic.replace(/\r?\n|\r/g, "");
@@ -43,16 +43,24 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   await storage.saveScanRecord(payload);
 
-  const getMemberResult = await storage.getMember({
-    reservationCode: payload.group,
-    memberNo: payload.memberId
-  });
+  if (payload.type != 1 || payload.type != 2) {
+    const getMemberResult = await storage.getMember({
+      reservationCode: payload.group,
+      memberNo: payload.memberId
+    });
 
-  const response = {
-      "code":0,
-      "message": `${payload.userName} roomKey: ${getMemberResult.roomKey}`
-  };
+    res.send({
+        "code":0,
+        "message": `${payload.userName} roomKey: ${getMemberResult.roomKey}`
+    });
 
-  res.send(response);
+  } else {
+    res.send({
+        "code":1,
+        "message": 'Not allowed!'
+
+    });
+  }
+
   
 });
