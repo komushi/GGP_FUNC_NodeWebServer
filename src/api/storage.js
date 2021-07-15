@@ -374,7 +374,7 @@ module.exports.saveReservationRecord = async (record) => {
 
 module.exports.getMember = async ({reservationCode, memberNo}) => {
 
-  console.log('getMember in:', {reservationCode, memberNo});
+  console.log('getMember in:' + JSON.stringify({reservationCode, memberNo}));
 
   const memberCmd = new QueryCommand({
     TableName: TBL_MEMBER,
