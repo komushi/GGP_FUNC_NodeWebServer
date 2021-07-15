@@ -50,38 +50,18 @@ module.exports.updateReportedShadow = async ({thingName, shadowName, reportedSta
 	return await updateShadow(newParams);
 };
 
-module.exports.updateDeltaShadow = async ({thingName, shadowName, deltaState}) => {
 
-	console.log('updateDeltaShadow in: thingName:' + thingName);
-	console.log('updateDeltaShadow in: shadowName:' + shadowName);
-	console.log('updateDeltaShadow in: deltaState:' + JSON.stringify(deltaState));
+module.exports.deleteShadow = async ({thingName, shadowName}) => {
 
-	let newParams = {
-		thingName: params.thingName
+	console.log('deleteShadow in:' + JSON.stringify({thingName, shadowName}));
+
+	if (!thingName || !shadowName) {
+		throw new Error('Both thingName and shadowName are needed to DeleteThingShadow!!');
 	}
-
-	if (shadowName) {
-		newParams.shadowName = shadowName;
-	}
-
-	if (deltaState) {
-		newParams.payload = Buffer.from(JSON.stringify({
-            "state": {
-                "delta": deltaState
-            }
-		}));
-	}
-
-	return await updateShadow(newParams);
-};
-
-module.exports.deleteShadow = async (params) => {
-
-	console.log('deleteShadow in: params:' + JSON.stringify(params));
 
 	const client = new IoTDataPlaneClient({});
 
-	const command = new DeleteThingShadowCommand(params);
+	const command = new DeleteThingShadowCommand({thingName, shadowName});
 
 	const objResult = await client.send(command);
 
@@ -120,3 +100,30 @@ const updateShadow = async (params) => {
 
 	return result;
 };
+
+/*
+module.exports.updateDeltaShadow = async ({thingName, shadowName, deltaState}) => {
+
+	console.log('updateDeltaShadow in: thingName:' + thingName);
+	console.log('updateDeltaShadow in: shadowName:' + shadowName);
+	console.log('updateDeltaShadow in: deltaState:' + JSON.stringify(deltaState));
+
+	let newParams = {
+		thingName: params.thingName
+	}
+
+	if (shadowName) {
+		newParams.shadowName = shadowName;
+	}
+
+	if (deltaState) {
+		newParams.payload = Buffer.from(JSON.stringify({
+            "state": {
+                "delta": deltaState
+            }
+		}));
+	}
+
+	return await updateShadow(newParams);
+};
+*/

@@ -12,6 +12,7 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
 	    group: reservationCode
 	});
 
+	// delete users at scanners
 	const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
 		return await scanner.deleteUsers({
 			scannerAddress: scannerAddress, 
@@ -27,6 +28,7 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
     	reservationCode: getReservationResult.reservation.reservationCode
     });
 
+    // delete named shadow
     await storage.deleteMembers(getReservationResult.members);
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
