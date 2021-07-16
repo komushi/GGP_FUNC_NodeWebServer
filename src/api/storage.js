@@ -450,7 +450,7 @@ module.exports.initializeDatabase = async () => {
   const recordCmd = new CreateTableCommand({
     TableName: TBL_RECORD,
     KeySchema: [
-      { AttributeName: 'terminalKey', KeyType: 'HASH' }
+      { AttributeName: 'terminalKey', KeyType: 'HASH' },
       { AttributeName: 'eventTimestamp', KeyType: 'RANGE' }
     ],
     AttributeDefinitions: [
