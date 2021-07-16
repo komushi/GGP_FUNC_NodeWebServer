@@ -8,6 +8,9 @@ const scanner = require('../api/scanner');
 
 
 module.exports.removeReservation = async ({reservationCode, listingId}) => {
+
+	console.log('removeReservation in: ' + JSON.stringify({reservationCode, listingId}));
+
 	const userResults = await scanner.findUsers({
 	    group: reservationCode
 	});
@@ -33,7 +36,7 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
     // delete named shadow
     await shadow.deleteShadow({
     	thingName: AWS_IOT_THING_NAME,
-    	reservationCode: reservationCode    	
+    	shadowName: reservationCode    	
     });
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
@@ -42,7 +45,7 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
 
 module.exports.syncReservation = async ({reservationCode, version}) => {
 
-	console.log('syncReservationV2 in: ' + JSON.stringify({reservationCode, version}));
+	console.log('syncReservation in: ' + JSON.stringify({reservationCode, version}));
 
 	const getShadowResult = await shadow.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
