@@ -22,7 +22,7 @@ const unmarshallOptions = {
 
 const translateConfig = { marshallOptions, unmarshallOptions };
 
-const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, CreateTableCommand, DescribeTableCommand } = require("@aws-sdk/client-dynamodb");
 
 const client = new DynamoDBClient(config);
 
@@ -390,5 +390,92 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
   console.log('getMember out: memberResult:' + JSON.stringify(memberResult));
 
   return memberResult.Items[0];
+
+};
+
+
+
+module.exports.initializeDatabase = async () => {
+
+  console.log('initializeDatabase in:');
+
+  const reservationCmd = new CreateTableCommand({
+    TableName: TBL_RESERVATION,
+    KeySchema: [
+      { AttributeName: 'listingId', KeyType: 'HASH' },
+      { AttributeName: 'reservationCode', KeyType: 'RANGE' }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: 'listingId', AttributeType: 'S' },
+      { AttributeName: 'reservationCode', AttributeType: 'S' }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
+  });
+
+
+  const memberCmd = new CreateTableCommand({
+    TableName: TBL_MEMBER,
+    KeySchema: [
+      { AttributeName: 'reservationCode', KeyType: 'HASH' },
+      { AttributeName: 'memberNo', KeyType: 'RANGE' }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: 'memberNo', AttributeType: 'N' },
+      { AttributeName: 'reservationCode', AttributeType: 'S' }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
+  });
+
+
+  const scannerCmd = new CreateTableCommand({
+    TableName: TBL_SCANNER,
+    KeySchema: [
+      { AttributeName: 'terminalKey', KeyType: 'HASH' }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: 'terminalKey', AttributeType: 'S' }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
+  });
+
+  const recordCmd = new CreateTableCommand({
+    TableName: TBL_RECORD,
+    KeySchema: [
+      { AttributeName: 'terminalKey', KeyType: 'HASH' }
+      { AttributeName: 'eventTimestamp', KeyType: 'RANGE' }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: 'terminalKey', AttributeType: 'S' },
+      { AttributeName: 'eventTimestamp', AttributeType: 'N' }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
+  });
+
+
+  const promises = [
+    ddbDocClient.send(reservationCmd),
+    ddbDocClient.send(memberCmd),
+    ddbDocClient.send(scannerCmd),
+    ddbDocClient.send(recordCmd)
+  ];
+
+
+  const results = await Promise.all(promises);
+
+  console.log('initializeDatabase out: results:' + JSON.stringify(results));
+
+  return;
 
 };

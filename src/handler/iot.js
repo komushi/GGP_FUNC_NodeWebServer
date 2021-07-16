@@ -24,8 +24,8 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
     const getReservationResult = await storage.getReservation({reservationCode, listingId});
 
     await storage.deleteReservation({
-    	listingId: getReservationResult.reservation.listingId,
-    	reservationCode: getReservationResult.reservation.reservationCode
+    	listingId: listingId,
+    	reservationCode: reservationCode
     });
 
     await storage.deleteMembers(getReservationResult.members);
@@ -33,7 +33,7 @@ module.exports.removeReservation = async ({reservationCode, listingId}) => {
     // delete named shadow
     await shadow.deleteShadow({
     	thingName: AWS_IOT_THING_NAME,
-    	reservationCode: getReservationResult.reservation.reservationCode    	
+    	reservationCode: reservationCode    	
     });
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
