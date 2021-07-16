@@ -51,7 +51,7 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   } else {
     res.send({
-        "code":1,
+        "code":0,
         "message": 'Not allowed!'
 
     });
