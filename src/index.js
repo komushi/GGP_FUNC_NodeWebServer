@@ -17,8 +17,8 @@ const ACTION_REMOVE = 'REMOVE';
 
 // This is a handler which does nothing for this example
 exports.handler = async function(event, context) {
-    console.log('event: ' + JSON.stringify(event));
-    console.log('context: ' + JSON.stringify(context));
+    // console.log('event: ' + JSON.stringify(event));
+    // console.log('context: ' + JSON.stringify(context));
 
     try {
 

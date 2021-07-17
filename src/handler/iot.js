@@ -20,8 +20,7 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
 		!getShadowResult.state.desired.lastRequestOn ||
 		getShadowResult.state.desired.lastRequestOn != lastRequestOn) {
 
-		console.log('syncReservation lastRequestOn validation: does not match!');
-		return;
+		throw new Error('syncReservation lastRequestOn validation: does not match!');
 	}
 	
 	const userResults = await scanner.findUsers({
@@ -69,8 +68,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
 		!getShadowResult.state.desired.lastRequestOn ||
 		getShadowResult.state.desired.lastRequestOn != lastRequestOn) {
 
-		console.log('syncReservation lastRequestOn validation: does not match!');
-		return;
+		throw new Error('syncReservation lastRequestOn validation: does not match!');
 	}
 
     let reportedMembers = new Map();
