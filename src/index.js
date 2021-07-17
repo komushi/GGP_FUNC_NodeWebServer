@@ -14,8 +14,6 @@ const CORE_PORT = process.env.CORE_PORT || 8081;
 const ACTION_UPDATE = 'UPDATE';
 const ACTION_REMOVE = 'REMOVE';
 
-const base_topic = AWS_IOT_THING_NAME + '/web_server_node'
-const log_topic = base_topic + '/log'
 
 // This is a handler which does nothing for this example
 exports.handler = async function(event, context) {
@@ -34,6 +32,8 @@ exports.handler = async function(event, context) {
             const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
                 if (action == ACTION_REMOVE) {
+                    console.log('shadow/update/delta action: ' + action);
+
                     await iotHandler.removeReservation({
                         reservationCode,
                         listingId,
@@ -47,6 +47,8 @@ exports.handler = async function(event, context) {
 
                     return;
                 } else if (action == ACTION_UPDATE) {
+                    console.log('shadow/update/delta action: ' + action);
+
                     await iotHandler.syncReservation({
                         reservationCode,
                         listingId,
@@ -57,8 +59,11 @@ exports.handler = async function(event, context) {
                         thingName: AWS_IOT_THING_NAME,
                         reportedState: event.state
                     });
-                    
+
+                    return;
+
                 } else {
+                    console.log('shadow/update/delta action: ' + action);
                     return;
                 }
             }));
