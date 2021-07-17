@@ -17,12 +17,6 @@ const ACTION_REMOVE = 'REMOVE';
 const base_topic = AWS_IOT_THING_NAME + '/web_server_node'
 const log_topic = base_topic + '/log'
 
-function publishCallback(err, data) {
-    console.log('publishCallback');
-    console.log(err);
-    console.log(data);
-}
-
 // This is a handler which does nothing for this example
 exports.handler = async function(event, context) {
     console.log('event: ' + JSON.stringify(event));
@@ -40,17 +34,30 @@ exports.handler = async function(event, context) {
             const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
                 if (action == ACTION_REMOVE) {
-                    return await iotHandler.removeReservation({
+                    await iotHandler.removeReservation({
                         reservationCode,
                         listingId,
                         lastRequestOn
                     });
+
+                    await shadow.updateReportedShadow({
+                        thingName: AWS_IOT_THING_NAME,
+                        reportedState: event.state
+                    });
+
+                    return;
                 } else if (action == ACTION_UPDATE) {
-                    return await iotHandler.syncReservation({
+                    await iotHandler.syncReservation({
                         reservationCode,
                         listingId,
                         lastRequestOn
-                    });                
+                    });
+
+                    await shadow.updateReportedShadow({
+                        thingName: AWS_IOT_THING_NAME,
+                        reportedState: event.state
+                    });
+                    
                 } else {
                     return;
                 }
