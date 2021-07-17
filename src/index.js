@@ -26,14 +26,18 @@ exports.handler = async function(event, context) {
             
             await storage.initializeDatabase();
 
-        } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
-            console.log('event.state.reservations: ' + JSON.stringify(event.state.reservations));
+        // } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
+        } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/documents`) {
+            console.log('event.current.state.desired: ' + JSON.stringify(event.current.state.desired));
+
+            if (!event.current.state.desired || !event.current.state.desired.reservations) {
+                console.log('Quit process as event.current.state.desired.reservations not available!!');
+                return;
+            }
 
             const results = await Promise.all(Object.entries(event.state.reservations).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
                 if (action == ACTION_REMOVE) {
-                    console.log('shadow/update/delta action: ' + action);
-
                     await iotHandler.removeReservation({
                         reservationCode,
                         listingId,
@@ -47,8 +51,6 @@ exports.handler = async function(event, context) {
 
                     return;
                 } else if (action == ACTION_UPDATE) {
-                    console.log('shadow/update/delta action: ' + action);
-
                     await iotHandler.syncReservation({
                         reservationCode,
                         listingId,
@@ -63,8 +65,10 @@ exports.handler = async function(event, context) {
                     return;
 
                 } else {
-                    console.log('shadow/update/delta action: ' + action);
-                    return;
+                    return {
+                        reservationCode: reservationCode,
+                        action: action
+                    };
                 }
             }));
 
