@@ -35,7 +35,7 @@ exports.handler = async function(event, context) {
                 return;
             }
 
-            const results = await Promise.all(Object.entries(event.current.state.reservations).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
+            const results = await Promise.all(Object.entries(event.current.state.desired.reservations).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
                 if (action == ACTION_REMOVE) {
                     await iotHandler.removeReservation({
