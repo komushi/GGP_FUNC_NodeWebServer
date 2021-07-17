@@ -46,7 +46,7 @@ exports.handler = async function(event, context) {
 
                     await shadow.updateReportedShadow({
                         thingName: AWS_IOT_THING_NAME,
-                        reportedState: event.state
+                        reportedState: event.current.state.desired
                     });
 
                     return;
@@ -59,7 +59,7 @@ exports.handler = async function(event, context) {
 
                     await shadow.updateReportedShadow({
                         thingName: AWS_IOT_THING_NAME,
-                        reportedState: event.state
+                        reportedState: event.current.state.desired
                     });
 
                     return;
