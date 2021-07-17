@@ -21,56 +21,47 @@ exports.handler = async function(event, context) {
     // console.log('context: ' + JSON.stringify(context));
 
     try {
-
         if (context.clientContext.Custom.subject.indexOf('init_db') > -1) {
             
             await storage.initializeDatabase();
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
-        // } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/documents`) {
             console.log('event.state: ' + JSON.stringify(event.state));
 
-            // if (!event.state.reservations) {
-            //     console.log('Quit process as event.state.reservations not available!!');
-            //     return;
-            // }
+            if (!event.state.reservations) {
+                console.log('reservations not specified in delta!!');
+                return;
+            }
 
             const getShadowResult = await shadow.getShadow({
                 thingName: AWS_IOT_THING_NAME
             });
 
-            const results = await Promise.all(Object.entries(getShadowResult.state.desired.reservations).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
+            const results = await Promise.all(
+                Object.entries(getShadowResult.state.desired.reservations)
+                .filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
+                    return Object.keys(event.state.reservations).includes(reservationCode);
+                })
+                .map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
-                if (action == ACTION_REMOVE) {
-                    return await iotHandler.removeReservation({
-                        reservationCode,
-                        listingId,
-                        lastRequestOn
-                    });
+                    console.log('!!!!reservationCode!!!!:' + reservationCode);
 
-                    // await shadow.updateReportedShadow({
-                    //     thingName: AWS_IOT_THING_NAME,
-                    //     reportedState: event.current.state.desired
-                    // });
+                    if (action == ACTION_REMOVE) {
+                        return await iotHandler.removeReservation({
+                            reservationCode,
+                            listingId,
+                            lastRequestOn
+                        });
+                    } else if (action == ACTION_UPDATE) {
+                        return await iotHandler.syncReservation({
+                            reservationCode,
+                            listingId,
+                            lastRequestOn
+                        });
+                    } else {
+                        throw new Error(`Wrong action ${action}!`);
+                    }
 
-                    return;
-                } else if (action == ACTION_UPDATE) {
-                    return await iotHandler.syncReservation({
-                        reservationCode,
-                        listingId,
-                        lastRequestOn
-                    });
-
-                    // await shadow.updateReportedShadow({
-                    //     thingName: AWS_IOT_THING_NAME,
-                    //     reportedState: event.current.state.desired
-                    // });
-
-                    return;
-
-                } else {
-                    throw new Error(`Wrong action ${action}!`);
-                }
             }));
 
             await shadow.updateReportedShadow({
@@ -97,12 +88,6 @@ exports.handler = async function(event, context) {
             });
 
         }
-
-
-        // } else if (context.clientContext.Custom.subject.indexOf('/update/delta') > -1 
-        //     && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
-            
-
 
     } catch (err) {
         console.error('!!!!!!error happened at handler error start!!!!!!');
