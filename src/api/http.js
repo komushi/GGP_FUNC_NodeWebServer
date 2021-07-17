@@ -36,8 +36,6 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
 
-  await storage.saveScanRecord(payload);
-
   if (payload.type == 1 || payload.type == 2) {
     const getMemberResult = await storage.getMember({
       reservationCode: payload.group,
@@ -56,6 +54,8 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
     });
   }
+
+  await storage.saveScanRecord(payload);
 });
 
 /*
