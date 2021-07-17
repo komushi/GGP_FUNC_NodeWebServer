@@ -65,7 +65,17 @@ exports.handler = async function(event, context) {
             console.log('/shadow/delete/accepted event.state: ' + JSON.stringify(event.state));
 
 
+        } else if (context.clientContext.Custom.subject.indexOf('find_user') > -1 ) {
+
+            console.log('find_user event.group: ' + event.group);
+
+
+            await scanner.findUsers({
+                group: event.group
+            });
+
         }
+
 
         // } else if (context.clientContext.Custom.subject.indexOf('/update/delta') > -1 
         //     && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
