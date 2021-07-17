@@ -30,15 +30,12 @@ const { DynamoDBDocumentClient, QueryCommand, TransactWriteCommand, DeleteComman
 
 const ddbDocClient = DynamoDBDocumentClient.from(client, translateConfig);
 
-module.exports.saveReservation = async ({reservation, members, version}) => {
+module.exports.saveReservation = async ({reservation, members}) => {
 
   try {
-    console.log('saveReservation in: reservation:' + JSON.stringify(reservation));
-    console.log('saveReservation in: members:' + JSON.stringify(members));
-    console.log('saveReservation in: version:' + version);
+    console.log('saveReservation in: reservation, members:' + JSON.stringify({reservation, members}));
 
     const reservarionRecord = reservation;
-    reservarionRecord.version = version;
 
     const reservationParams = getReservationParams(reservarionRecord);
 
@@ -198,10 +195,8 @@ module.exports.getReservation = async ({reservationCode, listingId}) => {
     return null;
   } else {
     const reservation = Object.assign({}, reservationResult.Items[0]);
-    delete reservation.version;
 
     const result = {
-      version: reservationResult.Items[0].version,
       reservation: reservation,
       members: memberResult.Items
     };

@@ -99,3 +99,5 @@ $ aws dynamodb create-table --cli-input-json file://create-table-record.json --e
 ```
 $ aws dynamodb scan --table-name GoCheckInScanner --endpoint-url http://192.168.11.36:8080
 ```
+
+
