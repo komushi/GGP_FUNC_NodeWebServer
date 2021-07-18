@@ -7,7 +7,7 @@ const Router = require('express-promise-router');
 const router = new Router();
 
 // export our router to be mounted by the parent application
-module.exports = router
+module.exports = router;
 
 router.post('/deviceReg', async (req, res) => {
 
@@ -67,7 +67,7 @@ router.post('/deviceReg', async (req, res) => {
 
   await Promise.all(params.map(async(param) => {
     await storage.updateScanner(param);
-  });
+  }));
 
 });
 
