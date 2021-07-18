@@ -233,8 +233,7 @@ module.exports.updateScanner = async (record) => {
 
 module.exports.getScanners = async ({listingId, roomCode}) => {
 
-  console.log('getScanners in: listingId:' + listingId);
-  console.log('getScanners in: roomCode:' + roomCode);
+  console.log('getScanners in:' + JSON.stringify({listingId, roomCode}));
 
   let param;
 
@@ -242,7 +241,8 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
     if (roomCode) {
       param = {
         TableName : TBL_SCANNER,
-        FilterExpression: 'listingId = :listingId and roomCode = :roomCode',
+        KeyConditionExpression: 'listingId = :listingId',
+        FilterExpression: 'roomCode = :roomCode',
         ExpressionAttributeValues: {
           ':listingId': listingId,
           ':roomCode': roomCode
@@ -251,19 +251,17 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
     } else {
       param = {
         TableName : TBL_SCANNER,
-        FilterExpression: 'listingId = :listingId',
+        KeyConditionExpression: 'listingId = :listingId',
         ExpressionAttributeValues: {
           ':listingId': listingId
         }    
       };
     }
   } else {
-    param = {
-      TableName : TBL_SCANNER
-    };
+    throw new Error('getScanners: listingId is required!!')
   }
 
-  const command = new ScanCommand(param);
+  const command = new QueryCommand(param);
 
   let result;
   
@@ -431,9 +429,11 @@ module.exports.initializeDatabase = async () => {
   const scannerCmd = new CreateTableCommand({
     TableName: TBL_SCANNER,
     KeySchema: [
-      { AttributeName: 'terminalKey', KeyType: 'HASH' }
+      { AttributeName: 'listiId', KeyType: 'HASH' },
+      { AttributeName: 'terminalKey', KeyType: 'RANGE' }
     ],
     AttributeDefinitions: [
+      { AttributeName: 'listiId', AttributeType: 'S' },
       { AttributeName: 'terminalKey', AttributeType: 'S' }
     ],
     ProvisionedThroughput: {

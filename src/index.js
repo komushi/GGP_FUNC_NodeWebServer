@@ -37,14 +37,11 @@ exports.handler = async function(event, context) {
                 thingName: AWS_IOT_THING_NAME
             });
 
-            const results = await Promise.all(
-                Object.entries(getShadowResult.state.desired.reservations)
+            const results = await Promise.all(Object.entries(getShadowResult.state.desired.reservations)
                 .filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
                     return Object.keys(event.state.reservations).includes(reservationCode);
                 })
                 .map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
-
-                    console.log('!!!!reservationCode!!!!:' + reservationCode);
 
                     if (action == ACTION_REMOVE) {
                         return await iotHandler.removeReservation({
