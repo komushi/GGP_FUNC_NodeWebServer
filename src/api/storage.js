@@ -225,7 +225,12 @@ module.exports.updateScanner = async ({
   const params = [{
     Put: {
       TableName: TBL_SCANNER,
-      Item: record
+      Item: {
+        terminalKey,
+        listingId,
+        roomCode,
+        localIp
+      }
     }
   }];
 
