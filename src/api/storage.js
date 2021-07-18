@@ -208,9 +208,19 @@ module.exports.getReservation = async ({reservationCode, listingId}) => {
 
 };
 
-module.exports.updateScanner = async (record) => {
+module.exports.updateScanner = async ({
+    terminalKey,
+    listingId,
+    roomCode,
+    localIp
+  }) => {
 
-  console.log('updateScanner in: record:' + JSON.stringify(record));
+  console.log('updateScanner in:' + JSON.stringify({
+    terminalKey,
+    listingId,
+    roomCode,
+    localIp
+  }));
 
   const params = [{
     Put: {

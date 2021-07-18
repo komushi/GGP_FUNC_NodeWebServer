@@ -47,14 +47,22 @@
     "KeySchema":
     [
         {
-            "AttributeName": "terminalKey",
+            "AttributeName": "listiId",
             "KeyType": "HASH"
+        },
+        {
+            "AttributeName": "terminalKey",
+            "KeyType": "RANGE"
         }
     ],
     "AttributeDefinitions":
     [
         {
             "AttributeName": "terminalKey",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "listiId",
             "AttributeType": "S"
         }
     ],
