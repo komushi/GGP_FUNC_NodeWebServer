@@ -444,11 +444,11 @@ module.exports.initializeDatabase = async () => {
   const scannerCmd = new CreateTableCommand({
     TableName: TBL_SCANNER,
     KeySchema: [
-      { AttributeName: 'listiId', KeyType: 'HASH' },
+      { AttributeName: 'listingId', KeyType: 'HASH' },
       { AttributeName: 'terminalKey', KeyType: 'RANGE' }
     ],
     AttributeDefinitions: [
-      { AttributeName: 'listiId', AttributeType: 'S' },
+      { AttributeName: 'listingId', AttributeType: 'S' },
       { AttributeName: 'terminalKey', AttributeType: 'S' }
     ],
     ProvisionedThroughput: {
