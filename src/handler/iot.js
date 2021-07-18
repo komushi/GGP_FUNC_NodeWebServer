@@ -101,10 +101,10 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
   		}
 	});
 
-	const scannerAddresses = await storage.getScanners({});
-	if (scannerAddresses.length == 0){
-		throw new Error('No scanner registered!! Needs at least one scanner!!');
-	}
+	// const scannerAddresses = await storage.getScanners({});
+	// if (scannerAddresses.length == 0){
+	// 	throw new Error('No scanner registered!! Needs at least one scanner!!');
+	// }
 
 	// delete users on scanner
 	const scannerDeletePromises = [];
