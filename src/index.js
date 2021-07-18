@@ -114,14 +114,3 @@ mountRoutes(app);
 
 app.listen(CORE_PORT, () => console.log(`Example app listening on port ${CORE_PORT}!`));
 
-
-// shadow.getShadow({
-//     thingName: AWS_IOT_THING_NAME
-// }).then(value => {
-//     console.log('getShadow startupShadowResult');
-// });
-
-
-console.log('AWS_IOT_THING_NAME: ' + AWS_IOT_THING_NAME);
-console.log('AWS_GREENGRASS_GROUP_NAME: ' + AWS_GREENGRASS_GROUP_NAME);
-
