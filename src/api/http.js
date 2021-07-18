@@ -1,5 +1,7 @@
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 
+console.log('http.js AWS_IOT_THING_NAME:' + AWS_IOT_THING_NAME);
+
 const storage = require('../api/storage');
 
 const Router = require('express-promise-router');
