@@ -219,7 +219,8 @@ module.exports.updateScanner = async ({
     terminalKey,
     listingId,
     roomCode,
-    localIp
+    localIp,
+    AWS_IOT_THING_NAME: process.env.AWS_IOT_THING_NAME
   }));
 
   const params = [{
