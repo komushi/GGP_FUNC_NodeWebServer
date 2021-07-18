@@ -1,3 +1,5 @@
+const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
+
 const storage = require('../api/storage');
 
 const Router = require('express-promise-router');
@@ -11,19 +13,61 @@ router.post('/deviceReg', async (req, res) => {
 
   console.log('req.body' + JSON.stringify(req.body));
 
-  await storage.updateScanner({
-    terminalKey: req.body.terminalKey,
-    listingId: req.body.listingId,
-    roomCode: req.body.roomCode,
-    localIp: req.body.localIp
-  });
+  const listingIds = req.body.listingId.split(',');
 
-  const response = {
-    "code":0,
-    "message":"Good!" 
+  let response = {
+    'code': 0,
+    'message': 'Good' 
   };
-  
-  res.send(response);
+
+  let params = [];
+
+  if (listingIds.length == 0) {
+    response = {
+      'code': 1,
+      'message': 'Please set listingId to <listingId1> or <listingId1>,<listingId2>!!'
+    };
+    
+    return res.send(response);
+
+  } else if (listingIds.length == 1) {
+
+    res.send(response);
+
+    params.push({
+      terminalKey: req.body.terminalKey,
+      listingId: req.body.listingId,
+      roomCode: req.body.roomCode,
+      localIp: req.body.localIp,
+      coreName: AWS_IOT_THING_NAME
+    });
+
+  } else if (listingIds.length > 1) {
+
+    if (req.body.roomCode) {
+      response = {
+        'code': 1,
+        'message': 'Cannot set roomCode with multiple listingIds.'
+      };
+
+      return res.send(response);
+    } else {
+      res.send(response);
+
+      listingIds.forEach(listingId => {
+        params.push({
+          terminalKey: req.body.terminalKey,
+          listingId: listingId,
+          localIp: req.body.localIp,
+          coreName: AWS_IOT_THING_NAME
+        });
+      });
+    }
+  }
+
+  await Promise.all(params.map(async(param) => {
+    await storage.updateScanner(param);
+  });
 
 });
 
