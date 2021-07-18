@@ -1,10 +1,3 @@
-
-console.log('http.js process.env.AWS_IOT_THING_NAME:' + process.env.AWS_IOT_THING_NAME);
-
-const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
-
-console.log('http.js AWS_IOT_THING_NAME:' + process.env.AWS_IOT_THING_NAME);
-
 const storage = require('../api/storage');
 
 const Router = require('express-promise-router');
@@ -43,8 +36,7 @@ router.post('/deviceReg', async (req, res) => {
       terminalKey: req.body.terminalKey,
       listingId: req.body.listingId,
       roomCode: req.body.roomCode,
-      localIp: req.body.localIp,
-      coreName: AWS_IOT_THING_NAME
+      localIp: req.body.localIp
     });
 
   } else if (listingIds.length > 1) {
@@ -63,8 +55,7 @@ router.post('/deviceReg', async (req, res) => {
         params.push({
           terminalKey: req.body.terminalKey,
           listingId: listingId,
-          localIp: req.body.localIp,
-          coreName: AWS_IOT_THING_NAME
+          localIp: req.body.localIp
         });
       });
     }

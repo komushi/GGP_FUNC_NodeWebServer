@@ -22,7 +22,7 @@ const unmarshallOptions = {
 
 const translateConfig = { marshallOptions, unmarshallOptions };
 
-const { DynamoDBClient, CreateTableCommand, DescribeTableCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, DeleteTableCommand, CreateTableCommand, DescribeTableCommand } = require("@aws-sdk/client-dynamodb");
 
 const client = new DynamoDBClient(config);
 
@@ -407,6 +407,22 @@ module.exports.initializeDatabase = async () => {
 
   console.log('initializeDatabase in:');
 
+  const reservationDeleteCmd = new DeleteTableCommand({
+    TableName: TBL_RESERVATION
+  });
+
+  const memberDeleteCmd = new DeleteTableCommand({
+    TableName: TBL_MEMBER
+  });
+
+  const scannerDeleteCmd = new DeleteTableCommand({
+    TableName: TBL_SCANNER
+  });
+
+  const recordDeleteCmd = new DeleteTableCommand({
+    TableName: TBL_RECORD
+  });
+
   const reservationCmd = new CreateTableCommand({
     TableName: TBL_RESERVATION,
     KeySchema: [
@@ -473,18 +489,25 @@ module.exports.initializeDatabase = async () => {
     }
   });
 
+  const deleteResults = await Promise.all([
+    ddbDocClient.send(reservationDeleteCmd),
+    ddbDocClient.send(memberDeleteCmd),
+    ddbDocClient.send(scannerDeleteCmd),
+    ddbDocClient.send(recordDeleteCmd)
+  ]).catch(err => {
+    console.log('initializeDatabase err:' + err.message);
+  });
 
-  const promises = [
+  const createResults = await Promise.all([
     ddbDocClient.send(reservationCmd),
     ddbDocClient.send(memberCmd),
     ddbDocClient.send(scannerCmd),
     ddbDocClient.send(recordCmd)
-  ];
+  ]).catch(err => {
+    console.log('initializeDatabase err:' + err.message);
+  });
 
-
-  const results = await Promise.all(promises);
-
-  console.log('initializeDatabase out: results:' + JSON.stringify(results));
+  console.log('initializeDatabase out');
 
   return;
 
