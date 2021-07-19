@@ -70,10 +70,27 @@ router.post('/deviceReg', async (req, res) => {
     terminalKey: req.body.terminalKey
   });
 
-  // const iotData = new greengrass.IotData();
-  // iotData.publish({
-  //   topic: `${AWS_IOT_THING_NAME}/update_scanner`
-  // });
+  const iotData = new greengrass.IotData();
+
+  console.log('AWS_IOT_THING_NAME:' + process.env.AWS_IOT_THING_NAME);
+
+  const publishResults = await Promise.all(newScanners.Items.map(async(item) => {
+      return new Promise((resolve, reject) => {
+        iotData.publish({
+          topic: `${AWS_IOT_THING_NAME}/update_scanner`,
+          payload: JSON.stringify(item)
+        }, (err, data) =>{
+          if (err) {
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+    })
+  );
+
+  console.log('publishResults:' + JSON.stringify(publishResults));
 
 });
 
