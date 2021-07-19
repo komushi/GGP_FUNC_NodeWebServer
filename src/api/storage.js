@@ -234,7 +234,7 @@ module.exports.updateScanner = async ({
 
     // const scanResult = await ddbDocClient.send(scanCmd);
 
-    const scanResult = module.exports.getScannersByTerminalKey({
+    const scanResult = await module.exports.getScannersByTerminalKey({
       terminalKey: terminalKey
     });
 
