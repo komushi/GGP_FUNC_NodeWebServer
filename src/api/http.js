@@ -1,4 +1,5 @@
-const storage = require('../api/storage');
+const greengrass = require('aws-greengrass-core-sdk');
+const storage = require('./storage');
 
 const Router = require('express-promise-router');
 
@@ -64,6 +65,15 @@ router.post('/deviceReg', async (req, res) => {
   await Promise.all(params.map(async(param) => {
     await storage.updateScanner(param);
   }));
+
+  const newScanners = await storage.getScannersByTerminalKey({
+    terminalKey: req.body.terminalKey
+  });
+
+  // const iotData = new greengrass.IotData();
+  // iotData.publish({
+  //   topic: `${AWS_IOT_THING_NAME}/update_scanner`
+  // });
 
 });
 

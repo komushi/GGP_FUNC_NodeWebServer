@@ -222,17 +222,21 @@ module.exports.updateScanner = async ({
       localIp
     }));
 
-    const scanParam = {
-      TableName : TBL_SCANNER,
-      FilterExpression: 'terminalKey = :terminalKey',
-      ExpressionAttributeValues: {
-        ':terminalKey': terminalKey
-      }    
-    };
+    // const scanParam = {
+    //   TableName : TBL_SCANNER,
+    //   FilterExpression: 'terminalKey = :terminalKey',
+    //   ExpressionAttributeValues: {
+    //     ':terminalKey': terminalKey
+    //   }    
+    // };
 
-    const scanCmd = new ScanCommand(scanParam);
+    // const scanCmd = new ScanCommand(scanParam);
 
-    const scanResult = await ddbDocClient.send(scanCmd);
+    // const scanResult = await ddbDocClient.send(scanCmd);
+
+    const scanResult = module.exports.getScannersByTerminalKey({
+      terminalKey: terminalKey
+    });
 
     const delParams = getDelScannerParams(scanResult.Items);
 
@@ -284,6 +288,28 @@ const getDelScannerParams = (records) => {
   console.log('getDelScannerParams out: params:' + JSON.stringify(params));
 
   return params;
+};
+
+module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
+
+  console.log('getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
+
+  const scanParam = {
+    TableName : TBL_SCANNER,
+    FilterExpression: 'terminalKey = :terminalKey',
+    ExpressionAttributeValues: {
+      ':terminalKey': terminalKey
+    }    
+  };
+
+  const scanCmd = new ScanCommand(scanParam);
+
+  const scanResult = await ddbDocClient.send(scanCmd);
+
+  console.log('getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+
+  return scanResult;
+
 };
 
 module.exports.getScanners = async ({listingId, roomCode}) => {
