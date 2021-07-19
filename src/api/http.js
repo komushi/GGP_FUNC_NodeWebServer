@@ -77,7 +77,7 @@ router.post('/deviceReg', async (req, res) => {
   const publishResults = await Promise.all(newScanners.Items.map(async(item) => {
       return new Promise((resolve, reject) => {
         iotData.publish({
-          topic: `${AWS_IOT_THING_NAME}/update_scanner`,
+          topic: `${process.env.AWS_IOT_THING_NAME}/update_scanner`,
           payload: JSON.stringify(item)
         }, (err, data) =>{
           if (err) {
