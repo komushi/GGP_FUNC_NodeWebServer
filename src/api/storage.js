@@ -215,36 +215,75 @@ module.exports.updateScanner = async ({
     localIp
   }) => {
 
-  console.log('updateScanner in:' + JSON.stringify({
-    terminalKey,
-    listingId,
-    roomCode,
-    localIp,
-    AWS_IOT_THING_NAME: process.env.AWS_IOT_THING_NAME
-  }));
+    console.log('updateScanner in:' + JSON.stringify({
+      terminalKey,
+      listingId,
+      roomCode,
+      localIp
+    }));
 
-  const params = [{
-    Put: {
+    const scanParam = {
+      TableName : TBL_SCANNER,
+      FilterExpression: 'terminalKey = :terminalKey',
+      ExpressionAttributeValues: {
+        ':terminalKey': terminalKey
+      }    
+    };
+
+    const scanCmd = new ScanCommand(scanParam);
+
+    const scanResult = await ddbDocClient.send(scanCmd);
+
+    const delParams = getDelScannerParams(scanResult.Items);
+
+    await Promise.all(delParams.map(async (param) => {
+      const command = new DeleteCommand(param);
+      return await ddbDocClient.send(command); 
+
+    }));   
+
+    const params = [{
+      Put: {
+        TableName: TBL_SCANNER,
+        Item: {
+          terminalKey,
+          listingId,
+          roomCode,
+          localIp,
+          coreName: process.env.AWS_IOT_THING_NAME
+        }
+      }
+    }];
+
+    const command = new TransactWriteCommand({
+      TransactItems: params
+    });
+
+    const result = await ddbDocClient.send(command);
+
+    console.log('updateScanner out: result:' + JSON.stringify(result));
+
+    return result;
+
+};
+
+const getDelScannerParams = (records) => {
+
+  console.log('getDelScannerParams in: records:' + JSON.stringify(records));
+
+  const params = records.map(record => {
+    return {
       TableName: TBL_SCANNER,
-      Item: {
-        terminalKey,
-        listingId,
-        roomCode,
-        localIp
+      Key: {
+        listingId: record.listingId,
+        terminalKey: record.terminalKey
       }
     }
-  }];
-
-  const command = new TransactWriteCommand({
-    TransactItems: params
   });
 
-  const result = await ddbDocClient.send(command);
+  console.log('getDelScannerParams out: params:' + JSON.stringify(params));
 
-  console.log('updateScanner out: result:' + JSON.stringify(result));
-
-  return result;
-
+  return params;
 };
 
 module.exports.getScanners = async ({listingId, roomCode}) => {

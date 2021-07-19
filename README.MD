@@ -47,7 +47,7 @@
     "KeySchema":
     [
         {
-            "AttributeName": "listiId",
+            "AttributeName": "listingId",
             "KeyType": "HASH"
         },
         {
@@ -62,7 +62,7 @@
             "AttributeType": "S"
         },
         {
-            "AttributeName": "listiId",
+            "AttributeName": "listingId",
             "AttributeType": "S"
         }
     ],
