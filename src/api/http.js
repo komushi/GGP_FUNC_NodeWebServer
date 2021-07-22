@@ -96,7 +96,8 @@ router.post('/deviceReg', async (req, res) => {
           topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/scanner_detected`,
           // payload: JSON.stringify(newScanners.Items)
           payload: JSON.stringify({
-            items: newScanners.Items
+            items: newScanners.Items,
+            terminalKey: req.body.terminalKey
           })
         }, (err, data) =>{
           if (err) {
