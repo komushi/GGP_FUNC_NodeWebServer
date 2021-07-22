@@ -94,7 +94,8 @@ router.post('/deviceReg', async (req, res) => {
       new Promise((resolve, reject) => {
         iotData.publish({
           topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/scanner_detected`,
-          payload: JSON.stringify(newScanners.Items)
+          // payload: JSON.stringify(newScanners.Items)
+          payload: JSON.stringify(newScanners.Items[0])
         }, (err, data) =>{
           if (err) {
             reject(err);
