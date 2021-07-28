@@ -57,12 +57,13 @@ router.post('/deviceReg', async (req, res) => {
 
       listingIds.forEach(listingId => {
         params.push({
+          coreName: process.env.AWS_IOT_THING_NAME,
           terminalKey: req.body.terminalKey,
+          terminalName: req.body.terminalName,
           listingId: listingId,
           localIp: req.body.localIp,
           latitude: req.body.latitude,
-          longitude: req.body.longitude,
-          coreName: process.env.AWS_IOT_THING_NAME
+          longitude: req.body.longitude
         });
       });
     }
