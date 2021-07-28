@@ -34,7 +34,7 @@ router.post('/deviceReg', async (req, res) => {
     res.send(response);
 
     params.push({
-      listingId: listingId,
+      listingId: req.body.listingId,
       terminalKey: req.body.terminalKey,
       terminalName: req.body.terminalName,
       coreName: process.env.AWS_IOT_THING_NAME,
@@ -58,7 +58,7 @@ router.post('/deviceReg', async (req, res) => {
 
       listingIds.forEach(listingId => {
         params.push({
-          listingId: listingId,
+          listingId: req.body.listingId,
           terminalKey: req.body.terminalKey,
           terminalName: req.body.terminalName,
           coreName: process.env.AWS_IOT_THING_NAME,
