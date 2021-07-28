@@ -1,9 +1,9 @@
-// iot-handler
+// shadow-handler
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 const COL_FACE_IMG_URL = process.env.COL_FACE_IMG_URL;
 
 const storage = require('../api/storage');
-const shadow = require('../api/shadow');
+const iot = require('../api/iot');
 const scanner = require('../api/scanner');
 
 
@@ -11,7 +11,7 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
 
 	console.log('removeReservation in: ' + JSON.stringify({reservationCode, listingId, lastRequestOn}));
 
-	const getShadowResult = await shadow.getShadow({
+	const getShadowResult = await iot.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
 	    shadowName: reservationCode
 	});
@@ -46,7 +46,7 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
     await storage.deleteMembers(getReservationResult.members);
 
     // delete named shadow
-    await shadow.deleteShadow({
+    await iot.deleteShadow({
     	thingName: AWS_IOT_THING_NAME,
     	shadowName: reservationCode    	
     });
@@ -59,7 +59,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
 
 	console.log('syncReservation in: ' + JSON.stringify({reservationCode, listingId, lastRequestOn}));
 
-	const getShadowResult = await shadow.getShadow({
+	const getShadowResult = await iot.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
 	    shadowName: reservationCode
 	});
@@ -172,7 +172,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
 		reportedState['members'][key] = null;
 	});
 
-    await shadow.updateReportedShadow({
+    await iot.updateReportedShadow({
     	thingName: AWS_IOT_THING_NAME,
     	shadowName: reservationCode,
     	reportedState: reportedState

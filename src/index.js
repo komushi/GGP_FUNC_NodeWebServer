@@ -1,10 +1,10 @@
 const express = require('express');
-const mountRoutes = require('./router');
+const mountRoutes = require('./handler/router');
 
-const storage = require('./api/storage');
-const shadow = require('./api/shadow');
+const storage = require('./handler/storage');
+const iot = require('./api/iot');
 const scanner = require('./api/scanner');
-const iotHandler = require('./handler/iot');
+const shadowHandler = require('./handler/shadow');
 
 const GROUP_ID = process.env.GROUP_ID
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
@@ -33,7 +33,7 @@ exports.handler = async function(event, context) {
                 return;
             }
 
-            const getShadowResult = await shadow.getShadow({
+            const getShadowResult = await iot.getShadow({
                 thingName: AWS_IOT_THING_NAME
             });
 
@@ -44,13 +44,13 @@ exports.handler = async function(event, context) {
                 .map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
                     if (action == ACTION_REMOVE) {
-                        return await iotHandler.removeReservation({
+                        return await shadowHandler.removeReservation({
                             reservationCode,
                             listingId,
                             lastRequestOn
                         });
                     } else if (action == ACTION_UPDATE) {
-                        return await iotHandler.syncReservation({
+                        return await shadowHandler.syncReservation({
                             reservationCode,
                             listingId,
                             lastRequestOn
@@ -61,7 +61,7 @@ exports.handler = async function(event, context) {
 
             }));
 
-            await shadow.updateReportedShadow({
+            await iot.updateReportedShadow({
                 thingName: AWS_IOT_THING_NAME,
                 reportedState: getShadowResult.state.desired
             });

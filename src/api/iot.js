@@ -1,10 +1,31 @@
-// const greengrass = require('aws-greengrass-core-sdk');
-// const iotData = new greengrass.IotData();
+const greengrass = require('aws-greengrass-core-sdk');
+const iotData = new greengrass.IotData();
 const { IoTDataPlaneClient, GetThingShadowCommand, UpdateThingShadowCommand, DeleteThingShadowCommand } = require("@aws-sdk/client-iot-data-plane");
+
+module.exports.publish = async ({topic, payload}) => {
+
+	console.log('iot-api.publish in: params:' + JSON.stringify(params));
+
+    return new Promise((resolve, reject) => {
+      iotData.publish({
+        topic: topic,
+        payload: payload
+      }, (err, data) =>{
+        if (err) {
+        	console.log('iot-api.publish err:' + JSON.stringify(err));
+          	reject(err);
+        } else {
+        	console.log('iot-api.publish out data:' + JSON.stringify(data));
+      		resolve(data);
+        }
+      });
+    });
+
+};
 
 module.exports.getShadow = async (params) => {
 
-	console.log('getShadow in: params:' + JSON.stringify(params));
+	console.log('iot-api.getShadow in: params:' + JSON.stringify(params));
 
 	const client = new IoTDataPlaneClient({});
 
@@ -19,7 +40,7 @@ module.exports.getShadow = async (params) => {
 		result = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(returnArray)));
 	}
 
-	console.log('getShadow out: result:' + JSON.stringify(result));
+	console.log('iot-api.getShadow out: result:' + JSON.stringify(result));
 
 	return result;
 
@@ -27,9 +48,7 @@ module.exports.getShadow = async (params) => {
 
 module.exports.updateReportedShadow = async ({thingName, shadowName, reportedState}) => {
 
-	console.log('updateReportedShadow in: thingName:' + thingName);
-	console.log('updateReportedShadow in: shadowName:' + shadowName);
-	console.log('updateReportedShadow in: reportedState:' + JSON.stringify(reportedState));
+	console.log('iot-api.updateReportedShadow in:' + JSON.stringify({thingName, shadowName, reportedState}));
 
 	let newParams = {
 		thingName: thingName
@@ -47,13 +66,15 @@ module.exports.updateReportedShadow = async ({thingName, shadowName, reportedSta
 		}));
 	}
 
-	return await updateShadow(newParams);
+	const result = await updateShadow(newParams);
+
+	console.log('iot-api.updateReportedShadow out: result:' + JSON.stringify({result}));
 };
 
 
 module.exports.deleteShadow = async ({thingName, shadowName}) => {
 
-	console.log('deleteShadow in:' + JSON.stringify({thingName, shadowName}));
+	console.log('iot-api.deleteShadow in:' + JSON.stringify({thingName, shadowName}));
 
 	if (!thingName || !shadowName) {
 		throw new Error('Both thingName and shadowName are needed to DeleteThingShadow!!');
@@ -72,16 +93,15 @@ module.exports.deleteShadow = async ({thingName, shadowName}) => {
 		result = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(returnArray)));
 	}
 
-	console.log('deleteShadow out: result:' + JSON.stringify(result));
+	console.log('iot-api.deleteShadow out: result:' + JSON.stringify(result));
 
 	return result;
 
 };
 
-const updateShadow = async (params) => {
+const updateShadow = async ({thingName, shadowName}) => {
 
-	console.log('updateShadow in: params.thingName:' + JSON.stringify(params.thingName));
-	console.log('updateShadow in: params.shadowName:' + JSON.stringify(params.shadowName));
+	console.log('iot-api.updateShadow in: ' + JSON.stringify({thingName, shadowName}));
 
 	const client = new IoTDataPlaneClient({});
 
@@ -96,34 +116,7 @@ const updateShadow = async (params) => {
 		result = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(returnArray)));
 	}
 
-	console.log('updateShadow out: result:' + JSON.stringify(result));
+	console.log('iot-api.updateShadow out: result:' + JSON.stringify(result));
 
 	return result;
 };
-
-/*
-module.exports.updateDeltaShadow = async ({thingName, shadowName, deltaState}) => {
-
-	console.log('updateDeltaShadow in: thingName:' + thingName);
-	console.log('updateDeltaShadow in: shadowName:' + shadowName);
-	console.log('updateDeltaShadow in: deltaState:' + JSON.stringify(deltaState));
-
-	let newParams = {
-		thingName: params.thingName
-	}
-
-	if (shadowName) {
-		newParams.shadowName = shadowName;
-	}
-
-	if (deltaState) {
-		newParams.payload = Buffer.from(JSON.stringify({
-            "state": {
-                "delta": deltaState
-            }
-		}));
-	}
-
-	return await updateShadow(newParams);
-};
-*/

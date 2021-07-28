@@ -222,18 +222,6 @@ module.exports.updateScanner = async ({
       localIp
     }));
 
-    // const scanParam = {
-    //   TableName : TBL_SCANNER,
-    //   FilterExpression: 'terminalKey = :terminalKey',
-    //   ExpressionAttributeValues: {
-    //     ':terminalKey': terminalKey
-    //   }    
-    // };
-
-    // const scanCmd = new ScanCommand(scanParam);
-
-    // const scanResult = await ddbDocClient.send(scanCmd);
-
     const scanResult = await module.exports.getScannersByTerminalKey({
       terminalKey: terminalKey
     });
