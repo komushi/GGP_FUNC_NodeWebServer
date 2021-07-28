@@ -1,7 +1,7 @@
 const express = require('express');
-const mountRoutes = require('./handler/router');
+const routerHandler = require('./handler/router');
 
-const storage = require('./handler/storage');
+const storage = require('./api/storage');
 const iot = require('./api/iot');
 const scanner = require('./api/scanner');
 const shadowHandler = require('./handler/shadow');
@@ -109,7 +109,7 @@ const app = express();
 
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true}));
-mountRoutes(app);
+routerHandler(app);
 
 
 app.listen(CORE_PORT, () => console.log(`Example app listening on port ${CORE_PORT}!`));
