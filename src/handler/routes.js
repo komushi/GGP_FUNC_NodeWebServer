@@ -34,13 +34,14 @@ router.post('/deviceReg', async (req, res) => {
     res.send(response);
 
     params.push({
+      listingId: listingId,
       terminalKey: req.body.terminalKey,
-      listingId: req.body.listingId,
-      roomCode: req.body.roomCode,
+      terminalName: req.body.terminalName,
+      coreName: process.env.AWS_IOT_THING_NAME,
       localIp: req.body.localIp,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
-      coreName: process.env.AWS_IOT_THING_NAME
+      roomCode: req.body.roomCode
     });
 
   } else if (listingIds.length > 1) {
@@ -57,10 +58,10 @@ router.post('/deviceReg', async (req, res) => {
 
       listingIds.forEach(listingId => {
         params.push({
-          coreName: process.env.AWS_IOT_THING_NAME,
+          listingId: listingId,
           terminalKey: req.body.terminalKey,
           terminalName: req.body.terminalName,
-          listingId: listingId,
+          coreName: process.env.AWS_IOT_THING_NAME,
           localIp: req.body.localIp,
           latitude: req.body.latitude,
           longitude: req.body.longitude
