@@ -208,22 +208,12 @@ module.exports.getReservation = async ({reservationCode, listingId}) => {
 
 };
 
-module.exports.updateScanner = async ({
-    terminalKey,
-    listingId,
-    roomCode,
-    localIp
-  }) => {
+module.exports.updateScanner = async (record) => {
 
-    console.log('updateScanner in:' + JSON.stringify({
-      terminalKey,
-      listingId,
-      roomCode,
-      localIp
-    }));
+    console.log('storage-api.updateScanner in: record:' + JSON.stringify(record));
 
     const scanResult = await module.exports.getScannersByTerminalKey({
-      terminalKey: terminalKey
+      terminalKey: record.terminalKey
     });
 
     const delParams = getDelScannerParams(scanResult.Items);
@@ -237,13 +227,7 @@ module.exports.updateScanner = async ({
     const params = [{
       Put: {
         TableName: TBL_SCANNER,
-        Item: {
-          terminalKey,
-          listingId,
-          roomCode,
-          localIp,
-          coreName: process.env.AWS_IOT_THING_NAME
-        }
+        Item: record
       }
     }];
 
@@ -253,7 +237,7 @@ module.exports.updateScanner = async ({
 
     const result = await ddbDocClient.send(command);
 
-    console.log('updateScanner out: result:' + JSON.stringify(result));
+    console.log('storage-api.updateScanner out: result:' + JSON.stringify(result));
 
     return result;
 
@@ -261,7 +245,7 @@ module.exports.updateScanner = async ({
 
 const getDelScannerParams = (records) => {
 
-  console.log('getDelScannerParams in: records:' + JSON.stringify(records));
+  console.log('storage-api.getDelScannerParams in: records:' + JSON.stringify(records));
 
   const params = records.map(record => {
     return {
@@ -273,14 +257,14 @@ const getDelScannerParams = (records) => {
     }
   });
 
-  console.log('getDelScannerParams out: params:' + JSON.stringify(params));
+  console.log('storage-api.getDelScannerParams out: params:' + JSON.stringify(params));
 
   return params;
 };
 
 module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
-  console.log('getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
+  console.log('storage-api.getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
 
   const scanParam = {
     TableName : TBL_SCANNER,
@@ -294,7 +278,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const scanResult = await ddbDocClient.send(scanCmd);
 
-  console.log('getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+  console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
 
   return scanResult;
 
@@ -302,7 +286,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
 module.exports.getScanners = async ({listingId, roomCode}) => {
 
-  console.log('getScanners in:' + JSON.stringify({listingId, roomCode}));
+  console.log('storage-api.getScanners in:' + JSON.stringify({listingId, roomCode}));
 
   let param;
 
@@ -346,7 +330,7 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
   }
   
 
-  console.log('getScanners result:' + JSON.stringify(result));
+  console.log('storage-api.getScanners result:' + JSON.stringify(result));
 
   return result.Items.map(item => item.localIp);
 
@@ -354,7 +338,7 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
 
 module.exports.saveScanRecord = async (record) => {
 
-  console.log('saveScanRecord in: record:', record);
+  console.log('storage-api.saveScanRecord in: record:', record);
 
   const params = [{
     Put: {
@@ -373,7 +357,7 @@ module.exports.saveScanRecord = async (record) => {
 
   const result = await ddbDocClient.send(command);  
 
-  console.log('saveScanRecord out: result:' + JSON.stringify(result));
+  console.log('storage-api.saveScanRecord out: result:' + JSON.stringify(result));
 
   return result;
 };
@@ -381,7 +365,7 @@ module.exports.saveScanRecord = async (record) => {
 
 module.exports.saveMembers = async (records) => {
 
-  console.log('saveMembers in: records:', records);
+  console.log('storage-api.saveMembers in: records:', records);
 
   const params = records.map(reord => {
     return {
@@ -402,14 +386,14 @@ module.exports.saveMembers = async (records) => {
 
   const result = await ddbDocClient.send(command); 
 
-  console.log('saveMembers out: result:', result);
+  console.log('storage-api.saveMembers out: result:', result);
 
   return result;
 };
 
 module.exports.saveReservationRecord = async (record) => {
 
-  console.log('saveReservationRecord in: record:', record);
+  console.log('storage-api.saveReservationRecord in: record:', record);
 
   const params = [{
     Put: {
@@ -428,7 +412,7 @@ module.exports.saveReservationRecord = async (record) => {
 
   const result = await ddbDocClient.send(command);  
 
-  console.log('saveReservationRecord out: result:', result);
+  console.log('storage-api.saveReservationRecord out: result:', result);
 
   return result;
 
@@ -436,7 +420,7 @@ module.exports.saveReservationRecord = async (record) => {
 
 module.exports.getMember = async ({reservationCode, memberNo}) => {
 
-  console.log('getMember in:' + JSON.stringify({reservationCode, memberNo}));
+  console.log('storage-api.getMember in:' + JSON.stringify({reservationCode, memberNo}));
 
   const memberCmd = new QueryCommand({
     TableName: TBL_MEMBER,
@@ -449,7 +433,7 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
 
   const memberResult = await ddbDocClient.send(memberCmd);
 
-  console.log('getMember out: memberResult:' + JSON.stringify(memberResult));
+  console.log('storage-api.getMember out: memberResult:' + JSON.stringify(memberResult));
 
   return memberResult.Items[0];
 
@@ -459,7 +443,7 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
 
 module.exports.initializeDatabase = async () => {
 
-  console.log('initializeDatabase in:');
+  console.log('storage-api.initializeDatabase in:');
 
   const reservationDeleteCmd = new DeleteTableCommand({
     TableName: TBL_RESERVATION
@@ -561,7 +545,7 @@ module.exports.initializeDatabase = async () => {
     console.log('initializeDatabase err:' + err.message);
   });
 
-  console.log('initializeDatabase out');
+  console.log('storage-api.initializeDatabase out');
 
   return;
 

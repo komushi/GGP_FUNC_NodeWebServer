@@ -10,7 +10,7 @@ module.exports = router;
 
 router.post('/deviceReg', async (req, res) => {
 
-  console.log('req.body' + JSON.stringify(req.body));
+  console.log('routes.deviceReg in: req.body:' + JSON.stringify(req.body));
 
   const listingIds = req.body.listingId.split(',');
 
@@ -39,7 +39,8 @@ router.post('/deviceReg', async (req, res) => {
       roomCode: req.body.roomCode,
       localIp: req.body.localIp,
       latitude: req.body.latitude,
-      longitude: req.body.longitude
+      longitude: req.body.longitude,
+      coreName: process.env.AWS_IOT_THING_NAME
     });
 
   } else if (listingIds.length > 1) {
@@ -60,7 +61,8 @@ router.post('/deviceReg', async (req, res) => {
           listingId: listingId,
           localIp: req.body.localIp,
           latitude: req.body.latitude,
-          longitude: req.body.longitude
+          longitude: req.body.longitude,
+          coreName: process.env.AWS_IOT_THING_NAME
         });
       });
     }
@@ -82,7 +84,7 @@ router.post('/deviceReg', async (req, res) => {
     })
   });
 
-  console.log('publishResults:' + JSON.stringify(publishResults));
+  console.log('routes.deviceReg out: publishResults:' + JSON.stringify(publishResults));
 
 });
 
@@ -93,7 +95,7 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
   payload.eventTimestamp = Date.now();
   delete payload.checkPic;
 
-  console.log('uploadMipsGateRecord payload:' + JSON.stringify(payload));
+  console.log('routes.uploadMipsGateRecord in: payload:' + JSON.stringify(payload));
 
   if (payload.type == 1 || payload.type == 2) {
     const getMemberResult = await storage.getMember({
@@ -115,5 +117,7 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
   }
 
   await storage.saveScanRecord(payload);
+
+  console.log('routes.uploadMipsGateRecord out:');
 });
 

@@ -4,7 +4,7 @@ const { IoTDataPlaneClient, GetThingShadowCommand, UpdateThingShadowCommand, Del
 
 module.exports.publish = async ({topic, payload}) => {
 
-	console.log('iot-api.publish in: params:' + JSON.stringify(params));
+	console.log('iot-api.publish in: ' + JSON.stringify({topic, payload}));
 
     return new Promise((resolve, reject) => {
       iotData.publish({
