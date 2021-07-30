@@ -99,13 +99,13 @@ module.exports.deleteShadow = async ({thingName, shadowName}) => {
 
 };
 
-const updateShadow = async ({thingName, shadowName}) => {
+const updateShadow = async ({thingName, shadowName, payload}) => {
 
-	console.log('iot-api.updateShadow in: ' + JSON.stringify({thingName, shadowName}));
+	console.log('iot-api.updateShadow in: ' + JSON.stringify({thingName, shadowName, payload}));
 
 	const client = new IoTDataPlaneClient({});
 
-	const command = new UpdateThingShadowCommand(params);
+	const command = new UpdateThingShadowCommand({thingName, shadowName, payload});
 
 	const objResult = await client.send(command);
 
