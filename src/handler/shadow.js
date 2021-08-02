@@ -54,7 +54,7 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
 
 	console.log('removeReservation deleteResults:' + JSON.stringify(deleteResults));
 
-	return {reservationCode, listingId, lastRequestOn};
+	return {reservationCode, listingId, lastRequestOn, clearRequest: true};
 	
 }
 

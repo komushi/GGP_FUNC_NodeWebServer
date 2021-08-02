@@ -69,7 +69,8 @@ exports.handler = async function(event, context) {
                     payload: JSON.stringify({
                         listingId: syncResult.listingId,
                         reservationCode: syncResult.reservationCode,
-                        lastResponse: syncResult.lastRequestOn
+                        lastResponse: syncResult.lastRequestOn,
+                        clearRequest: syncResult.clearRequest
                     })
                 });
             }));
