@@ -61,6 +61,8 @@ exports.handler = async function(event, context) {
 
             }));
 
+            console.log('removeReservation or syncReservation syncResults:' + JSON.stringify(syncResults));
+
             await Promise.all(syncResults.map(async(syncResult) => {
                 await iot.publish({
                     topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
@@ -78,7 +80,7 @@ exports.handler = async function(event, context) {
             });
 
 
-            console.log('removeReservation or syncReservation results:' + JSON.stringify(results));
+            
 
 
         } else if (context.clientContext.Custom.subject.indexOf('/delete/accepted') > -1
