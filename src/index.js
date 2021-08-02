@@ -37,7 +37,7 @@ exports.handler = async function(event, context) {
                 thingName: AWS_IOT_THING_NAME
             });
 
-            const results = await Promise.all(Object.entries(getShadowResult.state.desired.reservations)
+            const syncResults = await Promise.all(Object.entries(getShadowResult.state.desired.reservations)
                 .filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
                     return Object.keys(event.state.reservations).includes(reservationCode);
                 })
@@ -61,10 +61,22 @@ exports.handler = async function(event, context) {
 
             }));
 
+            await Promise.all(syncResults.map(async(syncResult) => {
+                await iot.publish({
+                    topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
+                    payload: JSON.stringify({
+                        listingId: syncResult.listingId,
+                        reservationCode: syncResult.reservationCode,
+                        lastResponse: syncResult.lastRequestOn
+                    })
+                });
+            }));
+
             await iot.updateReportedShadow({
                 thingName: AWS_IOT_THING_NAME,
                 reportedState: getShadowResult.state.desired
             });
+
 
             console.log('removeReservation or syncReservation results:' + JSON.stringify(results));
 

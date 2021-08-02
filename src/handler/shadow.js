@@ -179,7 +179,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
     });
 
 
-	return;
+	return {reservationCode, listingId, lastRequestOn};
 
 };
 
