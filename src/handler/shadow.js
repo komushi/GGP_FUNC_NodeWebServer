@@ -44,7 +44,9 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
     	reservationCode: reservationCode
     });
 
-    await storage.deleteMembers(getReservationResult.members);
+    if (getReservationResult && getReservationResult.members) {
+    	await storage.deleteMembers(getReservationResult.members);	
+    }
 
     // delete named shadow
     await iot.deleteShadow({
