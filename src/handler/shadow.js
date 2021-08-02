@@ -60,7 +60,7 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
 
 module.exports.syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
-	console.log('syncReservation in: ' + JSON.stringify({reservationCode, listingId, lastRequestOn}));
+	console.log('shadowHandler.syncReservation in: ' + JSON.stringify({reservationCode, listingId, lastRequestOn}));
 
 	const getShadowResult = await iot.getShadow({
 	    thingName: AWS_IOT_THING_NAME,
@@ -123,7 +123,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
 
 	const scannerDeleteResults = scannerDeleteResponse.flatMap(x => x);
 
-	console.log('scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
+	console.log('shadowHandler.syncReservation scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
 
 	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
 		throw new Error('There are scanner.deleteUser errors and process terminated!');
@@ -151,7 +151,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
 
 	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
 
-	console.log('scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
+	console.log('shadowHandler.syncReservation scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
 
 	if (scannerUpdateResults.filter(x => x.code != 0).length > 0) {
 		throw new Error('There are scanner.addUser errors and process terminated!');
@@ -181,6 +181,7 @@ module.exports.syncReservation = async ({reservationCode, listingId, lastRequest
     	reportedState: reportedState
     });
 
+	console.log('shadowHandler.syncReservation out:' + JSON.stringify({reservationCode, listingId, lastRequestOn}));
 
 	return {reservationCode, listingId, lastRequestOn};
 
