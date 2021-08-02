@@ -26,7 +26,7 @@ exports.handler = async function(event, context) {
             await storage.initializeDatabase();
 
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
-            console.log(`$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta event.state:` + JSON.stringify(event.state));
+            console.log('shadow/update/delta event.state:' + JSON.stringify(event.state));
 
             if (!event.state.reservations) {
                 console.log('reservations not specified in delta!!');
