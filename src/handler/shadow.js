@@ -24,6 +24,7 @@ module.exports.removeReservation = async ({reservationCode, listingId, lastReque
 	}
 	
 	const userResults = await scanner.findUsers({
+	    listingId: listingId,
 	    group: reservationCode
 	});
 
