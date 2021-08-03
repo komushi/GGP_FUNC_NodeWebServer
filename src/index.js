@@ -12,8 +12,8 @@ const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 const AWS_IOT_THING_ARN = process.env.AWS_IOT_THING_ARN;
 const AWS_GREENGRASS_GROUP_NAME = process.env.AWS_GREENGRASS_GROUP_NAME;
 const CORE_PORT = process.env.CORE_PORT || 8081;
-const ACTION_UPDATE = 'UPDATE';
-const ACTION_REMOVE = 'REMOVE';
+// const ACTION_UPDATE = 'UPDATE';
+// const ACTION_REMOVE = 'REMOVE';
 
 
 // This is a handler which does nothing for this example

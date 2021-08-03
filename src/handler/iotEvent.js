@@ -2,6 +2,9 @@
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
 const COL_FACE_IMG_URL = process.env.COL_FACE_IMG_URL;
 
+const ACTION_UPDATE = 'UPDATE';
+const ACTION_REMOVE = 'REMOVE';
+
 const storage = require('../api/storage');
 const iot = require('../api/iot');
 const scanner = require('../api/scanner');
