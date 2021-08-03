@@ -92,12 +92,10 @@ exports.handler = async function(event, context) {
 
         } else if (context.clientContext.Custom.subject.indexOf('find_user') > -1 ) {
 
-            console.log('find_user event.group: ' + event.group);
+            console.log('find_user event: ' + JSON.stringify(event));
 
 
-            await scanner.findUsers({
-                group: event.group
-            });
+            await scanner.findUsers(event);
 
         }
 
