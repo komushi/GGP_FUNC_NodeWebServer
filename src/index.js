@@ -30,59 +30,6 @@ exports.handler = async function(event, context) {
             console.log('shadow/update/delta event.state:' + JSON.stringify(event.state));
 
             await iotEventHandler.handler(event);
-/*
-            if (!event.state.reservations) {
-                console.log('reservations not specified in delta!!');
-                return;
-            }
-
-            const getShadowResult = await iot.getShadow({
-                thingName: AWS_IOT_THING_NAME
-            });
-
-            const syncResults = await Promise.all(Object.entries(getShadowResult.state.desired.reservations)
-                .filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
-                    return Object.keys(event.state.reservations).includes(reservationCode);
-                })
-                .map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
-
-                    if (action == ACTION_REMOVE) {
-                        return await shadowHandler.removeReservation({
-                            reservationCode,
-                            listingId,
-                            lastRequestOn
-                        });
-                    } else if (action == ACTION_UPDATE) {
-                        return await shadowHandler.syncReservation({
-                            reservationCode,
-                            listingId,
-                            lastRequestOn
-                        });
-                    } else {
-                        throw new Error(`Wrong action ${action}!`);
-                    }
-
-            }));
-
-            console.log('syncResults:' + JSON.stringify(syncResults));
-
-            await Promise.all(syncResults.map(async(syncResult) => {
-                await iot.publish({
-                    topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
-                    payload: JSON.stringify({
-                        listingId: syncResult.listingId,
-                        reservationCode: syncResult.reservationCode,
-                        lastResponse: syncResult.lastRequestOn,
-                        clearRequest: syncResult.clearRequest
-                    })
-                });
-            }));
-
-            await iot.updateReportedShadow({
-                thingName: AWS_IOT_THING_NAME,
-                reportedState: getShadowResult.state.desired
-            });
-*/
 
         } else if (context.clientContext.Custom.subject.indexOf('/delete/accepted') > -1
             && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
@@ -130,4 +77,4 @@ app.listen(CORE_PORT, () => console.log(`Example app listening on port ${CORE_PO
 
 setInterval(async () => {
     await iotEventHandler.handler();
-}, 10000);
+}, 300000);
