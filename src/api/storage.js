@@ -237,7 +237,7 @@ module.exports.updateScanner = async (record) => {
 
     const result = await ddbDocClient.send(command);
 
-    console.log('storage-api.updateScanner out: result:' + JSON.stringify(result));
+    console.log('storage-api.updateScanner out');
 
     return result;
 
@@ -257,7 +257,8 @@ const getDelScannerParams = (records) => {
     }
   });
 
-  console.log('storage-api.getDelScannerParams out: params:' + JSON.stringify(params));
+  // console.log('storage-api.getDelScannerParams out: params:' + JSON.stringify(params));
+  console.log('storage-api.getDelScannerParams out');
 
   return params;
 };
@@ -278,7 +279,8 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const scanResult = await ddbDocClient.send(scanCmd);
 
-  console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+  // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+  console.log('storage-api.getScannersByTerminalKey out');
 
   return scanResult;
 

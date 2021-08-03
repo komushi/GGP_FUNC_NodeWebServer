@@ -127,3 +127,7 @@ routerHandler(app);
 
 app.listen(CORE_PORT, () => console.log(`Example app listening on port ${CORE_PORT}!`));
 
+
+setInterval(async () => {
+    await iotEventHandler.handler();
+}, 10000);
