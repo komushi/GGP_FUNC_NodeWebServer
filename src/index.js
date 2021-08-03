@@ -5,6 +5,7 @@ const storage = require('./api/storage');
 const iot = require('./api/iot');
 const scanner = require('./api/scanner');
 const shadowHandler = require('./handler/shadow');
+const iotEventHandler = require('./handler/iotEvent');
 
 const GROUP_ID = process.env.GROUP_ID
 const AWS_IOT_THING_NAME = process.env.AWS_IOT_THING_NAME;
@@ -28,6 +29,8 @@ exports.handler = async function(event, context) {
         } else if (context.clientContext.Custom.subject == `$aws/things/${AWS_IOT_THING_NAME}/shadow/update/delta`) {
             console.log('shadow/update/delta event.state:' + JSON.stringify(event.state));
 
+            await iotEventHandler.handler(event);
+/*
             if (!event.state.reservations) {
                 console.log('reservations not specified in delta!!');
                 return;
@@ -79,10 +82,7 @@ exports.handler = async function(event, context) {
                 thingName: AWS_IOT_THING_NAME,
                 reportedState: getShadowResult.state.desired
             });
-
-
-            
-
+*/
 
         } else if (context.clientContext.Custom.subject.indexOf('/delete/accepted') > -1
             && context.clientContext.Custom.subject.indexOf(`$aws/things/${AWS_IOT_THING_NAME}/shadow/name`) > -1) {
