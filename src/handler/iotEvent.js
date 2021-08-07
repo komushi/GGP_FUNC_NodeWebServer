@@ -19,7 +19,9 @@ exports.handler = async function(event) {
 
     if (!event) {
     	event = { state : {} };
-    	event.state = getShadowResult.state.delta;
+    	if (getShadowResult.state.delta) {
+    		event.state = getShadowResult.state.delta;	
+    	}
     }
 
     if (!event.state.reservations) {
