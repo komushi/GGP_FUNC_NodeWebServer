@@ -108,7 +108,6 @@ exports.handler = async function(event) {
 
                 throw new Error(`Wrong action ${action}!`);
             }
-
     }));
 
     console.log('syncResults:' + JSON.stringify(syncResults));
@@ -121,11 +120,6 @@ exports.handler = async function(event) {
 	        reportedState: getShadowResult.state.desired
 	    });    	
     }
-
-    // await iot.updateReportedShadow({
-    //     thingName: AWS_IOT_THING_NAME,
-    //     reportedState: getShadowResult.state.desired
-    // });    	
 
     console.log('iotEventHandler.handler out');
 };
@@ -143,7 +137,7 @@ const removeReservation = async ({reservationCode, listingId, lastRequestOn}) =>
 		!getShadowResult.state.desired.lastRequestOn ||
 		getShadowResult.state.desired.lastRequestOn != lastRequestOn) {
 
-		throw new Error('syncReservation lastRequestOn validation: does not match!');
+		throw new Error('Request of RemoveReservation datetime validation error!');
 	}
 	
 	const userResults = await scanner.findUsers({
@@ -196,7 +190,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		!getShadowResult.state.desired.lastRequestOn ||
 		getShadowResult.state.desired.lastRequestOn != lastRequestOn) {
 
-		throw new Error('syncReservation lastRequestOn validation: does not match!');
+		throw new Error('Request of SyncReservation datetime validation error!');
 	}
 
     let reportedMembers = new Map();
@@ -251,7 +245,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 	console.log('shadowHandler.syncReservation scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
 
 	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
-		throw new Error('There are scanner.deleteUser errors and process terminated!');
+		throw new Error(`scanner.deleteUser error: ${x.info}`);
 	}
 
 	// add/update users to scanner
@@ -279,7 +273,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 	console.log('shadowHandler.syncReservation scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
 
 	if (scannerUpdateResults.filter(x => x.code != 0).length > 0) {
-		throw new Error('There are scanner.addUser errors and process terminated!');
+		throw new Error(`scanner.addUser error: ${x.info}`);
 	}
 
     // update local ddb
