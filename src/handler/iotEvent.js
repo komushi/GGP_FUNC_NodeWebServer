@@ -54,7 +54,7 @@ exports.handler = async function(event) {
 		                listingId: listingId,
 		                reservationCode: reservationCode,
 		                lastResponse: lastRequestOn,
-		                rejectReason: syncResult.rejectReason
+		                rejectReason: syncResult.rejectReason,
 		                clearRequest: (syncResult.rejectReason ? false : true)
 		            })
 		        });
