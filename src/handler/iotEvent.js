@@ -109,14 +109,19 @@ exports.handler = async function(event) {
 
     console.log('syncResults:' + JSON.stringify(syncResults));
 
-    if (syncResults.every(syncResult => {
-    	return (syncResult.status == 'fulfilled')
-    })) {
-	    await iot.updateReportedShadow({
-	        thingName: AWS_IOT_THING_NAME,
-	        reportedState: getShadowResult.state.desired
-	    });    	
-    }
+    // if (syncResults.every(syncResult => {
+    // 	return (syncResult.status == 'fulfilled')
+    // })) {
+	   //  await iot.updateReportedShadow({
+	   //      thingName: AWS_IOT_THING_NAME,
+	   //      reportedState: getShadowResult.state.desired
+	   //  });    	
+    // }
+
+    await iot.updateReportedShadow({
+        thingName: AWS_IOT_THING_NAME,
+        reportedState: getShadowResult.state.desired
+    });    	
 
     console.log('iotEventHandler.handler out');
 };
