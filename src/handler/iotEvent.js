@@ -113,7 +113,7 @@ exports.handler = async function(event) {
 
     if (syncResults.every(syncResult => {
     	return (syncResult.status == 'fulfilled')
-    }) {
+    })) {
 	    await iot.updateReportedShadow({
 	        thingName: AWS_IOT_THING_NAME,
 	        reportedState: getShadowResult.state.desired
