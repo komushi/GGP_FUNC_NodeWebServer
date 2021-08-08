@@ -111,7 +111,7 @@ exports.handler = async function(event) {
 
     console.log('syncResults:' + JSON.stringify(syncResults));
 
-    if (syncResults.every(syncResult) => {
+    if (syncResults.every(syncResult => {
     	return (syncResult.status == 'fulfilled')
     }) {
 	    await iot.updateReportedShadow({
