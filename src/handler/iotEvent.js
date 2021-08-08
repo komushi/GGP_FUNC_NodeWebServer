@@ -63,6 +63,8 @@ exports.handler = async function(event) {
 		        	throw new Error(syncResult.rejectReason);	
 		        }
 
+		        return;
+
             } else if (action == ACTION_UPDATE) {
                 const syncResult = await syncReservation({
                     reservationCode,
@@ -91,6 +93,8 @@ exports.handler = async function(event) {
 		        	throw new Error(syncResult.rejectReason);	
 		        }
 
+		        return;
+
             } else {
 		        await iot.publish({
 		            topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
@@ -109,19 +113,19 @@ exports.handler = async function(event) {
 
     console.log('syncResults:' + JSON.stringify(syncResults));
 
-    // if (syncResults.every(syncResult => {
-    // 	return (syncResult.status == 'fulfilled')
-    // })) {
-	   //  await iot.updateReportedShadow({
-	   //      thingName: AWS_IOT_THING_NAME,
-	   //      reportedState: getShadowResult.state.desired
-	   //  });    	
-    // }
+    if (syncResults.every(syncResult => {
+    	return (syncResult.status == 'fulfilled')
+    })) {
+	    await iot.updateReportedShadow({
+	        thingName: AWS_IOT_THING_NAME,
+	        reportedState: getShadowResult.state.desired
+	    });    	
+    }
 
-    await iot.updateReportedShadow({
-        thingName: AWS_IOT_THING_NAME,
-        reportedState: getShadowResult.state.desired
-    });    	
+    // await iot.updateReportedShadow({
+    //     thingName: AWS_IOT_THING_NAME,
+    //     reportedState: getShadowResult.state.desired
+    // });    	
 
     console.log('iotEventHandler.handler out');
 };
