@@ -105,9 +105,19 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
       memberNo: payload.memberId
     });
 
+    let message = `${payload.userName} `;
+
+    if (getMemberResult.roomCode) {
+       message += `Room: ${getMemberResult.roomCode} `;
+    }
+
+    if (getMemberResult.keyInfo) {
+       message += `Key: ${getMemberResult.keyInfo}`;
+    }
+
     res.send({
         "code":0,
-        "message": `${payload.userName} roomKey: ${getMemberResult.roomKey}`
+        "message": message
     });
 
   } else {
