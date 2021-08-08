@@ -29,7 +29,7 @@ exports.handler = async function(event) {
         return;
     }
 
-    const syncResults = await Promise.all(Object.entries(getShadowResult.state.desired.reservations)
+    const syncResults = await Promise.allSettled(Object.entries(getShadowResult.state.desired.reservations)
         .filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
             return Object.keys(event.state.reservations).includes(reservationCode);
         })
@@ -67,20 +67,14 @@ exports.handler = async function(event) {
                 listingId: syncResult.listingId,
                 reservationCode: syncResult.reservationCode,
                 lastResponse: syncResult.lastRequestOn,
-                clearRequest: syncResult.clearRequest
+                clearRequest: syncResult.clearRequest,
+                rejectReason: syncResult.reason
             })
         });
     }));
 
     console.log('iotEventHandler.handler out');
 };
-
-
-
-
-
-
-
 
 const removeReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
