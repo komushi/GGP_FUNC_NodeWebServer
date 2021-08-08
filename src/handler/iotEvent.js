@@ -36,23 +36,16 @@ exports.handler = async function(event) {
         .map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
 
             if (action == ACTION_REMOVE) {
-                await removeReservation({
+                const syncResult = await removeReservation({
                     reservationCode,
                     listingId,
                     lastRequestOn
-                }).catch(async(err) => {
+                }).catch(err => {
+           			console.log('removeReservation err:' + JSON.stringify(err));
 
-			        await iot.publish({
-			            topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
-			            payload: JSON.stringify({
-			                listingId: listingId,
-			                reservationCode: reservationCode,
-			                lastResponse: lastRequestOn,
-			                rejectReason: err.message
-			            })
-			        });
-
-                	throw err;
+           			return {
+           				rejectReason: err.message
+           			}
                 });
 
 		        await iot.publish({
@@ -61,27 +54,27 @@ exports.handler = async function(event) {
 		                listingId: listingId,
 		                reservationCode: reservationCode,
 		                lastResponse: lastRequestOn,
-		                clearRequest: true
+		                rejectReason: syncResult.rejectReason
+		                clearRequest: (syncResult.rejectReason ? false : true)
 		            })
 		        });
 
+		        if (syncResult.rejectReason) {
+		        	throw new Error(syncResult.rejectReason);	
+		        }
+
             } else if (action == ACTION_UPDATE) {
-                await syncReservation({
+                const syncResult = await syncReservation({
                     reservationCode,
                     listingId,
                     lastRequestOn
-                }).catch(async(err) => {
-			        await iot.publish({
-			            topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
-			            payload: JSON.stringify({
-			                listingId: listingId,
-			                reservationCode: reservationCode,
-			                lastResponse: lastRequestOn,
-			                rejectReason: err.message
-			            })
-			        });
+                }).catch(err => {
 
-                	throw err;
+           			console.log('syncReservation err:' + JSON.stringify(err));
+
+           			return {
+           				rejectReason: err.message
+           			}
                 });
 
 		        await iot.publish({
@@ -89,9 +82,14 @@ exports.handler = async function(event) {
 		            payload: JSON.stringify({
 		                listingId: listingId,
 		                reservationCode: reservationCode,
-		                lastResponse: lastRequestOn
+		                lastResponse: lastRequestOn,
+		                rejectReason: syncResult.rejectReason
 		            })
 		        });
+
+		        if (syncResult.rejectReason) {
+		        	throw new Error(syncResult.rejectReason);	
+		        }
 
             } else {
 		        await iot.publish({
