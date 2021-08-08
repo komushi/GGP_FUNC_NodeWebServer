@@ -40,7 +40,7 @@ exports.handler = async function(event) {
                     reservationCode,
                     listingId,
                     lastRequestOn
-                }).catch(err => {
+                }).catch(async(err) => {
 
 			        await iot.publish({
 			            topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
@@ -70,7 +70,7 @@ exports.handler = async function(event) {
                     reservationCode,
                     listingId,
                     lastRequestOn
-                }).catch(err => {
+                }).catch(async(err) => {
 			        await iot.publish({
 			            topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
 			            payload: JSON.stringify({
@@ -92,7 +92,7 @@ exports.handler = async function(event) {
 		                lastResponse: lastRequestOn
 		            })
 		        });
-		        
+
             } else {
 		        await iot.publish({
 		            topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/reservation_deployed`,
