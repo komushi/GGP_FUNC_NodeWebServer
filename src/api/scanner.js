@@ -94,8 +94,10 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
 
   const result = JSON.parse(response.body);
 
-  if (result.value.code == 1) {
-    throw new Error(result.value.message);
+  console.log('scanner.deleteUsers result:' + result);
+
+  if (result.code == 1) {
+    throw new Error(result.message);
   }
   
   console.log('scanner.deleteUsers out: result:' + result);
@@ -152,7 +154,7 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
 };
 
 module.exports.addUser = async ({reservation, userParam}) => {
-  console.log('addUser in:' + JSON.stringify({reservation, userParam}));
+  console.log('scanner.addUser in:' + JSON.stringify({reservation, userParam}));
 
   const scannerAddresses = await storage.getScanners({
     listingId: reservation.listingId, 
