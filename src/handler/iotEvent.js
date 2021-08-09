@@ -165,7 +165,7 @@ const removeReservation = async ({reservationCode, listingId, lastRequestOn}) =>
 			return true;
 		}
 	})) {
-		const message = results.filter(result => {
+		const message = deleteResults.filter(result => {
 			if (result.status != 'fulfilled') {
 		  		return true;
 			}
@@ -282,7 +282,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 			return true;
 		}
 	})) {
-		const message = results.filter(result => {
+		const message = scannerDeleteResults.filter(result => {
 			if (result.status != 'fulfilled') {
 		  		return true;
 			}
@@ -337,7 +337,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 			return true;
 		}
 	})) {
-		const message = results.filter(result => {
+		const message = scannerUpdateResults.filter(result => {
 			if (result.status != 'fulfilled') {
 		  		return true;
 			}
