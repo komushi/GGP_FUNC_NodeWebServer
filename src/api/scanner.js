@@ -145,8 +145,7 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
 };
 
 module.exports.addUser = async ({reservation, userParam}) => {
-  console.log('addUser in: reservation:' + JSON.stringify(reservation));
-  console.log('addUser in: userParam:' + JSON.stringify(userParam));
+  console.log('addUser in:' + JSON.stringify({reservation, userParam}));
 
   const scannerAddresses = await storage.getScanners({
     listingId: reservation.listingId, 

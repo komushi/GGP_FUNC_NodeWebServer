@@ -156,28 +156,35 @@ const removeReservation = async ({reservationCode, listingId, lastRequestOn}) =>
 	const deleteResults = deleteResponse.flatMap(x => x);
 
 	console.log('iotEventHandler.removeReservation deleteResults: ' + JSON.stringify(deleteResults));
-
 	if (deleteResults.some(result => {
 		if (result.status != 'fulfilled') {
-		  return true;
+	  		return true;
+		}
+
+		if (result.value.code != 0) {
+			return true;
 		}
 	})) {
 		const message = results.filter(result => {
 			if (result.status != 'fulfilled') {
+		  		return true;
+			}
+
+			if (result.value.code != 0) {
 				return true;
 			}
 		}).map(result => {
-			if (result.value) {
+			if (result.status = 'fulfilled') {
 				return `${result.value.userCode}: ${result.value.message}`;  
 			} else {
-				return result.toString();
+				return result.reason;
 			}
 		}).join();
 
 		console.log('scanner.deleteUsers errors: message:' + message);
 
 		throw new Error(message);
-	}
+	}	
 
 
     // update local ddb
@@ -268,25 +275,34 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
 	if (scannerDeleteResults.some(result => {
 		if (result.status != 'fulfilled') {
-		  return true;
+	  		return true;
+		}
+
+		if (result.value.code != 0) {
+			return true;
 		}
 	})) {
 		const message = results.filter(result => {
 			if (result.status != 'fulfilled') {
+		  		return true;
+			}
+
+			if (result.value.code != 0) {
 				return true;
 			}
 		}).map(result => {
-			if (result.value) {
+			if (result.status = 'fulfilled') {
 				return `${result.value.userCode}: ${result.value.message}`;  
 			} else {
-				return result.toString();
+				return result.reason;
 			}
 		}).join();
 
 		console.log('scanner.deleteUser errors: message:' + message);
 
 		throw new Error(message);
-	}
+	}	
+
 
 	// add/update users to scanner
 	const scannerUpdatePromises = [];
@@ -314,18 +330,26 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
 	if (scannerUpdateResults.some(result => {
 		if (result.status != 'fulfilled') {
-		  return true;
+	  		return true;
+		}
+
+		if (result.value.code != 0) {
+			return true;
 		}
 	})) {
 		const message = results.filter(result => {
 			if (result.status != 'fulfilled') {
+		  		return true;
+			}
+
+			if (result.value.code != 0) {
 				return true;
 			}
 		}).map(result => {
-			if (result.value) {
+			if (result.status = 'fulfilled') {
 				return `${result.value.userCode}: ${result.value.message}`;  
 			} else {
-				return result.toString();
+				return result.reason;
 			}
 		}).join();
 
