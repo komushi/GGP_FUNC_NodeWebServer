@@ -68,6 +68,8 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
 
   }));
 
+  console.log('scanner.findUsers results:' + JSON.stringify(results));
+
   if (results.some(result => {
     return (result.code == 1)
   })) {
@@ -152,6 +154,8 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
 
   }));
 
+  console.log('scanner.deleteUser results:' + JSON.stringify(results));
+
   if (results.some(result => {
     return (result.code == 1)
   })) {
@@ -209,8 +213,10 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
   }));
 
+  console.log('scanner.addUser results:' + JSON.stringify(results));
+
   if (results.some(result => {
-    return (result.code == 1)
+    return (result.code == 1);
   })) {
     const message = results.filter(result => {
       return (result.code == 1);
