@@ -322,42 +322,11 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
-	const scannerUpdateResponse = await Promise.allSettled(scannerUpdatePromises);
+	const scannerUpdateResponse = await Promise.all(scannerUpdatePromises);
 
 	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
 
 	console.log('iotEventHandler.syncReservation scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
-
-	if (scannerUpdateResults.some(result => {
-		if (result.status != 'fulfilled') {
-	  		return true;
-		}
-
-		if (result.value.code != 0) {
-			return true;
-		}
-	})) {
-		const message = scannerUpdateResults.filter(result => {
-			if (result.status != 'fulfilled') {
-		  		return true;
-			}
-
-			if (result.value.code != 0) {
-				return true;
-			}
-		}).map(result => {
-			if (result.status = 'fulfilled') {
-				return `${result.value.userCode}: ${result.value.message}`;  
-			} else {
-				return result.reason;
-			}
-		}).join();
-
-		console.log('scanner.addUser errors: message:' + message);
-
-		throw new Error(message);
-	}	
-
 
     // update local ddb
     await storage.deleteMembers(Array.from(toDeleteMembers.values()));

@@ -181,6 +181,14 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
   }));
 
+  results.filter(result => {
+    if (result.code != 0) {
+      return true;
+    }
+  }).map(result => {
+    throw new Error(`${result.userCode}: ${result.message}`);
+  });
+
   console.log('scanner.addUser out: results:' + JSON.stringify(results));
 
   return results;
