@@ -74,18 +74,10 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
     if (result.status != 'fulfilled') {
       return true;
     }
-
-    if (result.value.code != 0) {
-      return true;  
-    }
   })) {
     const message = results.filter(result => {
       if (result.status != 'fulfilled') {
         return true;
-      }
-
-      if (result.value.code != 0) {
-        return true;  
       }
     }).map(result => {
       if (result.value) {
@@ -176,18 +168,10 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
     if (result.status != 'fulfilled') {
       return true;
     }
-
-    if (result.value.code != 0) {
-      return true;  
-    }
   })) {
     const message = results.filter(result => {
       if (result.status != 'fulfilled') {
         return true;
-      }
-
-      if (result.value.code != 0) {
-        return true;  
       }
     }).map(result => {
       if (result.value) {
@@ -251,18 +235,10 @@ module.exports.addUser = async ({reservation, userParam}) => {
     if (result.status != 'fulfilled') {
       return true;
     }
-
-    if (result.value.code != 0) {
-      return true;  
-    }
   })) {
     const message = results.filter(result => {
       if (result.status != 'fulfilled') {
         return true;
-      }
-
-      if (result.value.code != 0) {
-        return true;  
       }
     }).map(result => {
       if (result.value) {
