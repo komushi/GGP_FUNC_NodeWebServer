@@ -71,18 +71,34 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
   console.log('scanner.findUsers results:' + JSON.stringify(results));
 
   if (results.some(result => {
-    return (result.code == 1)
+    if (result.status != 'fulfilled') {
+      return true;
+    }
+
+    if (result.value.code != 0) {
+      return true;  
+    }
   })) {
     const message = results.filter(result => {
-      return (result.code == 1);
+      if (result.status != 'fulfilled') {
+        return true;
+      }
+
+      if (result.value.code != 0) {
+        return true;  
+      }
     }).map(result => {
-      return result.message;
+      if (result.value) {
+        return `${result.value.userCode}: ${result.value.message}`;  
+      } else {
+        return result.toString();
+      }
     }).join();
 
     console.log('findUsers error: message:' + message);
 
     throw new Error(message);
-  }  
+  }
 
   console.log('findUsers out: results:' + JSON.stringify(results));
 
@@ -110,8 +126,8 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
 
   const result = JSON.parse(response.body);
 
-  if (result.code == 1) {
-    throw new Error(result.message);
+  if (result.value.code == 1) {
+    throw new Error(result.value.message);
   }
   
   console.log('deleteUsers out: result:' + result);
@@ -157,12 +173,28 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
   console.log('scanner.deleteUser results:' + JSON.stringify(results));
 
   if (results.some(result => {
-    return (result.code == 1)
+    if (result.status != 'fulfilled') {
+      return true;
+    }
+
+    if (result.value.code != 0) {
+      return true;  
+    }
   })) {
     const message = results.filter(result => {
-      return (result.code == 1);
+      if (result.status != 'fulfilled') {
+        return true;
+      }
+
+      if (result.value.code != 0) {
+        return true;  
+      }
     }).map(result => {
-      return result.message;
+      if (result.value) {
+        return `${result.value.userCode}: ${result.value.message}`;  
+      } else {
+        return result.toString();
+      }
     }).join();
 
     console.log('deleteUser error: message:' + message);
@@ -216,12 +248,28 @@ module.exports.addUser = async ({reservation, userParam}) => {
   console.log('scanner.addUser results:' + JSON.stringify(results));
 
   if (results.some(result => {
-    return (result.code == 1);
+    if (result.status != 'fulfilled') {
+      return true;
+    }
+
+    if (result.value.code != 0) {
+      return true;  
+    }
   })) {
     const message = results.filter(result => {
-      return (result.code == 1);
+      if (result.status != 'fulfilled') {
+        return true;
+      }
+
+      if (result.value.code != 0) {
+        return true;  
+      }
     }).map(result => {
-      return result.message;
+      if (result.value) {
+        return `${result.value.userCode}: ${result.value.message}`;  
+      } else {
+        return result.toString();
+      }
     }).join();
 
     console.log('addUser error: message:' + message);
