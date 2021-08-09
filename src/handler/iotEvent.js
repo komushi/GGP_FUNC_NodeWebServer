@@ -146,12 +146,39 @@ const removeReservation = async ({reservationCode, listingId, lastRequestOn}) =>
 	});
 
 	// delete users at scanners
-	const deleteResults = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
+	const deleteResponse = await Promise.allSettled(userResults.map(async({scannerAddress, users}) =>{
 		return await scanner.deleteUsers({
 			scannerAddress: scannerAddress, 
 			deleteUsersParam: users
 		});
 	}));
+
+	const deleteResults = deleteResponse.flatMap(x => x);
+
+	console.log('iotEventHandler.removeReservation deleteResults: ' + JSON.stringify(deleteResults));
+
+	if (deleteResults.some(result => {
+		if (result.status != 'fulfilled') {
+		  return true;
+		}
+	})) {
+		const message = results.filter(result => {
+			if (result.status != 'fulfilled') {
+				return true;
+			}
+		}).map(result => {
+			if (result.value) {
+				return `${result.value.userCode}: ${result.value.message}`;  
+			} else {
+				return result.toString();
+			}
+		}).join();
+
+		console.log('scanner.deleteUsers errors: message:' + message);
+
+		throw new Error(message);
+	}
+
 
     // update local ddb
     const getReservationResult = await storage.getReservation({reservationCode, listingId});
@@ -223,11 +250,6 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
   		}
 	});
 
-	// const scannerAddresses = await storage.getScanners({});
-	// if (scannerAddresses.length == 0){
-	// 	throw new Error('No scanner registered!! Needs at least one scanner!!');
-	// }
-
 	// delete users on scanner
 	const scannerDeletePromises = [];
 
@@ -238,19 +260,33 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
-	await Promise.allSettled(scannerDeletePromises);
-
-/*
-	const scannerDeleteResponse = await Promise.all(scannerDeletePromises);
+	const scannerDeleteResponse = await Promise.allSettled(scannerDeletePromises);
 
 	const scannerDeleteResults = scannerDeleteResponse.flatMap(x => x);
 
-	console.log('shadowHandler.syncReservation scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
+	console.log('iotEventHandler.syncReservation scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
 
-	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
-		throw new Error(`scanner.deleteUser error: ${x.info}`);
+	if (scannerDeleteResults.some(result => {
+		if (result.status != 'fulfilled') {
+		  return true;
+		}
+	})) {
+		const message = results.filter(result => {
+			if (result.status != 'fulfilled') {
+				return true;
+			}
+		}).map(result => {
+			if (result.value) {
+				return `${result.value.userCode}: ${result.value.message}`;  
+			} else {
+				return result.toString();
+			}
+		}).join();
+
+		console.log('scanner.deleteUser errors: message:' + message);
+
+		throw new Error(message);
 	}
-*/
 
 	// add/update users to scanner
 	const scannerUpdatePromises = [];
@@ -274,29 +310,29 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
 	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
 
-	console.log('shadowHandler.syncReservation scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
+	console.log('iotEventHandler.syncReservation scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
 
-  // if (results.some(result => {
-  //   if (result.status != 'fulfilled') {
-  //     return true;
-  //   }
-  // })) {
-  //   const message = results.filter(result => {
-  //     if (result.status != 'fulfilled') {
-  //       return true;
-  //     }
-  //   }).map(result => {
-  //     if (result.value) {
-  //       return `${result.value.userCode}: ${result.value.message}`;  
-  //     } else {
-  //       return result.toString();
-  //     }
-  //   }).join();
+	if (scannerUpdateResults.some(result => {
+		if (result.status != 'fulfilled') {
+		  return true;
+		}
+	})) {
+		const message = results.filter(result => {
+			if (result.status != 'fulfilled') {
+				return true;
+			}
+		}).map(result => {
+			if (result.value) {
+				return `${result.value.userCode}: ${result.value.message}`;  
+			} else {
+				return result.toString();
+			}
+		}).join();
 
-  //   console.log('addUser error: message:' + message);
+		console.log('scanner.addUser errors: message:' + message);
 
-  //   throw new Error(message);
-  // }	
+		throw new Error(message);
+	}	
 
 
     // update local ddb
