@@ -238,6 +238,9 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
+	await Promise.allSettled(scannerDeletePromises);
+
+/*
 	const scannerDeleteResponse = await Promise.all(scannerDeletePromises);
 
 	const scannerDeleteResults = scannerDeleteResponse.flatMap(x => x);
@@ -247,6 +250,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 	if (scannerDeleteResults.filter(x => x.code != 0).length > 0) {
 		throw new Error(`scanner.deleteUser error: ${x.info}`);
 	}
+*/
 
 	// add/update users to scanner
 	const scannerUpdatePromises = [];
@@ -266,6 +270,9 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
+	await Promise.allSettled(scannerUpdatePromises);
+
+/*
 	const scannerUpdateResponse = await Promise.allSettled(scannerUpdatePromises);
 
 	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
@@ -275,6 +282,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 	if (scannerUpdateResults.filter(x => x.code != 0).length > 0) {
 		throw new Error(`scanner.addUser error: ${x.info}`);
 	}
+*/
 
     // update local ddb
     await storage.deleteMembers(Array.from(toDeleteMembers.values()));
