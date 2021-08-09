@@ -146,7 +146,7 @@ const removeReservation = async ({reservationCode, listingId, lastRequestOn}) =>
 	});
 
 	// delete users at scanners
-	const deleteResponse = await Promise.allSettled(userResults.map(async({scannerAddress, users}) =>{
+	const deleteResponse = await Promise.all(userResults.map(async({scannerAddress, users}) =>{
 		return await scanner.deleteUsers({
 			scannerAddress: scannerAddress, 
 			deleteUsersParam: users
@@ -155,36 +155,7 @@ const removeReservation = async ({reservationCode, listingId, lastRequestOn}) =>
 
 	const deleteResults = deleteResponse.flatMap(x => x);
 
-	console.log('iotEventHandler.removeReservation deleteResults: ' + JSON.stringify(deleteResults));
-	if (deleteResults.some(result => {
-		if (result.status != 'fulfilled') {
-	  		return true;
-		}
-
-		if (result.value.code != 0) {
-			return true;
-		}
-	})) {
-		const message = deleteResults.filter(result => {
-			if (result.status != 'fulfilled') {
-		  		return true;
-			}
-
-			if (result.value.code != 0) {
-				return true;
-			}
-		}).map(result => {
-			if (result.status = 'fulfilled') {
-				return `${result.value.userCode}: ${result.value.message}`;  
-			} else {
-				return result.reason;
-			}
-		}).join();
-
-		console.log('scanner.deleteUsers errors: message:' + message);
-
-		throw new Error(message);
-	}	
+	console.log('iotEventHandler.syncReservation deleteResults: ' + JSON.stringify(deleteResults));
 
 
     // update local ddb
@@ -267,42 +238,11 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
-	const scannerDeleteResponse = await Promise.allSettled(scannerDeletePromises);
+	const scannerDeleteResponse = await Promise.all(scannerDeletePromises);
 
 	const scannerDeleteResults = scannerDeleteResponse.flatMap(x => x);
 
 	console.log('iotEventHandler.syncReservation scannerDeleteResults: ' + JSON.stringify(scannerDeleteResults));
-
-	if (scannerDeleteResults.some(result => {
-		if (result.status != 'fulfilled') {
-	  		return true;
-		}
-
-		if (result.value.code != 0) {
-			return true;
-		}
-	})) {
-		const message = scannerDeleteResults.filter(result => {
-			if (result.status != 'fulfilled') {
-		  		return true;
-			}
-
-			if (result.value.code != 0) {
-				return true;
-			}
-		}).map(result => {
-			if (result.status = 'fulfilled') {
-				return `${result.value.userCode}: ${result.value.message}`;  
-			} else {
-				return result.reason;
-			}
-		}).join();
-
-		console.log('scanner.deleteUser errors: message:' + message);
-
-		throw new Error(message);
-	}	
-
 
 	// add/update users to scanner
 	const scannerUpdatePromises = [];

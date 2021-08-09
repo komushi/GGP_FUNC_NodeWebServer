@@ -138,6 +138,13 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
 
   }));
 
+  results.filter(result => {
+    if (result.code != 0) {
+      return true;
+    }
+  }).map(result => {
+    throw new Error(`${result.userCode}: ${result.message}`);
+  });
 
   console.log('scanner.deleteUser out: results:' + JSON.stringify(results));
 
