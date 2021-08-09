@@ -270,19 +270,34 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
-	await Promise.allSettled(scannerUpdatePromises);
-
-/*
 	const scannerUpdateResponse = await Promise.allSettled(scannerUpdatePromises);
 
 	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
 
 	console.log('shadowHandler.syncReservation scannerUpdateResults: ' + JSON.stringify(scannerUpdateResults));
 
-	if (scannerUpdateResults.filter(x => x.code != 0).length > 0) {
-		throw new Error(`scanner.addUser error: ${x.info}`);
-	}
-*/
+  // if (results.some(result => {
+  //   if (result.status != 'fulfilled') {
+  //     return true;
+  //   }
+  // })) {
+  //   const message = results.filter(result => {
+  //     if (result.status != 'fulfilled') {
+  //       return true;
+  //     }
+  //   }).map(result => {
+  //     if (result.value) {
+  //       return `${result.value.userCode}: ${result.value.message}`;  
+  //     } else {
+  //       return result.toString();
+  //     }
+  //   }).join();
+
+  //   console.log('addUser error: message:' + message);
+
+  //   throw new Error(message);
+  // }	
+
 
     // update local ddb
     await storage.deleteMembers(Array.from(toDeleteMembers.values()));

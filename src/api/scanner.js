@@ -40,10 +40,10 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
     throw new Error('Need userName, userCode or group to find a user');
   }
   
-  const results = await Promise.allSettled(scannerAddresses.map(async (scannerAddress) => {
+  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
-    console.log('findUsers url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`);
-    console.log('findUsers bodyFormData:' + JSON.stringify(bodyFormData));
+    // console.log('findUsers url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`);
+    // console.log('findUsers bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`, {
       body: bodyFormData
@@ -68,31 +68,7 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
 
   }));
 
-  console.log('scanner.findUsers results:' + JSON.stringify(results));
-
-  if (results.some(result => {
-    if (result.status != 'fulfilled') {
-      return true;
-    }
-  })) {
-    const message = results.filter(result => {
-      if (result.status != 'fulfilled') {
-        return true;
-      }
-    }).map(result => {
-      if (result.value) {
-        return `${result.value.userCode}: ${result.value.message}`;  
-      } else {
-        return result.toString();
-      }
-    }).join();
-
-    console.log('findUsers error: message:' + message);
-
-    throw new Error(message);
-  }
-
-  console.log('findUsers out: results:' + JSON.stringify(results));
+  console.log('scanner.findUsers out: results:' + JSON.stringify(results));
 
   return results;
 };
@@ -110,7 +86,7 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
   const bodyFormData = new FormData();
   bodyFormData.append('userCode', userCodes);
 
-  console.log('deleteUsers bodyFormData:' + JSON.stringify(bodyFormData));
+  // console.log('deleteUsers bodyFormData:' + JSON.stringify(bodyFormData));
 
   const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
     body: bodyFormData
@@ -122,7 +98,7 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
     throw new Error(result.value.message);
   }
   
-  console.log('deleteUsers out: result:' + result);
+  console.log('scanner.deleteUsers out: result:' + result);
 
   return result;
 
@@ -149,10 +125,10 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
   const bodyFormData = new FormData();
   bodyFormData.append('userCode', userCode);
 
-  const results = await Promise.allSettled(scannerAddresses.map(async (scannerAddress) => {
+  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
     
-    console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
-    console.log('deleteUser bodyFormData:' + JSON.stringify(bodyFormData));
+    // console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
+    // console.log('deleteUser bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`, {
       body: bodyFormData
@@ -162,31 +138,8 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
 
   }));
 
-  console.log('scanner.deleteUser results:' + JSON.stringify(results));
 
-  if (results.some(result => {
-    if (result.status != 'fulfilled') {
-      return true;
-    }
-  })) {
-    const message = results.filter(result => {
-      if (result.status != 'fulfilled') {
-        return true;
-      }
-    }).map(result => {
-      if (result.value) {
-        return `${result.value.userCode}: ${result.value.message}`;  
-      } else {
-        return result.toString();
-      }
-    }).join();
-
-    console.log('deleteUser error: message:' + message);
-
-    throw new Error(message);
-  }  
-
-  console.log('deleteUser out: results:' + JSON.stringify(results));
+  console.log('scanner.deleteUser out: results:' + JSON.stringify(results));
 
   return results;
 };
@@ -216,10 +169,10 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
   bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
 
-  const results = await Promise.allSettled(scannerAddresses.map(async (scannerAddress) => {
+  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
 
-    console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
-    console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
+    // console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
+    // console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
 
     const response = await got.post(`http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`, {
       body: bodyFormData
@@ -229,31 +182,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
   }));
 
-  console.log('scanner.addUser results:' + JSON.stringify(results));
-
-  if (results.some(result => {
-    if (result.status != 'fulfilled') {
-      return true;
-    }
-  })) {
-    const message = results.filter(result => {
-      if (result.status != 'fulfilled') {
-        return true;
-      }
-    }).map(result => {
-      if (result.value) {
-        return `${result.value.userCode}: ${result.value.message}`;  
-      } else {
-        return result.toString();
-      }
-    }).join();
-
-    console.log('addUser error: message:' + message);
-
-    throw new Error(message);
-  }
-
-  console.log('addUser out: results:' + JSON.stringify(results));
+  console.log('scanner.addUser out: results:' + JSON.stringify(results));
 
   return results;
 };
