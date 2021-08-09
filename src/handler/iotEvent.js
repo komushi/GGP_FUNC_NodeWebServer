@@ -266,7 +266,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 		}));
 	});
 
-	const scannerUpdateResponse = await Promise.all(scannerUpdatePromises);
+	const scannerUpdateResponse = await Promise.allSettled(scannerUpdatePromises);
 
 	const scannerUpdateResults = scannerUpdateResponse.flatMap(x => x);
 

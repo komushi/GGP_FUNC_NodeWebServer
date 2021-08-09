@@ -11,10 +11,7 @@ const FormData = require('form-data');
 const storage = require('../api/storage');
 
 module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
-  console.log('findUsers in: listingId:' + listingId);
-  console.log('findUsers in: userName:' + userName);
-  console.log('findUsers in: userCode:' + userCode);
-  console.log('findUsers in: group:' + group);
+  console.log('findUsers in: ' + JSON.stringify({listingId, userName, userCode, group}));
 
   let scannerAddresses = [];
 
@@ -43,7 +40,7 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
     throw new Error('Need userName, userCode or group to find a user');
   }
   
-  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+  const results = await Promise.allSettled(scannerAddresses.map(async (scannerAddress) => {
     
     console.log('findUsers url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_FIND_API}`);
     console.log('findUsers bodyFormData:' + JSON.stringify(bodyFormData));
@@ -71,6 +68,20 @@ module.exports.findUsers = async ({listingId, userName, userCode, group}) => {
 
   }));
 
+  if (results.some(result => {
+    return (result.code == 1)
+  })) {
+    const message = results.filter(result => {
+      return (result.code == 1);
+    }).map(result => {
+      return result.message;
+    }).join();
+
+    console.log('findUsers error: message:' + message);
+
+    throw new Error(message);
+  }  
+
   console.log('findUsers out: results:' + JSON.stringify(results));
 
   return results;
@@ -95,7 +106,15 @@ module.exports.deleteUsers = async ({scannerAddress, deleteUsersParam}) => {
     body: bodyFormData
   });
 
-  return JSON.parse(response.body);
+  const result = JSON.parse(response.body);
+
+  if (result.code == 1) {
+    throw new Error(result.message);
+  }
+  
+  console.log('deleteUsers out: result:' + result);
+
+  return result;
 
 };
 
@@ -120,7 +139,7 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
   const bodyFormData = new FormData();
   bodyFormData.append('userCode', userCode);
 
-  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+  const results = await Promise.allSettled(scannerAddresses.map(async (scannerAddress) => {
     
     console.log('deleteUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_DELETE_API}`);
     console.log('deleteUser bodyFormData:' + JSON.stringify(bodyFormData));
@@ -132,6 +151,20 @@ module.exports.deleteUser = async ({listingId, userParam}) => {
     return JSON.parse(response.body);
 
   }));
+
+  if (results.some(result => {
+    return (result.code == 1)
+  })) {
+    const message = results.filter(result => {
+      return (result.code == 1);
+    }).map(result => {
+      return result.message;
+    }).join();
+
+    console.log('deleteUser error: message:' + message);
+
+    throw new Error(message);
+  }  
 
   console.log('deleteUser out: results:' + JSON.stringify(results));
 
@@ -163,7 +196,7 @@ module.exports.addUser = async ({reservation, userParam}) => {
   bodyFormData.append('beginDate', `${reservation.checkInDate} 14:00`);
   bodyFormData.append('endDate', `${reservation.checkOutDate} 11:00`);
 
-  const results = await Promise.all(scannerAddresses.map(async (scannerAddress) => {
+  const results = await Promise.allSettled(scannerAddresses.map(async (scannerAddress) => {
 
     console.log('addUser url:' + `http://${scannerAddress}:${SCANNER_PORT}/${USER_ADD_API}`);
     console.log('addUser bodyFormData:' + JSON.stringify(bodyFormData));
@@ -174,7 +207,21 @@ module.exports.addUser = async ({reservation, userParam}) => {
 
     return JSON.parse(response.body);
 
-  }));    
+  }));
+
+  if (results.some(result => {
+    return (result.code == 1)
+  })) {
+    const message = results.filter(result => {
+      return (result.code == 1);
+    }).map(result => {
+      return result.message;
+    }).join();
+
+    console.log('addUser error: message:' + message);
+
+    throw new Error(message);
+  }
 
   console.log('addUser out: results:' + JSON.stringify(results));
 
