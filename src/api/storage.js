@@ -298,33 +298,10 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
   //   return item;
   // }));
 
-  const newResult = [];
-
-  for (const item of scanResult.Items) {
-    console.log('storage-api.getScannersByTerminalKey item:' + JSON.stringify(item));
-
-    const getCmd = new GetCommand({
-      TableName: TBL_LISTING,
-      Key: {
-        listingId: item.listingId
-      }
-    });
-
-    console.log('storage-api.getScannersByTerminalKey getCmd:' + JSON.stringify(getCmd));
-
-    getResult = await ddbDocClient.send(getCmd);
-
-    console.log('storage-api.getScannersByTerminalKey getResult:' + JSON.stringify(getResult));
-
-    item.hostId = getResult.Item.hostId;
-
-    newResult.push(item);
-  }
-
   // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
-  console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(newResult));
+  console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(scanResult));
 
-  return newResult;
+  return scanResult;
 
 };
 
