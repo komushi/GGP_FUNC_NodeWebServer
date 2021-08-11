@@ -513,11 +513,9 @@ module.exports.initializeDatabase = async () => {
   const listingCmd = new CreateTableCommand({
     TableName: TBL_LISTING,
     KeySchema: [
-      { AttributeName: 'hostId', KeyType: 'RANGE' },
       { AttributeName: 'listingId', KeyType: 'HASH' }
     ],
     AttributeDefinitions: [
-      { AttributeName: 'hostId', AttributeType: 'S' },
       { AttributeName: 'listingId', AttributeType: 'S' }
     ],
     ProvisionedThroughput: {
@@ -598,9 +596,9 @@ module.exports.initializeDatabase = async () => {
     ddbDocClient.send(memberDeleteCmd),
     ddbDocClient.send(scannerDeleteCmd),
     ddbDocClient.send(recordDeleteCmd)
-  ]).catch(err => {
-    console.log('initializeDatabase err:' + err.message);
-  });
+  ]);
+
+  console.log('initializeDatabase deleteResults:' + JSON.stringify(deleteResults));
 
   const createResults = await Promise.allSettled([
     ddbDocClient.send(listingCmd),
@@ -608,9 +606,9 @@ module.exports.initializeDatabase = async () => {
     ddbDocClient.send(memberCmd),
     ddbDocClient.send(scannerCmd),
     ddbDocClient.send(recordCmd)
-  ]).catch(err => {
-    console.log('initializeDatabase err:' + err.message);
-  });
+  ]);
+
+  console.log('initializeDatabase createResults:' + JSON.stringify(createResults));
 
   console.log('storage-api.initializeDatabase out');
 
