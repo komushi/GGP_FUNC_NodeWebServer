@@ -300,7 +300,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const newResult = [];
 
-  scanResult.Items.forEach(item => {
+  scanResult.Items.forEach(async(item) => {
     console.log('storage-api.getScannersByTerminalKey item:' + JSON.stringify(item));
 
     const getCmd = new GetCommand({
