@@ -300,7 +300,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const newResult = [];
 
-  scanResult.Items.forEach(async(item) => {
+  for (const item of scanResult.Items) {
     console.log('storage-api.getScannersByTerminalKey item:' + JSON.stringify(item));
 
     const getCmd = new GetCommand({
@@ -319,7 +319,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
     item.hostId = getResult.Item.hostId;
 
     newResult.push(item);
-  });
+  }
 
   // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
   console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(newResult));
