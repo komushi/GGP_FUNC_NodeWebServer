@@ -213,7 +213,7 @@ module.exports.updateScanner = async (record) => {
 
     console.log('storage-api.updateScanner in: record:' + JSON.stringify(record));
 
-    const scanResult = await module.exports.getScannersByTerminalKey({
+    const scanResult = await this.fetchScanners({
       terminalKey: record.terminalKey
     });
 
@@ -272,19 +272,9 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   console.log('storage-api.getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
 
-  const scanParam = {
-    TableName : TBL_SCANNER,
-    FilterExpression: 'terminalKey = :terminalKey',
-    ExpressionAttributeValues: {
-      ':terminalKey': terminalKey
-    }    
-  };
-
-  const scanCmd = new ScanCommand(scanParam);
-
-  const scanResult = await ddbDocClient.send(scanCmd);
-
-  console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+  const scanResult = await this.fetchScanners({
+    terminalKey: record.terminalKey
+  });
 
   const newResult = Promise.all(scanResult.Items.map(async(item) => {
 
@@ -310,6 +300,29 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
   console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(newResult));
 
   return newResult;
+
+};
+
+const fetchScanners = async ({terminalKey}) => {
+
+  console.log('storage-api.fetchScanners in:' + JSON.stringify({terminalKey}));
+
+  const scanParam = {
+    TableName : TBL_SCANNER,
+    FilterExpression: 'terminalKey = :terminalKey',
+    ExpressionAttributeValues: {
+      ':terminalKey': terminalKey
+    }    
+  };
+
+  const scanCmd = new ScanCommand(scanParam);
+
+  const scanResult = await ddbDocClient.send(scanCmd);
+
+  console.log('storage-api.fetchScanners out: scanResult:' + JSON.stringify(scanResult));
+
+  return scanResult;
+
 
 };
 
