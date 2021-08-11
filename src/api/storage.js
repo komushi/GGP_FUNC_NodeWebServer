@@ -294,6 +294,8 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
     getResult = await ddbDocClient.send(getCmd);
 
+    console.log('storage-api.getScannersByTerminalKey getResult:' + JSON.stringify({getResult}));
+
     item.hostId = getResult.Item.hostId;
 
     return item;
