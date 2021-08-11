@@ -213,7 +213,7 @@ module.exports.updateScanner = async (record) => {
 
     console.log('storage-api.updateScanner in: record:' + JSON.stringify(record));
 
-    const scanResult = await this.fetchScanners({
+    const scanResult = await fetchScanners({
       terminalKey: record.terminalKey
     });
 
@@ -272,7 +272,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   console.log('storage-api.getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
 
-  const scanResult = await this.fetchScanners({
+  const scanResult = await fetchScanners({
     terminalKey: record.terminalKey
   });
 
