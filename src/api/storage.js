@@ -284,7 +284,12 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const scanResult = await ddbDocClient.send(scanCmd);
 
+  console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+
   const newResult = Promise.all(scanResult.Items.map(async(item) => {
+
+    console.log('storage-api.getScannersByTerminalKey item:' + JSON.stringify(item));
+
     const getCmd = new GetCommand({
       TableName: TBL_LISTING,
       Key: {
