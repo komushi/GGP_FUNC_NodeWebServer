@@ -248,6 +248,10 @@ const getDelScannerParams = (records) => {
 
   console.log('storage-api.getDelScannerParams in: records:' + JSON.stringify(records));
 
+  if (!records) {
+    return [];
+  }
+
   const params = records.map(record => {
     return {
       TableName: TBL_SCANNER,
