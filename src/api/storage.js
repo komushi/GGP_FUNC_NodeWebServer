@@ -27,7 +27,7 @@ const { DynamoDBClient, DeleteTableCommand, CreateTableCommand, DescribeTableCom
 
 const client = new DynamoDBClient(config);
 
-const { DynamoDBDocumentClient, QueryCommand, TransactWriteCommand, DeleteCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { DynamoDBDocumentClient, QueryCommand, TransactWriteCommand, DeleteCommand, ScanCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const ddbDocClient = DynamoDBDocumentClient.from(client, translateConfig);
 
@@ -280,10 +280,25 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const scanResult = await ddbDocClient.send(scanCmd);
 
-  // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
-  console.log('storage-api.getScannersByTerminalKey out');
+  const newResult = scanResult.Items.map(async(item) => {
+    const getCmd = new GetCommand({
+      TableName: TBL_LISTING,
+      Key: {
+        listingId: item.listingId
+      }
+    });
 
-  return scanResult;
+    getResult = await ddbDocClient.send(getCmd);
+
+    item.hostId = getResult.Item.hostId;
+
+    return item;
+  });
+
+  // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
+  console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(newResult));
+
+  return newResult;
 
 };
 
@@ -322,7 +337,7 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
   let result;
   
   try {
-    result = await ddbDocClient.send(command);  
+    result = await ddbDocClient.send(command);
   } catch (err) {
     console.error(`getScanners with listingId: ${listingId} and roomCode: ${roomCode} has err.name: ${err.name}`);
     console.error(`getScanners with listingId: ${listingId} and roomCode: ${roomCode} has err.message: ${err.message}`);

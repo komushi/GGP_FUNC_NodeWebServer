@@ -305,7 +305,7 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
 const updateListing = async ({hostId, listingId}) => {
 
-	console.log('updateListing in: ' + JSON.stringify({hostId, listingId}));
+	console.log('iotEventHandler.updateListing in: ' + JSON.stringify({hostId, listingId}));
 
     // update local ddb
     await storage.updateListing({
@@ -313,6 +313,6 @@ const updateListing = async ({hostId, listingId}) => {
     	listingId: listingId
     });
 
-	console.log('updateListing out');
+	console.log('iotEventHandler.updateListing out');
 	
 }
