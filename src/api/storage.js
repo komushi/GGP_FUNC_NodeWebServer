@@ -273,7 +273,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
   console.log('storage-api.getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
 
   const scanResult = await fetchScanners({
-    terminalKey: record.terminalKey
+    terminalKey: terminalKey
   });
 
   const newResult = Promise.all(scanResult.Items.map(async(item) => {
