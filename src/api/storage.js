@@ -296,7 +296,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
     console.log('storage-api.getScannersByTerminalKey getResult:' + JSON.stringify({getResult}));
 
-    item.hostId = getResult.Item.hostId;
+    item.hostId = getResult.getResult.Item.hostId;
 
     return item;
   });
