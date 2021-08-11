@@ -284,7 +284,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
 
   const scanResult = await ddbDocClient.send(scanCmd);
 
-  const newResult = scanResult.Items.map(async(item) => {
+  const newResult = Promise.all(scanResult.Items.map(async(item) => {
     const getCmd = new GetCommand({
       TableName: TBL_LISTING,
       Key: {
@@ -299,7 +299,7 @@ module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
     item.hostId = getResult.Item.hostId;
 
     return item;
-  });
+  }));
 
   // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
   console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(newResult));
