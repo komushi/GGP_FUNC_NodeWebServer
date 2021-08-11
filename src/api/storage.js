@@ -577,7 +577,7 @@ module.exports.initializeDatabase = async () => {
     }
   });
 
-  const deleteResults = await Promise.all([
+  const deleteResults = await Promise.allSettled([
     ddbDocClient.send(listingDeleteCmd),
     ddbDocClient.send(reservationDeleteCmd),
     ddbDocClient.send(memberDeleteCmd),
@@ -587,7 +587,7 @@ module.exports.initializeDatabase = async () => {
     console.log('initializeDatabase err:' + err.message);
   });
 
-  const createResults = await Promise.all([
+  const createResults = await Promise.allSettled([
     ddbDocClient.send(listingCmd),
     ddbDocClient.send(reservationCmd),
     ddbDocClient.send(memberCmd),
