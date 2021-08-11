@@ -498,8 +498,8 @@ module.exports.initializeDatabase = async () => {
   const listingCmd = new CreateTableCommand({
     TableName: TBL_LISTING,
     KeySchema: [
-      { AttributeName: 'hostId', KeyType: 'HASH' },
-      { AttributeName: 'listingId', KeyType: 'RANGE' }
+      { AttributeName: 'hostId', KeyType: 'RANGE' },
+      { AttributeName: 'listingId', KeyType: 'HASH' }
     ],
     AttributeDefinitions: [
       { AttributeName: 'hostId', AttributeType: 'S' },

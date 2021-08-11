@@ -3,12 +3,12 @@
 {
     "TableName": "GoCheckInListing",
     "KeySchema": [
-      { "AttributeName": "hostId", "KeyType": "HASH" },
-      { "AttributeName": "listingId", "KeyType": "RANGE" }
+      { "AttributeName": "listingId", "KeyType": "HASH" },
+      { "AttributeName": "hostId", "KeyType": "RANGE" }
     ],
     "AttributeDefinitions": [
-      { "AttributeName": "hostId", "AttributeType": "S" },
-      { "AttributeName": "listingId", "AttributeType": "S" }
+      { "AttributeName": "listingId", "AttributeType": "S" },
+      { "AttributeName": "hostId", "AttributeType": "S" }
     ],
     "ProvisionedThroughput": {
       "ReadCapacityUnits": 5,
