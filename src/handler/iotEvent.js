@@ -29,12 +29,17 @@ exports.handler = async function(event) {
         return;
     }
 
-    const syncResults = await Promise.allSettled(Object.entries(getShadowResult.state.desired.reservations)
-        .filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
-            return Object.keys(event.state.reservations).includes(reservationCode);
-        })
-        .map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
+	await Promise.allSettled(
+		Object.entries(getShadowResult.state.desired.reservations).filter(([reservationCode, {listingId, hostId}]) => {
+	        return Object.keys(event.state.reservations).includes(reservationCode);
+	    }).map(async ([reservationCode, {listingId, hostId}]) => {
+    	await updateListing({listingId, hostId});
+	}));
 
+    const syncResults = await Promise.allSettled(
+    	Object.entries(getShadowResult.state.desired.reservations).filter(([reservationCode, {listingId, lastRequestOn, action}]) => {
+            return Object.keys(event.state.reservations).includes(reservationCode);
+        }).map(async ([reservationCode, {listingId, lastRequestOn, action}]) => {
             if (action == ACTION_REMOVE) {
                 const syncResult = await removeReservation({
                     reservationCode,
@@ -298,3 +303,16 @@ const syncReservation = async ({reservationCode, listingId, lastRequestOn}) => {
 
 };
 
+const updateListing = async ({hostId, listingId}) => {
+
+	console.log('updateListing in: ' + JSON.stringify({hostId, listingId}));
+
+    // update local ddb
+    await storage.updateListing({
+    	hostId: hostId,
+    	listingId: listingId
+    });
+
+	console.log('updateListing out');
+	
+}

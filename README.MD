@@ -1,3 +1,22 @@
+## create-table-listing.json
+```
+{
+    "TableName": "GoCheckInListing",
+    "KeySchema": [
+      { "AttributeName": "hostId", "KeyType": "HASH" },
+      { "AttributeName": "listingId", "KeyType": "RANGE" }
+    ],
+    "AttributeDefinitions": [
+      { "AttributeName": "hostId", "AttributeType": "S" },
+      { "AttributeName": "listingId", "AttributeType": "S" }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+}
+
+```
 
 ## create-table-reservation.json
 ```

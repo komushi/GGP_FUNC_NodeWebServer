@@ -2,6 +2,7 @@ const TBL_RESERVATION = process.env.TBL_RESERVATION;
 const TBL_MEMBER = process.env.TBL_MEMBER;
 const TBL_SCANNER = process.env.TBL_SCANNER;
 const TBL_RECORD = process.env.TBL_RECORD;
+const TBL_LISTING = process.env.TBL_LISTING;
 
 const config = {
   endpoint: process.env.DDB_ENDPOINT || 'http://localhost:8080',
@@ -441,11 +442,42 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
 
 };
 
+module.exports.updateListing = async ({hostId, listingId}) => {
+
+  console.log('storage-api.updateListing in:' + JSON.stringify({hostId, listingId}));
+
+
+  const params = [{
+    Put: {
+      TableName: TBL_LISTING,
+      Item: {hostId, listingId},
+      ExpressionAttributeNames : {
+          '#pk' : 'hostId'
+      },
+      ConditionExpression: 'attribute_not_exists(#pk)'
+    }
+  }];
+
+  const command = new TransactWriteCommand({
+    TransactItems: params
+  });
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('storage-api.updateListing out: result:' + JSON.stringify(result));
+
+  return;
+
+};
 
 
 module.exports.initializeDatabase = async () => {
 
   console.log('storage-api.initializeDatabase in:');
+
+  const listingDeleteCmd = new DeleteTableCommand({
+    TableName: TBL_LISTING
+  });
 
   const reservationDeleteCmd = new DeleteTableCommand({
     TableName: TBL_RESERVATION
@@ -461,6 +493,22 @@ module.exports.initializeDatabase = async () => {
 
   const recordDeleteCmd = new DeleteTableCommand({
     TableName: TBL_RECORD
+  });
+
+  const listingCmd = new CreateTableCommand({
+    TableName: TBL_LISTING,
+    KeySchema: [
+      { AttributeName: 'hostId', KeyType: 'HASH' },
+      { AttributeName: 'listingId', KeyType: 'RANGE' }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: 'hostId', AttributeType: 'S' },
+      { AttributeName: 'listingId', AttributeType: 'S' }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
   });
 
   const reservationCmd = new CreateTableCommand({
@@ -530,6 +578,7 @@ module.exports.initializeDatabase = async () => {
   });
 
   const deleteResults = await Promise.all([
+    ddbDocClient.send(listingDeleteCmd),
     ddbDocClient.send(reservationDeleteCmd),
     ddbDocClient.send(memberDeleteCmd),
     ddbDocClient.send(scannerDeleteCmd),
@@ -539,6 +588,7 @@ module.exports.initializeDatabase = async () => {
   });
 
   const createResults = await Promise.all([
+    ddbDocClient.send(listingCmd),
     ddbDocClient.send(reservationCmd),
     ddbDocClient.send(memberCmd),
     ddbDocClient.send(scannerCmd),
