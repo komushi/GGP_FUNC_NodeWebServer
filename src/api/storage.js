@@ -235,7 +235,7 @@ module.exports.updateScanners = async (params) => {
       TransactItems: txnParams
     });
 
-    const result = await ddbDocClient.send(command);
+    const result = await ddbDocClient.send(txnCommand);
 
     console.log('storage-api.updateScanners out');
 
