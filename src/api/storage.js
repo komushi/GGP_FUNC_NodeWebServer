@@ -209,6 +209,41 @@ module.exports.getReservation = async ({reservationCode, listingId}) => {
 
 };
 
+module.exports.updateScanners = async (params) => {
+
+    console.log('storage-api.updateScanners in: params:' + JSON.stringify(params));
+
+
+    const delParams = getDelScannerParams(params);
+
+    await Promise.all(delParams.map(async (param) => {
+      const command = new DeleteCommand(param);
+      return await ddbDocClient.send(command); 
+
+    }));
+
+    const txnParams = params.map((param) => {
+      return {
+        Put: {
+          TableName: TBL_SCANNER,
+          Item: param
+        }
+      }
+    });
+
+    const txnCommand = new TransactWriteCommand({
+      TransactItems: txnParams
+    });
+
+    const result = await ddbDocClient.send(command);
+
+    console.log('storage-api.updateScanners out');
+
+    return result;
+
+};
+
+
 module.exports.updateScanner = async (record) => {
 
     console.log('storage-api.updateScanner in: record:' + JSON.stringify(record));

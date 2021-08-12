@@ -70,9 +70,11 @@ router.post('/deviceReg', async (req, res) => {
     }
   }
 
-  await Promise.all(params.map(async(param) => {
-    await storage.updateScanner(param);
-  }));
+  // await Promise.all(params.map(async(param) => {
+  //   await storage.updateScanner(param);
+  // }));
+
+  await storage.updateScanners(params);
 
   const newScanners = await storage.getScannersByTerminalKey({
     terminalKey: req.body.terminalKey
