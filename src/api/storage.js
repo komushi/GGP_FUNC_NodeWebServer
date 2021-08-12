@@ -276,66 +276,6 @@ const getDelScannerParams = (records) => {
   return params;
 };
 
-module.exports.getScannersByTerminalKey = async ({terminalKey}) => {
-
-  console.log('storage-api.getScannersByTerminalKey in:' + JSON.stringify({terminalKey}));
-
-  const scanResult = await fetchScanners({
-    terminalKey: terminalKey
-  });
-
-  // const newResult = await Promise.all(scanResult.Items.map(async(item) => {
-
-  //   console.log('storage-api.getScannersByTerminalKey item:' + JSON.stringify(item));
-
-  //   const getCmd = new GetCommand({
-  //     TableName: TBL_LISTING,
-  //     Key: {
-  //       listingId: item.listingId
-  //     }
-  //   });
-
-  //   console.log('storage-api.getScannersByTerminalKey getCmd:' + JSON.stringify(getCmd));
-
-  //   getResult = await ddbDocClient.send(getCmd);
-
-  //   console.log('storage-api.getScannersByTerminalKey getResult:' + JSON.stringify(getResult));
-
-  //   item.hostId = getResult.Item.hostId;
-
-  //   return item;
-  // }));
-
-  // console.log('storage-api.getScannersByTerminalKey scanResult:' + JSON.stringify(scanResult));
-  console.log('storage-api.getScannersByTerminalKey out: newResult:' + JSON.stringify(scanResult));
-
-  return scanResult;
-
-};
-
-const fetchScanners = async ({terminalKey}) => {
-
-  console.log('storage-api.fetchScanners in:' + JSON.stringify({terminalKey}));
-
-  const scanParam = {
-    TableName : TBL_SCANNER,
-    FilterExpression: 'terminalKey = :terminalKey',
-    ExpressionAttributeValues: {
-      ':terminalKey': terminalKey
-    }    
-  };
-
-  const scanCmd = new ScanCommand(scanParam);
-
-  const scanResult = await ddbDocClient.send(scanCmd);
-
-  console.log('storage-api.fetchScanners out: scanResult:' + JSON.stringify(scanResult));
-
-  return scanResult;
-
-
-};
-
 module.exports.getScanners = async ({listingId, roomCode}) => {
 
   console.log('storage-api.getScanners in:' + JSON.stringify({listingId, roomCode}));
@@ -516,6 +456,29 @@ module.exports.updateHost = async (hostId) => {
   console.log('storage-api.updateHost out: result:' + JSON.stringify(result));
 
   return;
+
+};
+
+module.exports.getHostId = async () => {
+
+  console.log('storage-api.getHostId in');
+
+
+  const scanParam = {
+    TableName : TBL_HOST,
+    PageSize : 1
+  };
+
+  const scanResult = await ddbDocClient.send(scanCmd);
+
+  let hostId;
+  if (scanResult.Items) {
+    hostId = scanResult.Items[0].hostId;    
+  }
+
+  console.log('storage-api.updateHost out: hostId:' + hostId);
+
+  return hostId
 
 };
 

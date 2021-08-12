@@ -60,18 +60,31 @@ exports.handler = async function(event, context) {
     return promise;
 };
 
+const initialize = () => {
+
+    console.log('initialize in');
+
+    const app = express();
+
+    app.use(express.json()); 
+    app.use(express.urlencoded({extended: true}));
+    routerHandler(app);
 
 
-const app = express();
-
-app.use(express.json()); 
-app.use(express.urlencoded({extended: true}));
-routerHandler(app);
+    app.listen(CORE_PORT, () => console.log(`Example app listening on port ${CORE_PORT}!`));
 
 
-app.listen(CORE_PORT, () => console.log(`Example app listening on port ${CORE_PORT}!`));
+    setInterval(async () => {
+        await iotEventHandler.handler();
+    }, 300000);
+
+    if (!process.env.HOST_ID) {
+        process.env.HOST_ID = await storage.getHostId();    
+    }
+    
+
+    console.log('initialize out');
+
+};
 
 
-setInterval(async () => {
-    await iotEventHandler.handler();
-}, 300000);
