@@ -42,7 +42,7 @@ exports.handler = async function(event) {
 		process.env.HOST_ID = getShadowResult.state.desired.hostId;
 		await storage.updateHost(getShadowResult.state.desired.hostId).catch(err) {
 			console.log('updateHost' + JSON.stringify(err));
-		};
+		}	;
 	}
 
     const syncResults = await Promise.allSettled(
