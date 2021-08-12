@@ -223,6 +223,7 @@ module.exports.updateScanners = async (params) => {
     }));
 
     const txnParams = params.map((param) => {
+      param.lastUpdateOn = (new Date).toISOString();
       return {
         Put: {
           TableName: TBL_SCANNER,
