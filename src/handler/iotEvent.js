@@ -29,12 +29,18 @@ exports.handler = async function(event) {
         return;
     }
 
+/*
 	await Promise.allSettled(
 		Object.entries(getShadowResult.state.desired.reservations).filter(([reservationCode, {listingId, hostId}]) => {
 	        return Object.keys(event.state.reservations).includes(reservationCode);
 	    }).map(async ([reservationCode, {listingId, hostId}]) => {
     	await updateListing({listingId, hostId});
 	}));
+*/
+
+	if (getShadowResult.state.desired.hostId) {
+		await updateHost(getShadowResult.state.desired.hostId);
+	}
 
     const syncResults = await Promise.allSettled(
     	Object.entries(getShadowResult.state.desired.reservations).filter(([reservationCode, {listingId, lastRequestOn, action}]) => {

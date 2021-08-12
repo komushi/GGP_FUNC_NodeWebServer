@@ -71,9 +71,6 @@ router.post('/deviceReg', async (req, res) => {
   }
 
   const scannerResults = await storage.updateScanners(params);
-  // const newScanners = await storage.getScannersByTerminalKey({
-  //   terminalKey: req.body.terminalKey
-  // });
 
   const publishResults = await iot.publish({
     topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/scanner_detected`,

@@ -3,6 +3,7 @@ const TBL_MEMBER = process.env.TBL_MEMBER;
 const TBL_SCANNER = process.env.TBL_SCANNER;
 const TBL_RECORD = process.env.TBL_RECORD;
 const TBL_LISTING = process.env.TBL_LISTING;
+const TBL_HOST = process.env.TBL_HOST;
 
 const config = {
   endpoint: process.env.DDB_ENDPOINT || 'http://localhost:8080',
@@ -489,6 +490,34 @@ module.exports.getMember = async ({reservationCode, memberNo}) => {
 
 };
 
+module.exports.updateHost = async (hostId) => {
+
+  console.log('storage-api.updateHost in:' + hostId);
+
+
+  const params = [{
+    Put: {
+      TableName: TBL_HOST,
+      Item: { hostId },
+      ExpressionAttributeNames : {
+          '#pk' : 'hostId'
+      },
+      ConditionExpression: 'attribute_not_exists(#pk)'
+    }
+  }];
+
+  const command = new TransactWriteCommand({
+    TransactItems: params
+  });
+
+  const result = await ddbDocClient.send(command);  
+
+  console.log('storage-api.updateHost out: result:' + JSON.stringify(result));
+
+  return;
+
+};
+
 module.exports.updateListing = async ({hostId, listingId}) => {
 
   console.log('storage-api.updateListing in:' + JSON.stringify({hostId, listingId}));
@@ -522,6 +551,10 @@ module.exports.initializeDatabase = async () => {
 
   console.log('storage-api.initializeDatabase in:');
 
+  const hostDeleteCmd = new DeleteTableCommand({
+    TableName: TBL_HOST
+  });
+
   const listingDeleteCmd = new DeleteTableCommand({
     TableName: TBL_LISTING
   });
@@ -540,6 +573,20 @@ module.exports.initializeDatabase = async () => {
 
   const recordDeleteCmd = new DeleteTableCommand({
     TableName: TBL_RECORD
+  });
+
+  const hostCmd = new CreateTableCommand({
+    TableName: TBL_HOST,
+    KeySchema: [
+      { AttributeName: 'hostId', KeyType: 'HASH' }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: 'hostId', AttributeType: 'S' }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 5,
+      WriteCapacityUnits: 5
+    }
   });
 
   const listingCmd = new CreateTableCommand({
@@ -623,6 +670,7 @@ module.exports.initializeDatabase = async () => {
   });
 
   const deleteResults = await Promise.allSettled([
+    ddbDocClient.send(hostDeleteCmd),
     ddbDocClient.send(listingDeleteCmd),
     ddbDocClient.send(reservationDeleteCmd),
     ddbDocClient.send(memberDeleteCmd),
@@ -633,6 +681,7 @@ module.exports.initializeDatabase = async () => {
   console.log('initializeDatabase deleteResults:' + JSON.stringify(deleteResults));
 
   const createResults = await Promise.allSettled([
+    ddbDocClient.send(hostCmd),
     ddbDocClient.send(listingCmd),
     ddbDocClient.send(reservationCmd),
     ddbDocClient.send(memberCmd),
