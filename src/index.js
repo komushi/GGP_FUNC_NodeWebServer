@@ -76,15 +76,19 @@ const initialize = () => {
 
     setInterval(async () => {
         await iotEventHandler.handler();
+
+        if (!process.env.HOST_ID) {
+            process.env.HOST_ID = await storage.getHostId();    
+        }
     }, 300000);
 
-    if (!process.env.HOST_ID) {
-        process.env.HOST_ID = await storage.getHostId();    
-    }
+
     
 
     console.log('initialize out');
 
 };
+
+initialize();
 
 

@@ -435,6 +435,11 @@ module.exports.updateHost = async (hostId) => {
 
   console.log('storage-api.updateHost in:' + hostId);
 
+  if (!hostId) {
+    console.log('storage-api.updateHost out');
+    return;
+  }
+
 
   const params = [{
     Put: {
