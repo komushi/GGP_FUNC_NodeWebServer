@@ -244,42 +244,6 @@ module.exports.updateScanners = async (params) => {
 
 };
 
-
-module.exports.updateScanner = async (record) => {
-
-    console.log('storage-api.updateScanner in: record:' + JSON.stringify(record));
-
-    const scanResult = await fetchScanners({
-      terminalKey: record.terminalKey
-    });
-
-    const delParams = getDelScannerParams(scanResult.Items);
-
-    await Promise.all(delParams.map(async (param) => {
-      const command = new DeleteCommand(param);
-      return await ddbDocClient.send(command); 
-
-    }));   
-
-    const params = [{
-      Put: {
-        TableName: TBL_SCANNER,
-        Item: record
-      }
-    }];
-
-    const command = new TransactWriteCommand({
-      TransactItems: params
-    });
-
-    const result = await ddbDocClient.send(command);
-
-    console.log('storage-api.updateScanner out');
-
-    return result;
-
-};
-
 const getDelScannerParams = (records) => {
 
   console.log('storage-api.getDelScannerParams in: records:' + JSON.stringify(records));
