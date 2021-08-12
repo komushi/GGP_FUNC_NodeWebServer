@@ -39,6 +39,7 @@ exports.handler = async function(event) {
 */
 
 	if (getShadowResult.state.desired.hostId) {
+		process.env.HOST_ID = hostId;
 		await storage.updateHost(getShadowResult.state.desired.hostId);
 	}
 

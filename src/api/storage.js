@@ -227,6 +227,7 @@ module.exports.updateScanners = async (params) => {
 
     const rtnParams = params.map((param) => {
       param.lastUpdateOn = crtTimestamp;
+      param.hostId = process.env.HOST_ID;
       return param;
     });
 
