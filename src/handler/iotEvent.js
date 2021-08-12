@@ -39,7 +39,7 @@ exports.handler = async function(event) {
 */
 
 	if (getShadowResult.state.desired.hostId) {
-		await updateHost(getShadowResult.state.desired.hostId);
+		await storage.updateHost(getShadowResult.state.desired.hostId);
 	}
 
     const syncResults = await Promise.allSettled(
