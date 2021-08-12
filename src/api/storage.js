@@ -474,6 +474,8 @@ module.exports.getHostId = async () => {
     PageSize : 1
   };
 
+  const scanCmd = new ScanCommand(scanParam);
+
   const scanResult = await ddbDocClient.send(scanCmd);
 
   let hostId;
