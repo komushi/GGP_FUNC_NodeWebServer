@@ -222,8 +222,14 @@ module.exports.updateScanners = async (params) => {
 
     }));
 
-    const txnParams = params.map((param) => {
-      param.lastUpdateOn = (new Date).toISOString();
+    const crtTimestamp = (new Date).toISOString();
+
+    const rtnParams = params.map((param) => {
+      param.lastUpdateOn = crtTimestamp;
+      return param;
+    });
+
+    const txnParams = rtnParams.map((param) => {
       return {
         Put: {
           TableName: TBL_SCANNER,
@@ -236,11 +242,11 @@ module.exports.updateScanners = async (params) => {
       TransactItems: txnParams
     });
 
-    const result = await ddbDocClient.send(txnCommand);
+    await ddbDocClient.send(txnCommand);
 
-    console.log('storage-api.updateScanners out');
+    console.log('storage-api.updateScanners out:' + JSON.stringify(rtnParams));
 
-    return result;
+    return rtnParams;
 
 };
 
