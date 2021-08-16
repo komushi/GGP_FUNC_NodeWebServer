@@ -297,6 +297,7 @@ module.exports.getScanners = async ({listingId, roomCode}) => {
       param = {
         TableName : TBL_SCANNER,
         KeyConditionExpression: 'listingId = :listingId',
+        FilterExpression: 'attribute_not_exists(roomCode)',
         ExpressionAttributeValues: {
           ':listingId': listingId
         }    
