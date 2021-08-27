@@ -122,11 +122,22 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
     });
   }
 
-  await storage.saveScanRecord(payload);
+  // await storage.saveScanRecord(payload);
+
+  const iotPayload = {
+    reservationCode: payload.group,
+    terminalKey: payload.terminalKey,
+    hostId: process.env.HOST_ID,
+    temperature: payload.temperature,
+    mask: payload.temperature,
+    userName: payload.userName,
+    recordTime: (new Date(payload.eventTimestamp)).toISOString()
+  }
+
 
   const publishResults = await iot.publish({
     topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/scan_record`,
-    payload: JSON.stringify(payload)
+    payload: JSON.stringify(iotPayload)
   });
 
   console.log('routes.uploadMipsGateRecord out:');
