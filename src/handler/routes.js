@@ -124,6 +124,11 @@ router.post('/uploadMipsGateRecord', async (req, res) => {
 
   await storage.saveScanRecord(payload);
 
+  const publishResults = await iot.publish({
+    topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/scan_record`,
+    payload: JSON.stringify(payload)
+  });
+
   console.log('routes.uploadMipsGateRecord out:');
 });
 
