@@ -71,7 +71,7 @@ router.post('/deviceReg', async (req, res) => {
   }
 
   const scannerResults = await storage.updateScanners(params);
-
+/*
   const publishResults = await iot.publish({
     topic: `gocheckin/${process.env.AWS_IOT_THING_NAME}/scanner_detected`,
     payload: JSON.stringify({
@@ -79,6 +79,7 @@ router.post('/deviceReg', async (req, res) => {
       terminalKey: req.body.terminalKey
     })
   });
+*/
 
   console.log('routes.deviceReg out: publishResults:' + JSON.stringify(publishResults));
 
